@@ -63,60 +63,6 @@ function previewBoutons() {
 
 
 
-async function fetchEAN(url) {
-    try {
-        const res = await fetch(url, { credentials: 'include' }); // important si la session est nécessaire
-        if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
-        const text = await res.text();
-
-        // Parser le HTML reçu
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-        // console.log("Document chargé pour l'EAN:", doc);
-
-        // Récupérer l'élément contenant l'EAN
-        const eanEl = doc.querySelector('#product_details_references_ean_13');
-        console.log("EAN Element:", eanEl);
-        return eanEl ? eanEl.textContent.trim() : null;
-    } catch (e) {
-        console.error('Erreur fetch EAN:', e);
-        return null;
-    }
-}
-
-async function ajouterEANs() {
-    console.log("🔄 Ajout des EANs");
-
-    // Sélecteur des lignes produits (à adapter selon ta page)  #product_grid_table > tbody > tr:nth-child(1) > td.link-type.column-reference.text-left > a
-    const lignes = document.querySelectorAll('#product_grid_table tbody tr'); // remplacer par le vrai sélecteur
-
-    for (const ligne of lignes) {
-        // Trouver le lien vers la fiche produit dans la ligne
-        const lien = ligne.querySelector('.link-type.column-reference a').href; // adapter sélecteur
-        console.log("Lien produit:", lien);
-
-        if (!lien) continue;
-
-        // Évite de refaire la requête si déjà affiché
-        if (ligne.querySelector('.ean13')) continue;
-
-        const ean = await fetchEAN(lien.href);
-        if (ean) {
-            const span = document.createElement('span');
-            span.className = 'ean13';
-            span.textContent = `EAN: ${ean}`;
-            span.style.marginLeft = '10px';
-            ligne.appendChild(span);
-        }
-    }
-}
-
-// Lancer la fonction (tu peux ajouter MutationObserver si les lignes se chargent dynamiquement)
-ajouterEANs();
-
-
-
-
 // MutationObserver pour suivre les changements du DOM
 const observer = new MutationObserver(ajouterCopyBoutons);
 observer.observe(document.body, { childList: true, subtree: true });
