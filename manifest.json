@@ -1,0 +1,25 @@
+{
+  "name": "Extensions CSP",
+  "description": "Base Level Extension",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "hello.html",
+    "default_icon": "logo.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://concept-store-photo.dmu.sarl/logcncin/index.php/sell/catalog/products-v2/*",
+        "https://conceptstorephoto.fr/",
+        "https://concept-store-photo.dmu.sarl/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "clipboardWrite"
+  ]
+}
