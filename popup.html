@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extension CSP</title>
+  <script src="popup.js"></script>
+
+</head>
+<style>
+  html,
+  * {
+    box-sizing: border-box;
+    --bleu: #045163;
+    --bleu-hover: #033f4d;
+    --text-color-1: #333;
+  }
+
+  html body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: var(--text-color-1);
+    margin: 0;
+    padding: 20px;
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8;
+  }
+
+  h1 {
+    text-align: center;
+    color: var(--bleu);
+  }
+
+  h3 {
+    margin-top: 0;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  a {
+    color: var(--bleu);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .button {
+    padding: 10px;
+    background-color: var(--bleu);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+  }
+
+  .button:hover {
+    background-color: var(--bleu-hover);
+  }
+
+  .conteneur {
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+</style>
+
+<body>
+  <div>
+    <h1>CSP tools</h1>
+    <p>Pour corriger les problèmes d'interface du site web</p>
+  </div>
+
+  <div class="conteneur">
+    <h3>Catalogue</h3>
+    <label>
+      <input type="checkbox" class="toggle-button" id="toggle_copy_buttons" />
+      Activer les boutons "copier" dans le catalogue produits
+    </label>
+  </div>
+
+  <div class="conteneur">
+    <h3>Fiche produit</h3>
+    <label>
+      <input type="checkbox" class="toggle-button" id="toggle_preview_buttons" />
+      Racourcis vers la prévisualisation des produits
+    </label>
+  </div>
+
+
+  <button class="button" id="refresh">🔁 Recharger la page pour appliquer</button>
+
+</body>
+<footer>
+  <p style="text-align: center; font-size: 12px; color: #666;">
+    Extension développé par <a href="https://github.com/ConceptStorePhoto/chrome-extensions-CSP"
+      target="_blank">QuentinPerou</a> pour <a href="https://conceptstorephoto.fr" target="_blank"
+      rel="noopener noreferrer">Concept Store Photo</a>.
+  </p>
+</footer>
+
+</html>

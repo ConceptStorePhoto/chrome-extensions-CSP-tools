@@ -1,3 +1,13 @@
+# Extention Chrome pour ConceptStorePhoto
+
+Permet de corriger des problèmes d'interface sur le site web.
+
+
+<br>
+<br>
+<br>
+
+
 # Getting Started With Google Chrome Extensions (Hello World)
 
 This example demonstrates how to create a simple "Hello World" Chrome Extension.
