@@ -43,9 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Mise à jour de l'état 
         button.addEventListener('change', () => {
-            chrome.storage.sync.set({ [button.id]: button.checked },() => {
-                chrome.runtime.sendMessage({ action: button.id, enabled: button.checked });
-            });
+            chrome.storage.sync.set({ [button.id]: button.checked });
         });
 
     });

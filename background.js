@@ -27,34 +27,17 @@ function showUpdateNotification(version, url) {
 
 /////////////////////////////////////
 
-// Création du menu contextuel
-function updateContextMenu(enabled) {
-    chrome.contextMenus.removeAll(() => {
-        if (enabled) {
-            chrome.contextMenus.create({
-                id: "copier-ref", // identifiant unique
-                title: "Copier le texte",
-                contexts: ["selection", "link"], // selon ce que tu veux viser
-                documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*"
-                ] // uniquement sur ton site
-            });
-        }
-    });
-}
-
-// Quand l'extension démarre : lire l'état
+// Quand l'extension démarre
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.sync.get("toggle_ContextMenu", (data) => {
-        updateContextMenu(data.toggle_ContextMenu ?? true);
+    // Création du menu contextuel
+    chrome.contextMenus.create({
+        id: "copier-ref", // identifiant unique
+        title: "Copier le texte",
+        contexts: ["selection", "link"], // selon ce que tu veux viser
+        documentUrlPatterns: [
+            "*://concept-store-photo.dmu.sarl/*"
+        ] // uniquement sur ton site
     });
-});
-
-// Réagir aux messages depuis la popup
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "toggle_ContextMenu") {
-        updateContextMenu(message.enabled);
-    }
 });
 
 // Action quand l’utilisateur clique sur l’entrée du menu
