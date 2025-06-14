@@ -32,3 +32,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 });
+
+
+// Vérification des mises à jour
+import { checkForUpdate } from './utils.js';
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const updateMsg = document.getElementById("update-message");
+
+    const updateInfo = await checkForUpdate();
+
+    if (updateInfo.updateAvailable) {
+        updateMsg.innerHTML = `
+            🚀 <strong>Mise à jour disponible</strong> (v${updateInfo.remoteVersion})<br>
+            <a href="${updateInfo.repoURL}" target="_blank" rel="noopener">Télécharger</a>
+        `;
+        updateMsg.style.display = "block";
+    } else {
+        updateMsg.textContent = `✅ Extension à jour - Version local : ${updateInfo.localVersion}`;
+        updateMsg.style.display = "block";
+    }
+});
+

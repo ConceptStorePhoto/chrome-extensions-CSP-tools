@@ -1,7 +1,7 @@
 {
   "name": "CSP tools",
-  "description": "Ajoute des fonctionnalités à la boutique ConceptStorePhoto - DEV par QuentinPerou",
-  "version": "1.0",
+  "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto - DEV par QuentinPerou",
+  "version": "1.0.1",
   "manifest_version": 3,
   "action": {
     "default_popup": "popup.html",
@@ -29,6 +29,11 @@
   ],
   "permissions": [
     "clipboardWrite",
-    "storage"
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/*",
+    "https://raw.githubusercontent.com/ConceptStorePhoto/chrome-extensions-CSP-tools/*"
   ]
 }
