@@ -1,6 +1,6 @@
 console.log("✅ Script injecté !");
 
-function ajouterCopyBoutons() {
+function catalogActions() {
     try {
         chrome.storage.sync.get("toggle_copy_buttons", (data) => {
             if (!data.toggle_copy_buttons) return; // Ne rien faire si désactivé
@@ -72,7 +72,6 @@ function ajouterCopyBoutons() {
 
                 el.prepend(bouton);
             });
-
         });
 
         chrome.storage.sync.get("toggle_catalogue_preview_buttons", (data) => {
@@ -92,13 +91,26 @@ function ajouterCopyBoutons() {
                 element.innerHTML = `<i class="material-icons">visibility</i>`;
                 el.parentNode.parentNode.appendChild(element);
             });
-
         });
 
 
+        chrome.storage.sync.get("toggle_catalogue_masquer_horsTaxe", (data) => {
+            if (!data.toggle_catalogue_masquer_horsTaxe) return; // Ne rien faire si désactivé
+            console.log("🔄 Masquage hors taxe du catalogue");
+
+            document.querySelectorAll("[data-column-id='final_price_tax_excluded']").forEach((el) => {
+                el.style.display = "none";
+            });
+
+            const elements = document.querySelectorAll(".column-final_price_tax_excluded");
+            elements.forEach((el) => {
+                el.style.display = "none";
+            });
+        });
+
 
     } catch (error) {
-        console.error("Erreur lors de l'ajout des boutons de copie dans le catalogue :", error);
+        console.error("Erreur lors de l'ajout des boutons/actions dans le catalogue :", error);
     }
 }
 
@@ -123,10 +135,10 @@ function previewBoutons() {
 
 
 // MutationObserver pour suivre les changements du DOM
-const observer = new MutationObserver(ajouterCopyBoutons);
+const observer = new MutationObserver(catalogActions);
 observer.observe(document.body, { childList: true, subtree: true });
 
 
 // Exécution initiale
-ajouterCopyBoutons();
+catalogActions();
 previewBoutons();
