@@ -11,7 +11,7 @@ Permet de corriger les problèmes d'interface sur le site web.
 - Télécharger le github au format ZIP
 - Décompresser le fichier ZIP
 - Ouvrir Google Chrome
-- Accéder à la page des extensions de Chrome : `chrome://extensions/`
+- Accéder à la page des extensions de Chrome : [chrome://extensions/](chrome://extensions/)
 - Activer le mode développeur en haut à droite
 - Cliquer sur "Charger l'extension non empaquetée"
 - Sélectionner le dossier décompressé du projet
