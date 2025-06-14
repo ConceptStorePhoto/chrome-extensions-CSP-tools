@@ -5,6 +5,7 @@ export async function checkForUpdate() {
     try {
         console.log("🔎 Vérification de mise à jour en cours...");
         const res = await fetch(GITHUB_MANIFEST_URL);
+        console.log("HTTP status fetch manifest:", res.status);
         if (!res.ok) {
             console.error(`❌ Erreur HTTP lors du fetch du manifest: ${res.status}`);
             throw new Error(`Erreur HTTP ${res.status}`);

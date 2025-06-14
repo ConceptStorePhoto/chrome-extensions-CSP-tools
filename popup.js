@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (updateInfo.updateAvailable) {
         updateMsg.innerHTML = `
-            🚀 <strong>Mise à jour disponible</strong> (v${updateInfo.remoteVersion})<br>
+            🚀 <strong>Mise à jour disponible</strong> (v${updateInfo.remoteVersion})
             <a href="${updateInfo.repoURL}" target="_blank" rel="noopener">Télécharger</a>
         `;
         updateMsg.style.display = "block";
