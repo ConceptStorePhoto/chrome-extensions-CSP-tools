@@ -74,9 +74,31 @@ function ajouterCopyBoutons() {
             });
 
         });
-        
+
+        chrome.storage.sync.get("toggle_catalogue_preview_buttons", (data) => {
+            if (!data.toggle_catalogue_preview_buttons) return; // Ne rien faire si désactivé
+            console.log("🔄 Ajout des boutons de prévisualisation au catalogue");
+
+            const elements = document.querySelectorAll(".grid-prévisualiser-row-link");
+            elements.forEach((el) => {
+                // Évite d'ajouter le bouton plusieurs fois
+                if (el.parentNode.parentNode.querySelector("a.preview-btn")) return;
+
+                //copier le bouton sélectioner dans l'élément parent
+                let element = document.createElement("a");
+                element.href = el.href;
+                element.className = "preview-btn";
+                element.target = "_blank";
+                element.innerHTML = `<i class="material-icons">visibility</i>`;
+                el.parentNode.parentNode.appendChild(element);
+            });
+
+        });
+
+
+
     } catch (error) {
-        console.error("Erreur lors de l'ajout des boutons de copie :", error);
+        console.error("Erreur lors de l'ajout des boutons de copie dans le catalogue :", error);
     }
 }
 
