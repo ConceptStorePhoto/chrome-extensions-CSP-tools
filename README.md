@@ -1,6 +1,22 @@
-# Extention Chrome pour ConceptStorePhoto
+# CSP tools
 
-Permet de corriger des problèmes d'interface sur le site web.
+Extension Chrome pour ConceptStorePhoto
+
+Permet de corriger les problèmes d'interface sur le site web.
+
+
+
+# Installation
+
+- Télécharger le github au format ZIP
+- Décompresser le fichier ZIP
+- Ouvrir Google Chrome
+- Accéder à la page des extensions de Chrome : `chrome://extensions/`
+- Activer le mode développeur en haut à droite
+- Cliquer sur "Charger l'extension non empaquetée"
+- Sélectionner le dossier décompressé du projet
+- L'extension devrait apparaître dans la liste des extensions installées
+- Vous pouvez maintenant utiliser l'extension sur le site ConceptStorePhoto
 
 
 <br>

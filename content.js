@@ -55,7 +55,7 @@ function ajouterCopyBoutons() {
                 const bouton = document.createElement("button");
                 bouton.innerText = "📋";
                 bouton.className = "copier-btn";
-                bouton.style.marginLeft = "8px";
+                bouton.style.marginRight = "8px";
                 bouton.style.borderRadius = "10px";
                 bouton.style.border = "none";
                 bouton.style.outline = "none";
@@ -70,7 +70,7 @@ function ajouterCopyBoutons() {
                     });
                 };
 
-                el.appendChild(bouton);
+                el.prepend(bouton);
             });
 
         });
