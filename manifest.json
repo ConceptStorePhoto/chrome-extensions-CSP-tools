@@ -32,7 +32,10 @@
     "clipboardWrite",
     "storage",
     "notifications",
-    "tabs"
+    "tabs",
+    "contextMenus",
+    "activeTab",
+    "scripting"
   ],
   "host_permissions": [
     "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/*",
