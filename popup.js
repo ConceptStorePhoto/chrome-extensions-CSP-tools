@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Vérification des mises à jour
-import { checkForUpdate } from './utils.js';
+import { checkForUpdate } from './update-check.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const updateMsg = document.getElementById("update-message");
@@ -53,4 +53,3 @@ document.addEventListener("DOMContentLoaded", async () => {
         updateMsg.style.display = "block";
     }
 });
-
