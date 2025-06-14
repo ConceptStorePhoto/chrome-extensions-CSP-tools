@@ -36,6 +36,7 @@
 
   h3 {
     margin-top: 0;
+    font-size: 16px;
   }
 
   p {
@@ -61,6 +62,7 @@
     cursor: pointer;
     padding: 10px 20px;
     margin-bottom: 10px;
+    font-size: 14px;
   }
 
   .button:hover {
@@ -74,38 +76,114 @@
     border-radius: 8px;
     margin-bottom: 20px;
   }
+
+  /*************** BOUTON Switch ***************/
+  .divSliderButton {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  /* The switch - the box around the slider */
+  .switchButton {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    min-width: 40px;
+    height: 22px;
+    margin-right: 10px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switchButton input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: gray;
+    transition: 0.4s;
+  }
+
+  /* point blanc*/
+  .slider::before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+  }
+
+  input:checked+.slider {
+    background-color: var(--bleu);
+  }
+
+  input:checked+.slider:before {
+    transform: translateX(18px);
+  }
+
+  /*****************************/
 </style>
 
 <body>
   <div>
     <h1>CSP tools</h1>
-    <p>Pour corriger les problèmes d'interface du site web</p>
+    <p>Pour corriger les problèmes d'interface du site web PrestaShop</p>
   </div>
 
   <div class="conteneur">
     <h3>Catalogue produit</h3>
-    <div>
-      <label>
-        <input type="checkbox" class="toggle-button" id="toggle_copy_buttons" />
-        Boutons "copier" le code <b>AICM</b> 
+
+    <div class="divSliderButton">
+      <label class="switchButton">
+        <input type="checkbox" class="toggle-button" id="toggle_copy_buttons">
+        <span class="slider round"></span>
       </label>
+      <span>Boutons "copier" le code <b>AICM</b></span>
     </div>
-    <div>
-      <label>
-        <input type="checkbox" class="toggle-button" id="toggle_copy_name_buttons" />
-        Boutons "copier" le <b>Nom</b>
+
+    <div class="divSliderButton">
+      <label class="switchButton">
+        <input type="checkbox" class="toggle-button" id="toggle_copy_name_buttons">
+        <span class="slider round"></span>
       </label>
+      <span>Boutons "copier" le <b>Nom</b></span>
     </div>
+
   </div>
 
   <div class="conteneur">
     <h3>Fiche produit</h3>
-    <div>
-      <label>
-        <input type="checkbox" class="toggle-button" id="toggle_preview_buttons" />
-        Racourcis vers la prévisualisation des produits
+
+    <div class="divSliderButton">
+      <label class="switchButton">
+        <input type="checkbox" class="toggle-button" id="toggle_preview_buttons">
+        <span class="slider round"></span>
       </label>
+      <span> Racourcis vers la prévisualisation des produits</span>
     </div>
+
   </div>
 
 
