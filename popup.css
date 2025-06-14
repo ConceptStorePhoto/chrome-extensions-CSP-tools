@@ -18,6 +18,11 @@
      border-radius: 8;
  }
 
+ #toolsCSP{
+        display: flex;
+        flex-direction: column;
+ }
+
  h1 {
      text-align: center;
      color: var(--bleu);

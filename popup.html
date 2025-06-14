@@ -10,67 +10,70 @@
 </head>
 
 <body>
-  <div>
-    <h1>CSP tools</h1>
-    <p>Pour corriger les problèmes d'interface du site web PrestaShop</p>
+  <h1 style="margin-top: 0;">CSP tools</h1>
+    <p style="margin-top: 0; display: none;" id="infoMessage">Info</p>
+
+    <div id="toolsCSP" style="display: none;">
+    <p style="margin-top: 0;">Pour corriger les problèmes d'interface du site web <b>PrestaShop</b></p>
+
+    <div class="conteneur">
+      <h3>Catalogue produit</h3>
+
+      <div class="divSliderButton">
+        <label class="switchButton">
+          <input type="checkbox" class="toggle-button" id="toggle_copy_buttons">
+          <span class="slider round"></span>
+        </label>
+        <span>Boutons "copier" le code <b>AICM</b></span>
+      </div>
+
+      <div class="divSliderButton">
+        <label class="switchButton">
+          <input type="checkbox" class="toggle-button" id="toggle_copy_name_buttons">
+          <span class="slider round"></span>
+        </label>
+        <span>Boutons "copier" le <b>Nom</b></span>
+      </div>
+
+      <div class="divSliderButton">
+        <label class="switchButton">
+          <input type="checkbox" class="toggle-button" id="toggle_catalogue_preview_buttons">
+          <span class="slider round"></span>
+        </label>
+        <span>Boutons prévisualisation</span>
+      </div>
+
+      <div class="divSliderButton">
+        <label class="switchButton">
+          <input type="checkbox" class="toggle-button" id="toggle_catalogue_masquer_horsTaxe">
+          <span class="slider round"></span>
+        </label>
+        <span>Masquer colonne hors taxe</span>
+      </div>
+
+    </div>
+
+    <div class="conteneur">
+      <h3>Fiche produit</h3>
+
+      <div class="divSliderButton">
+        <label class="switchButton">
+          <input type="checkbox" class="toggle-button" id="toggle_preview_buttons">
+          <span class="slider round"></span>
+        </label>
+        <span> Racourcis vers la prévisu des produits</span>
+      </div>
+
+    </div>
+
+    <button class="button" id="refresh">🔁 Recharger la page pour appliquer</button>
   </div>
-
-  <div class="conteneur">
-    <h3>Catalogue produit</h3>
-
-    <div class="divSliderButton">
-      <label class="switchButton">
-        <input type="checkbox" class="toggle-button" id="toggle_copy_buttons">
-        <span class="slider round"></span>
-      </label>
-      <span>Boutons "copier" le code <b>AICM</b></span>
-    </div>
-
-    <div class="divSliderButton">
-      <label class="switchButton">
-        <input type="checkbox" class="toggle-button" id="toggle_copy_name_buttons">
-        <span class="slider round"></span>
-      </label>
-      <span>Boutons "copier" le <b>Nom</b></span>
-    </div>
-
-    <div class="divSliderButton">
-      <label class="switchButton">
-        <input type="checkbox" class="toggle-button" id="toggle_catalogue_preview_buttons">
-        <span class="slider round"></span>
-      </label>
-      <span>Boutons prévisualisation</span>
-    </div>
-
-    <div class="divSliderButton">
-      <label class="switchButton">
-        <input type="checkbox" class="toggle-button" id="toggle_catalogue_masquer_horsTaxe">
-        <span class="slider round"></span>
-      </label>
-      <span>Masquer colonne hors taxe</span>
-    </div>
-
-  </div>
-
-  <div class="conteneur">
-    <h3>Fiche produit</h3>
-
-    <div class="divSliderButton">
-      <label class="switchButton">
-        <input type="checkbox" class="toggle-button" id="toggle_preview_buttons">
-        <span class="slider round"></span>
-      </label>
-      <span> Racourcis vers la prévisu des produits</span>
-    </div>
-
-  </div>
-
-
-  <button class="button" id="refresh">🔁 Recharger la page pour appliquer</button>
 
 </body>
 <footer>
-  <div id="update-message" style="display:none; padding: 8px; background:#eef; border:1px solid #99a2cc; border-radius:4px; margin: 10px 0;"></div>
+  <div id="update-message"
+    style="display:none; padding: 8px; background:#eef; border:1px solid #99a2cc; border-radius:4px; margin: 10px 0;">
+  </div>
   <p style="text-align: center; font-size: 12px; color: #666;">
     Extension développé par <a href="https://github.com/ConceptStorePhoto/chrome-extensions-CSP"
       target="_blank">QuentinPerou</a> pour <a href="https://conceptstorephoto.fr" target="_blank"

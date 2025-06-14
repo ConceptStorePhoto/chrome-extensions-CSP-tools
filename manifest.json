@@ -31,7 +31,8 @@
   "permissions": [
     "clipboardWrite",
     "storage",
-    "notifications"
+    "notifications",
+    "tabs"
   ],
   "host_permissions": [
     "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/*",

@@ -44,3 +44,5 @@ https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples/
 <br>
 
 Dev par [QuentinPerou](https://github.com/quentinperou)
+
+Merci ChatGPT pour l'aide à la création de l'extension ^^
