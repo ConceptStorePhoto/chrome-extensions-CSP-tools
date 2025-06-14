@@ -29,6 +29,9 @@ Getting Started With Google Chrome Extensions (Hello World)
 This example demonstrates how to create a simple "Hello World" Chrome Extension.
 For more details, visit the [official tutorial](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world).
 
+Doc pour les commandes de l'extension :
+https://developer.chrome.com/docs/extensions/reference/api/commands?hl=fr
+https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples/default_command_override
 
 <br> 
 
