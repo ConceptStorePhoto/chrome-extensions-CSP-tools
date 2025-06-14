@@ -29,24 +29,42 @@ function showUpdateNotification(version, url) {
 
 // Quand l'extension démarre
 chrome.runtime.onInstalled.addListener(() => {
-    // Création du menu contextuel
-    chrome.contextMenus.create({
-        id: "copier-ref", // identifiant unique
-        title: "Copier le texte",
-        contexts: ["selection", "link"], // selon ce que tu veux viser
-        documentUrlPatterns: [
-            "*://concept-store-photo.dmu.sarl/*"
-        ] // uniquement sur ton site
+    chrome.contextMenus.removeAll(() => {
+        // Création du menu contextuel
+        chrome.contextMenus.create({
+            id: "copier-ref", // identifiant unique
+            title: "Copier le texte",
+            contexts: ["selection", "link"], // selon ce que tu veux viser
+            documentUrlPatterns: [
+                "*://concept-store-photo.dmu.sarl/*"
+            ] // uniquement sur ton site
+        });
+        chrome.contextMenus.create({
+            id: "recherche-missNumerique", // identifiant unique
+            title: "Rechercher sur Miss Numérique",
+            contexts: ["selection", "link"],
+            documentUrlPatterns: [
+                "*://concept-store-photo.dmu.sarl/*"
+            ]
+        });
     });
 });
 
 // Action quand l’utilisateur clique sur l’entrée du menu
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === "copier-ref") {
-        chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            function: copierReferenceDepuisPage
-        });
+    switch (info.menuItemId) {
+        case "copier-ref":
+            chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                function: copierReferenceDepuisPage
+            });
+            break;
+        case "recherche-missNumerique":
+            chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                function: rechercherSurMissNumerique
+            });
+            break;
     }
 });
 
@@ -67,5 +85,27 @@ function copierReferenceDepuisPage() {
         });
     } else {
         alert("Aucun texte trouvé !");
+    }
+}
+
+
+function rechercherSurMissNumerique() {
+    const selection = window.getSelection().toString().trim();
+    const element = document.activeElement;
+
+    if (selection) {
+        const url = `https://www.missnumerique.com/#75e9/embedded/m=and&q=${encodeURIComponent(selection)}`;
+        window.open(url, '_blank');
+    }
+    else if (element) {
+        const texte = element.innerText.trim();
+        if (texte) {
+            const url = `https://www.missnumerique.com/#75e9/embedded/m=and&q=${encodeURIComponent(texte)}`;
+            window.open(url, '_blank');
+        } else {
+            alert("Aucun texte trouvé dans l'élément cliqué.");
+        }
+    } else {
+        alert("Veuillez sélectionner un texte à rechercher.");
     }
 }
