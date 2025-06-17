@@ -20,7 +20,6 @@
     {
       "matches": [
         "https://concept-store-photo.dmu.sarl/logcncin/index.php/sell/catalog/products-v2/*",
-        "https://conceptstorephoto.fr/",
         "https://concept-store-photo.dmu.sarl/*"
       ],
       "js": [

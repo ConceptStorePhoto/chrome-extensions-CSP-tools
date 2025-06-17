@@ -29,8 +29,27 @@ function showUpdateNotification(version, url) {
 
 // Quand l'extension démarre
 chrome.runtime.onInstalled.addListener(() => {
+    console.log("🔄 Extension installée");
+
+    // définition des régalage par défaut si non déjà définis
+    chrome.storage.sync.get(["toggle_copy_buttons", "toggle_catalogue_preview_buttons", "toggle_preview_buttons", "toggle_adminEdit_buttons"], (data) => {
+        if (data.toggle_copy_buttons === undefined) {
+            chrome.storage.sync.set({ toggle_copy_buttons: true });
+        }
+        if (data.toggle_catalogue_preview_buttons === undefined) {
+            chrome.storage.sync.set({ toggle_catalogue_preview_buttons: true });
+        }
+        if (data.toggle_preview_buttons === undefined) {
+            chrome.storage.sync.set({ toggle_preview_buttons: true });
+        }
+        if (data.toggle_adminEdit_buttons === undefined) {
+            chrome.storage.sync.set({ toggle_adminEdit_buttons: true });
+        }
+    });
+
+    // Création du menu contextuel
+    console.log("🔄 Création du menu contextuel");
     chrome.contextMenus.removeAll(() => {
-        // Création du menu contextuel
         chrome.contextMenus.create({
             id: "copier-ref", // identifiant unique
             title: "Copier le texte",
@@ -48,6 +67,7 @@ chrome.runtime.onInstalled.addListener(() => {
             ]
         });
     });
+
 });
 
 // Action quand l’utilisateur clique sur l’entrée du menu
@@ -68,7 +88,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     }
 });
 
-// Cette fonction sera injectée dans la page
+// Fonction pour copier le texte sélectionné ou le texte de l'élément cliqué
 function copierReferenceDepuisPage() {
     //copie le texte sélectionné ou le texte de l'élément cliqué
     const selection = window.getSelection().toString().trim();

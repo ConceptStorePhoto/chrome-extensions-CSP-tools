@@ -196,7 +196,4 @@ function addAdminLinkButton() {
     button.style.zIndex = "9999";
 
     document.body.appendChild(button);
-    // document.querySelector("#wrapper").prepend(button);
-    // document.querySelector("nav.breadcrumb").appendChild(button);
-    // document.querySelector("div.product-prices").appendChild(button);
 }
