@@ -74,22 +74,40 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get("toggle_catalogue_preview_buttons", (data) => {
-            if (!data.toggle_catalogue_preview_buttons) return; // Ne rien faire si désactivé
-            console.log("🔄 Ajout des boutons de prévisualisation au catalogue");
+        // chrome.storage.sync.get("toggle_catalogue_preview_buttons", (data) => {
+        //     if (!data.toggle_catalogue_preview_buttons) return; // Ne rien faire si désactivé
+        //     console.log("🔄 Ajout des boutons de prévisualisation au catalogue");
 
-            const elements = document.querySelectorAll(".grid-prévisualiser-row-link");
+        //     const elements = document.querySelectorAll(".grid-prévisualiser-row-link");
+        //     elements.forEach((el) => {
+        //         // Évite d'ajouter le bouton plusieurs fois
+        //         if (el.parentNode.parentNode.querySelector("a.preview-btn")) return;
+
+        //         //copier le bouton sélectioner dans l'élément parent
+        //         let element = document.createElement("a");
+        //         element.href = el.href;
+        //         element.className = "preview-btn";
+        //         element.target = "_blank";
+        //         element.innerHTML = `<i class="material-icons">visibility</i>`;
+        //         el.parentNode.parentNode.appendChild(element);
+        //     });
+        // });
+
+        chrome.storage.sync.get("toggle_catalog_ungroup_action", (data) => {
+            if (!data.toggle_catalog_ungroup_action) return; // Ne rien faire si désactivé
+            console.log("🔄 Dégroupage des boutons d'action du catalogue");
+
+            const elements = document.querySelectorAll(".btn-group .dropdown-menu");
             elements.forEach((el) => {
-                // Évite d'ajouter le bouton plusieurs fois
-                if (el.parentNode.parentNode.querySelector("a.preview-btn")) return;
-
-                //copier le bouton sélectioner dans l'élément parent
-                let element = document.createElement("a");
-                element.href = el.href;
-                element.className = "preview-btn";
-                element.target = "_blank";
-                element.innerHTML = `<i class="material-icons">visibility</i>`;
-                el.parentNode.parentNode.appendChild(element);
+                //pour chaque élément du menu déroulant, on déplace les liens dans l'élément parent
+                el.querySelectorAll("a").forEach((link) => {
+                    let icon = link.querySelector('i');
+                    link.textContent = "";
+                    link.appendChild(icon);
+                    link.parentNode.parentNode.appendChild(link);
+                });
+                el.parentNode.parentNode.querySelector('a.dropdown-toggle').style.display = "none"; // Supprimer le bouton de menu déroulant
+                el.remove(); // Supprimer le menu déroulant
             });
         });
 

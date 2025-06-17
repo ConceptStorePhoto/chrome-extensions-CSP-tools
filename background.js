@@ -37,7 +37,7 @@ chrome.runtime.onInstalled.addListener(() => {
             chrome.storage.sync.set({ toggle_copy_buttons: true });
         }
         if (data.toggle_catalogue_preview_buttons === undefined) {
-            chrome.storage.sync.set({ toggle_catalogue_preview_buttons: true });
+            // chrome.storage.sync.set({ toggle_catalogue_preview_buttons: true });
         }
         if (data.toggle_preview_buttons === undefined) {
             chrome.storage.sync.set({ toggle_preview_buttons: true });
