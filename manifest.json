@@ -1,7 +1,7 @@
 {
   "name": "CSP tools",
   "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto - DEV par QuentinPerou",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "manifest_version": 3,
   "action": {
     "default_popup": "popup.html",
@@ -20,10 +20,21 @@
     {
       "matches": [
         "https://concept-store-photo.dmu.sarl/logcncin/index.php/sell/catalog/products-v2/*",
-        "https://concept-store-photo.dmu.sarl/*"
+        "https://concept-store-photo.dmu.sarl/logcncin/*"
       ],
       "js": [
-        "content.js"
+        "content-admin.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://concept-store-photo.dmu.sarl/*"
+      ],
+      "exclude_matches": [
+        "https://concept-store-photo.dmu.sarl/logcncin/*"
+      ],
+      "js": [
+        "content-client.js"
       ]
     }
   ],

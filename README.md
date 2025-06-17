@@ -5,9 +5,9 @@ Extension Chrome qui permet de corriger les problèmes d'interface sur le site w
 ## Fonctionnalités
 - **Correction des problèmes d'interface** : Permet de corriger les problèmes d'interface sur le site web.
 - **Commandes personnalisées** : Permet de personnaliser les fonctions de l'extension pour les adapter à vos besoins.
-- **Raccourcis clavier** : Permet d'utiliser des raccourcis clavier pour accéder rapidement aux fonctionnalités de l'extension. (PAS ENCORE IMPLEMENTE)
-- **Menu contextuel** : Permet d'accéder aux fonctionnalités de l'extension depuis le menu contextuel du navigateur.
 - **Notifications** : Affiche des notifications pour informer l'utilisateur des mises à jour de l'extension.
+- **Menu contextuel** : Permet d'accéder aux fonctionnalités de l'extension depuis le menu contextuel du navigateur. (clique droit)
+- **Raccourcis clavier** : Permet d'utiliser des raccourcis clavier pour accéder rapidement aux fonctionnalités de l'extension. (PAS ENCORE IMPLEMENTE)
 
 
 ## Installation
