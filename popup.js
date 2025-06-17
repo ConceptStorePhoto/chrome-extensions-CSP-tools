@@ -43,7 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Mise à jour de l'état 
         button.addEventListener('change', () => {
-            chrome.storage.sync.set({ [button.id]: button.checked });
+            chrome.storage.sync.set({ [button.id]: button.checked }, () => {
+                chrome.runtime.sendMessage({ type: "updateContextMenu" });
+            });
         });
 
     });

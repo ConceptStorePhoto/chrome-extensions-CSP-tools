@@ -47,28 +47,50 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     });
 
+    updateContextMenu(); // Met à jour le menu contextuel au démarrage
+
+});
+
+function updateContextMenu() {
     // Création du menu contextuel
     console.log("🔄 Création du menu contextuel");
     chrome.contextMenus.removeAll(() => {
-        chrome.contextMenus.create({
-            id: "copier-ref", // identifiant unique
-            title: "Copier le texte",
-            contexts: ["selection", "link"], // selon ce que tu veux viser
-            documentUrlPatterns: [
-                "*://concept-store-photo.dmu.sarl/*",
-                "*://conceptstorephoto.fr/*"
-            ] // uniquement sur ton site
-        });
-        chrome.contextMenus.create({
-            id: "recherche-missNumerique", // identifiant unique
-            title: "Rechercher sur Miss Numérique",
-            contexts: ["selection", "link"],
-            documentUrlPatterns: [
-                "*://concept-store-photo.dmu.sarl/*"
-            ]
-        });
-    });
 
+        chrome.storage.sync.get("toggle_copy_text", (data) => {
+            if (!data.toggle_copy_text) return; // Ne rien faire si désactivé
+
+            chrome.contextMenus.create({
+                id: "copier-ref", // identifiant unique
+                title: "Copier le texte",
+                contexts: ["selection", "link"], // selon ce que tu veux viser
+                documentUrlPatterns: [
+                    "*://concept-store-photo.dmu.sarl/*",
+                    "*://conceptstorephoto.fr/*"
+                ] // uniquement sur ton site
+            });
+        });
+
+        chrome.storage.sync.get("toggle_search_miss_num", (data) => {
+            if (!data.toggle_search_miss_num) return; // Ne rien faire si désactivé
+
+            chrome.contextMenus.create({
+                id: "recherche-missNumerique", // identifiant unique
+                title: "Rechercher sur Miss Numérique",
+                contexts: ["selection", "link"],
+                documentUrlPatterns: [
+                    "*://concept-store-photo.dmu.sarl/*"
+                ]
+            });
+        });
+
+    });
+}
+
+// Réagir aux messages depuis la popup
+chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.type === "updateContextMenu") {
+        updateContextMenu();
+    }
 });
 
 // Action quand l’utilisateur clique sur l’entrée du menu
