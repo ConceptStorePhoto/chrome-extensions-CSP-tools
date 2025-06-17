@@ -32,9 +32,9 @@ chrome.runtime.onInstalled.addListener(() => {
     console.log("🔄 Extension installée");
 
     // définition des régalage par défaut si non déjà définis
-    chrome.storage.sync.get(["toggle_copy_buttons", "toggle_catalogue_preview_buttons", "toggle_preview_buttons", "toggle_adminEdit_buttons"], (data) => {
-        if (data.toggle_copy_buttons === undefined) {
-            chrome.storage.sync.set({ toggle_copy_buttons: true });
+    chrome.storage.sync.get(["toggle_copy_aicm_buttons", "toggle_catalogue_preview_buttons", "toggle_preview_buttons", "toggle_adminEdit_buttons"], (data) => {
+        if (data.toggle_copy_aicm_buttons === undefined) {
+            chrome.storage.sync.set({ toggle_copy_aicm_buttons: true });
         }
         if (data.toggle_catalogue_preview_buttons === undefined) {
             // chrome.storage.sync.set({ toggle_catalogue_preview_buttons: true });
@@ -55,7 +55,8 @@ chrome.runtime.onInstalled.addListener(() => {
             title: "Copier le texte",
             contexts: ["selection", "link"], // selon ce que tu veux viser
             documentUrlPatterns: [
-                "*://concept-store-photo.dmu.sarl/*"
+                "*://concept-store-photo.dmu.sarl/*",
+                "*://conceptstorephoto.fr/*"
             ] // uniquement sur ton site
         });
         chrome.contextMenus.create({

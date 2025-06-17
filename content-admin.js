@@ -2,9 +2,9 @@ console.log("✅ Script injecté !  content-admin.js");
 
 function catalogActions() {
     try {
-        chrome.storage.sync.get("toggle_copy_buttons", (data) => {
-            if (!data.toggle_copy_buttons) return; // Ne rien faire si désactivé
-            console.log("🔄 Ajout des boutons de copie");
+        chrome.storage.sync.get("toggle_copy_aicm_buttons", (data) => {
+            if (!data.toggle_copy_aicm_buttons) return; // Ne rien faire si désactivé
+            console.log("🔄 Ajout des boutons de copie du code AICM");
 
             const elements = document.querySelectorAll(".column-reference");
             elements.forEach((el) => {
