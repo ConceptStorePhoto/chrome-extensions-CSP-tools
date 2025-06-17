@@ -31,13 +31,13 @@ function showUpdateNotification(version, url) {
 chrome.runtime.onInstalled.addListener(() => {
     console.log("🔄 Extension installée");
 
-    // définition des régalage par défaut si non déjà définis
-    chrome.storage.sync.get(["toggle_copy_aicm_buttons", "toggle_catalogue_preview_buttons", "toggle_preview_buttons", "toggle_adminEdit_buttons"], (data) => {
+    // définition des réglages par défaut si non déjà définis
+    chrome.storage.sync.get(["toggle_copy_aicm_buttons", "toggle_copy_text", "toggle_preview_buttons", "toggle_adminEdit_buttons"], (data) => {
         if (data.toggle_copy_aicm_buttons === undefined) {
             chrome.storage.sync.set({ toggle_copy_aicm_buttons: true });
         }
-        if (data.toggle_catalogue_preview_buttons === undefined) {
-            // chrome.storage.sync.set({ toggle_catalogue_preview_buttons: true });
+        if (data.toggle_copy_text === undefined) {
+            chrome.storage.sync.set({ toggle_copy_text: true });
         }
         if (data.toggle_preview_buttons === undefined) {
             chrome.storage.sync.set({ toggle_preview_buttons: true });
