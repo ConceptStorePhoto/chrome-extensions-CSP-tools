@@ -8,7 +8,7 @@
      --background-color-2: #fff;
  }
 
- /* Mise en forme barre de scroll */
+ /*************** Mise en forme barre de scroll ***************/
  html::-webkit-scrollbar {
      width: 8px;
      /* background-color: #f4f4f4; */
@@ -27,7 +27,7 @@
      background-color: #f4f4f4;
  } */
 
- /* Global styles */
+ /*************** Global styles ***************/
 
  html body {
      font-family: Arial, sans-serif;
@@ -160,7 +160,7 @@
      transform: translateX(18px);
  }
 
- /*****************************/
+ /*************** Bouton fixé au scroll ***************/
 
  #refreshContainer.fixed {
      position: fixed;

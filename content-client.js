@@ -23,7 +23,6 @@ chrome.storage.sync.get("token_admin", (data) => {
 
 //ajout un bouton sur les pages produit coté client pour rediriger vers le produit dans l'admin
 function addAdminLinkButton() {
-    //récupération de l'id dans l'url : exemple"https://concept-store-photo.dmu.sarl/39851-mini-max-creator-kit.html"
     const productId = window.location.pathname.split("/")[1].split("-")[0];
     console.log("➡️ ID produit :", productId);
     if (!productId) return; // Si pas d'ID de produit, on ne fait rien

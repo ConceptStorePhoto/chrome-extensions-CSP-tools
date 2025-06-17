@@ -165,12 +165,7 @@ function productActions() {
 }
 
 
-
-
 /////// Exécution initiale
-
-// catalogActions();
-// productActions();
 
 // déclenchement des actions sur les pages correspondantes
 console.log("🔄 Vérification du type de page :", window.location.pathname.split("/"));
@@ -178,7 +173,7 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
     console.log("✅ Page catalogue détectée, ajout des actions...");
     catalogActions();
 
-    // MutationObserver pour suivre les changements du DOM
+    // MutationObserver pour suivre les changements du DOM => je crois que ce n'est pas nécessaire ici
     // const observer = new MutationObserver(catalogActions);
     // observer.observe(document.body, { childList: true, subtree: true });
 }
@@ -187,13 +182,9 @@ else if (window.location.pathname.split("/")[window.location.pathname.split("/")
     productActions();
 }
 
-///////////////
-
-let token = "";
-// récupération du tocken dans l'url du site si page admin
-// console.log("🔄 Récupération du token depuis l'URL ", window.location);
+// récupération du token dans l'url du site si page admin
 if (window.location.search.includes('token=')) {
-    token = window.location.search.split('=')[window.location.search.split('=').length - 1]; // récupère le dernier paramètre de l'URL
+    let token = window.location.search.split('=')[window.location.search.split('=').length - 1]; // récupère le dernier paramètre de l'URL
     console.log("🔄 Token récupéré depuis l'URL :", token);
     chrome.storage.sync.set({ token_admin: token }); // stock la valeur actuelle
 }
