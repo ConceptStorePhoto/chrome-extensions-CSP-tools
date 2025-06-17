@@ -59,6 +59,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Observer pour rendre le bouton "Recharger" fixe en bas de la popup
+    const refreshContainer = document.getElementById("refreshContainer");
+    const observer = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) {
+            refreshContainer.classList.add('fixed');
+        } else {
+            refreshContainer.classList.remove('fixed');
+        }
+    });
+    observer.observe(document.getElementById("sentinel_refresh"));
 
 });
 

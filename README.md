@@ -1,6 +1,6 @@
 # CSP tools
 
-Extension Chrome qui permet de corriger les problèmes d'interface sur le site web.
+Extension Chrome qui permet de corriger certains problèmes d'interface sur le site web.
 
 ## Fonctionnalités
 - **Correction des problèmes d'interface** : Permet de corriger les problèmes d'interface sur le site web.
@@ -22,6 +22,8 @@ Extension Chrome qui permet de corriger les problèmes d'interface sur le site w
 - Sélectionner le dossier décompressé précédemment
 - L'extension devrait apparaître dans la liste des extensions installées
 - Vous pouvez maintenant utiliser l'extension
+- Penser à l'épingler à la barre d'outils, pour un accès rapide  
+
 
 ## Mise à jour
 Pour mettre à jour l'extension, il suffit de télécharger à nouveau le fichier ZIP et de remplacer les fichiers précédemment installés par les nouveaux fichiers.

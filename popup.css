@@ -4,6 +4,8 @@
      --bleu: #045163;
      --bleu-hover: #033f4d;
      --text-color-1: #333;
+     --background-color-1: #f4f4f4;
+     --background-color-2: #fff;
  }
 
  /* Mise en forme barre de scroll */
@@ -29,7 +31,7 @@
 
  html body {
      font-family: Arial, sans-serif;
-     background-color: #f4f4f4;
+     background-color: var(--background-color-1);
      color: var(--text-color-1);
      margin: 0;
      padding: 20px;
@@ -86,7 +88,7 @@
 
  .conteneur {
      width: 100%;
-     background-color: #fff;
+     background-color: var(--background-color-2);
      padding: 20px;
      border-radius: 8px;
      margin-bottom: 20px;
@@ -159,3 +161,14 @@
  }
 
  /*****************************/
+
+ #refreshContainer.fixed {
+     position: fixed;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     padding: 10px 20px 0 20px;
+     background-color: var(--background-color-1);
+     z-index: 1000;
+     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+ }
