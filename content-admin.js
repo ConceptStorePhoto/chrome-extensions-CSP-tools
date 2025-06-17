@@ -12,7 +12,7 @@ function catalogActions() {
                 if (el.querySelector("button.copier-btn")) return;
 
                 // Vérifie que l'élément a du texte
-                if (!el.innerText || el.innerText.trim() === "") return;
+                if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM")) return;
 
                 let texte = el.innerText;
 
@@ -36,6 +36,20 @@ function catalogActions() {
 
                 el.appendChild(bouton);
             });
+        });
+
+        chrome.storage.sync.get("toggle_no_aicm_warning", (data) => {
+            if (!data.toggle_no_aicm_warning) return; // Ne rien faire si désactivé
+
+            const elements = document.querySelectorAll(".column-reference");
+            elements.forEach((el) => {
+                // Vérifie que l'élément a du texte
+                if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM")) {
+                    el.querySelector("a").innerText = "Aucun code AICM";
+                    el.querySelector("a").setAttribute("style", "color: red !important"); // Met en rouge si pas de code
+                }
+            });
+
         });
 
         chrome.storage.sync.get("toggle_copy_name_buttons", (data) => {
