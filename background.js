@@ -96,6 +96,32 @@ function updateContextMenu() {
             });
         });
 
+        chrome.storage.sync.get("toggle_search_panajou", (data) => {
+            if (!data.toggle_search_panajou) return; // Ne rien faire si désactivé
+
+            chrome.contextMenus.create({
+                id: "recherche-panajou", // identifiant unique
+                title: "🔎 Rechercher sur Panajou",
+                contexts: ["selection", "link"],
+                documentUrlPatterns: [
+                    "*://concept-store-photo.dmu.sarl/*"
+                ]
+            });
+        });
+
+        chrome.storage.sync.get("toggle_search_ipln", (data) => {
+            if (!data.toggle_search_ipln) return; // Ne rien faire si désactivé
+
+            chrome.contextMenus.create({
+                id: "recherche-ipln", // identifiant unique
+                title: "🔎 Rechercher sur IPLN",
+                contexts: ["selection", "link"],
+                documentUrlPatterns: [
+                    "*://concept-store-photo.dmu.sarl/*"
+                ]
+            });
+        });
+
     });
 }
 
@@ -116,16 +142,16 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             });
             break;
         case "recherche-missNumerique":
-            chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                function: rechercherSurMissNumerique
-            });
+            injecterRecherche(tab.id, "https://www.missnumerique.com/#75e9/embedded/m=and&q=");
             break;
         case "recherche-idealo":
-            chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                function: rechercherSurIdealo
-            });
+            injecterRecherche(tab.id, "https://www.idealo.fr/prechcat.html?q=");
+            break;
+        case "recherche-panajou":
+            injecterRecherche(tab.id, "https://www.panajou.fr/resultats-recherche-photos-videos?search_query=");
+            break;
+        case "recherche-ipln":
+            injecterRecherche(tab.id, "https://ipln.fr/recherche?controller=search&s=");
             break;
     }
 });
@@ -150,49 +176,24 @@ function copierReferenceDepuisPage() {
     }
 }
 
+function injecterRecherche(tabId, baseURL) {
+    chrome.scripting.executeScript({
+        target: { tabId },
+        func: (baseURL) => {
+            const selection = window.getSelection().toString().trim();
+            const element = document.activeElement;
+            const texte = selection || (element?.innerText?.trim() ?? "");
 
-function rechercherSurMissNumerique() {
-    const selection = window.getSelection().toString().trim();
-    const element = document.activeElement;
-
-    if (selection) {
-        const url = `https://www.missnumerique.com/#75e9/embedded/m=and&q=${encodeURIComponent(selection)}`;
-        window.open(url, '_blank');
-    }
-    else if (element) {
-        const texte = element.innerText.trim();
-        if (texte) {
-            const url = `https://www.missnumerique.com/#75e9/embedded/m=and&q=${encodeURIComponent(texte)}`;
-            window.open(url, '_blank');
-        } else {
-            alert("Aucun texte trouvé dans l'élément cliqué.");
-        }
-    } else {
-        alert("Veuillez sélectionner un texte à rechercher.");
-    }
+            if (texte) {
+                const url = baseURL + encodeURIComponent(texte);
+                window.open(url, '_blank');
+            } else {
+                alert("Aucun texte sélectionné ou trouvé dans l'élément actif.");
+            }
+        },
+        args: [baseURL]
+    });
 }
-
-function rechercherSurIdealo() {
-    const selection = window.getSelection().toString().trim();
-    const element = document.activeElement;
-
-    if (selection) {
-        const url = `https://www.idealo.fr/prechcat.html?q=${encodeURIComponent(selection)}`;
-        window.open(url, '_blank');
-    }
-    else if (element) {
-        const texte = element.innerText.trim();
-        if (texte) {
-            const url = `https://www.idealo.fr/prechcat.html?q=${encodeURIComponent(texte)}`;
-            window.open(url, '_blank');
-        } else {
-            alert("Aucun texte trouvé dans l'élément cliqué.");
-        }
-    } else {
-        alert("Veuillez sélectionner un texte à rechercher.");
-    }
-}
-
 
 //// Gestion des raccourcis clavier
 chrome.commands.onCommand.addListener((command) => {
