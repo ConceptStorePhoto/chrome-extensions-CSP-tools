@@ -152,3 +152,22 @@ function rechercherSurMissNumerique() {
         alert("Veuillez sélectionner un texte à rechercher.");
     }
 }
+
+
+//// Gestion des raccourcis clavier
+chrome.commands.onCommand.addListener((command) => {
+    if (command === "backCatalog") {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs[0]?.id) {
+                chrome.scripting.executeScript({
+                    target: { tabId: tabs[0].id },
+                    func: () => {
+                        // Remplace ici par le sélecteur du bouton
+                        const bouton = document.querySelector('#product_footer_actions_catalog');
+                        if (bouton) bouton.click();
+                    }
+                });
+            }
+        });
+    }
+});

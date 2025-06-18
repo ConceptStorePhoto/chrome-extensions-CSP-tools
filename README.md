@@ -8,6 +8,7 @@ Extension Chrome qui permet de corriger certains problèmes d'interface sur le s
 - **Notifications** : Affiche des notifications pour informer l'utilisateur des mises à jour de l'extension.
 - **Menu contextuel** : Permet d'accéder aux fonctionnalités de l'extension depuis le menu contextuel du navigateur. (clique droit)
 - **Raccourcis clavier** : Permet d'utiliser des raccourcis clavier pour accéder rapidement aux fonctionnalités de l'extension. (PAS ENCORE IMPLEMENTE)
+    - Alt+Shift+Q : Retour au catalogue depuis modification de produit
 
 
 ## Installation

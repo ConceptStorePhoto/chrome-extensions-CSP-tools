@@ -38,6 +38,14 @@
       ]
     }
   ],
+  "commands": {
+    "backCatalog": {
+      "suggested_key": {
+        "default": "Alt+Shift+Q"
+      },
+      "description": "Retour au catalogue depuis modif produit"
+    }
+  },
   "permissions": [
     "clipboardWrite",
     "storage",
@@ -45,7 +53,8 @@
     "tabs",
     "contextMenus",
     "activeTab",
-    "scripting"
+    "scripting",
+    "commands"
   ],
   "host_permissions": [
     "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/*",
