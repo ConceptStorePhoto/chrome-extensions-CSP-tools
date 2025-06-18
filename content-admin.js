@@ -53,7 +53,21 @@ function catalogActions() {
                     }
                 }
             });
+        });
 
+        chrome.storage.sync.get("toggle_warning_HT_TTC", (data) => {
+            if (!data.toggle_warning_HT_TTC) return; // Ne rien faire si désactivé
+
+            const elements = document.querySelectorAll(".column-final_price_tax_excluded");
+            elements.forEach((el) => {
+                // Vérifie que l'élément existe et a du texte
+                if (el.innerText || !el.innerText.trim() === "") {
+                    if (el.innerText == el.nextElementSibling.innerText) {
+                        el.querySelector("a").setAttribute("style", "color: red !important"); // Met en rouge si pas de code
+                        el.nextElementSibling.querySelector("a").setAttribute("style", "color: red !important"); // Met en rouge si pas de code
+                    }
+                }
+            });
         });
 
         chrome.storage.sync.get("toggle_copy_name_buttons", (data) => {
