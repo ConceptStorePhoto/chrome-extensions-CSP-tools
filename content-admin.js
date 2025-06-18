@@ -162,20 +162,110 @@ function productActions() {
         });
 
     });
+
+
+    chrome.storage.sync.get("toggle_remise_calcul", (data) => {
+        if (!data.toggle_remise_calcul) return; // Ne rien faire si désactivé
+        console.log("🔄 Ajout du calcul de remise");
+
+        // si l'url contient "#tab-product_pricing-tab", on ajoute le bouton de calcul de remise
+        // if (window.location.hash.includes("#tab-product_pricing-tab")) {
+        const prix_de_baseTTC = parseFloat(document.querySelector("#product_pricing_retail_price_price_tax_included").value); // Prix de base TTC
+        console.log("🔄 Prix de base TTC :", prix_de_baseTTC);
+
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1 && node.id === "modal-specific-price-form") {
+                        console.log("✅ Popup détecté :", node);
+
+                        // Attendre que l'iframe soit complètement chargé
+                        const iframe = node.querySelector('iframe');
+                        if (!iframe) {
+                            console.log("⚠️ Pas d'iframe trouvé");
+                            return;
+                        }
+                        iframe.addEventListener('load', () => {
+                            console.log("✅ Iframe chargé");
+                            try {
+                                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+                                // Exemple : chercher un champ dans l'iframe
+                                const remise = iframeDoc.querySelector('#specific_price_impact_reduction_value');
+                                const divPrix = iframeDoc.querySelector('#specific_price_impact_reduction');
+                                if (divPrix) {
+                                    console.log('🎯 div prix trouvée :');
+
+                                    //cree l'imput pour le prix apres remise
+                                    const inputPrixApresRemise = document.createElement('input');
+                                    inputPrixApresRemise.type = 'text';
+                                    inputPrixApresRemise.setAttribute('style', 'width: 150px !important;');
+                                    inputPrixApresRemise.style.marginLeft = '20px';
+                                    inputPrixApresRemise.placeholder = 'Prix après remise TTC';
+                                    divPrix.prepend(inputPrixApresRemise);
+                                    inputPrixApresRemise.addEventListener('input', () => {
+                                        const prixApresRemise = parseFloat(inputPrixApresRemise.value);
+                                        console.log('🔄 Prix après remise TTC :', prixApresRemise);
+                                        remise.value = prix_de_baseTTC - prixApresRemise;
+                                    });
+
+                                } else {
+                                    console.log('❌ div prix introuvable dans iframe');
+                                }
+
+                                const divDateFin = iframeDoc.querySelector('div.input-group.date-range.row>div:last-child');
+                                if (divDateFin) {
+                                    divDateFin.style.marginLeft = "100px";
+
+                                    // quand la check box #specific_price_date_range_unlimited est décocher on change l'atribut 
+                                    // const checkbox = iframeDoc.querySelector('#specific_price_date_range_unlimited');
+                                    // if (checkbox) {
+                                    //     checkbox.addEventListener('change', () => {
+                                    //         console.log("🔄 Checkbox date range changed :", checkbox.checked);
+                                    //         if (!checkbox.checked) {
+                                    //             // NE FONCTIONNE PAS .... :/
+                                    //             let dateValue = divDateFin.querySelector('#specific_price_date_range_to').getAttribute('data-default-value');
+                                    //             dateValue.split(' ')[1] = '23:59:59'; // Mettre l'heure à 23:59:59
+                                    //             divDateFin.querySelector('#specific_price_date_range_to').value = dateValue; // Mettre à jour la valeur de l'input
+                                    //             divDateFin.querySelector('#specific_price_date_range_to').focus();
+                                    //         }
+                                    //     });
+                                    // }
+                                }
+
+                            } catch (err) {
+                                console.log("❌ Erreur d'accès à l'iframe :", err);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+
+        // } // fin de la condition pour l'url
+    });
+
 }
 
 
 /////// Exécution initiale
 
 // déclenchement des actions sur les pages correspondantes
+// const observerCatalog = "";
 console.log("🔄 Vérification du type de page :", window.location.pathname.split("/"));
 if (window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "" && window.location.pathname.includes("catalog")) {
     console.log("✅ Page catalogue détectée, ajout des actions...");
     catalogActions();
 
     // MutationObserver pour suivre les changements du DOM => je crois que ce n'est pas nécessaire ici
-    // const observer = new MutationObserver(catalogActions);
-    // observer.observe(document.body, { childList: true, subtree: true });
+    // observerCatalog = new MutationObserver(catalogActions);
+    // observerCatalog.observe(document.body, { childList: true, subtree: true });
 }
 else if (window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "edit" && window.location.pathname.includes("products-v2")) {
     console.log("✅ Page produit détectée, ajout des actions...");
