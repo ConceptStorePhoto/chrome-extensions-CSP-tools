@@ -44,9 +44,13 @@ function catalogActions() {
             const elements = document.querySelectorAll(".column-reference");
             elements.forEach((el) => {
                 // Vérifie que l'élément a du texte
-                if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM")) {
+                if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM") || el.innerText.includes("Déclinaisons ?")) {
                     el.querySelector("a").innerText = "Aucun code AICM";
                     el.querySelector("a").setAttribute("style", "color: red !important"); // Met en rouge si pas de code
+                    if (el.nextElementSibling.nextElementSibling && el.nextElementSibling.nextElementSibling.innerText == "0,00 €") {
+                        // console.log("✅ Élément suivant :", el.nextElementSibling.nextElementSibling.innerText);
+                        el.querySelector("a").innerText = "Déclinaisons ?";
+                    }
                 }
             });
 
@@ -177,7 +181,7 @@ function productActions() {
             for (const mutation of mutations) {
                 mutation.addedNodes.forEach((node) => {
                     if (node.nodeType === 1 && node.id === "modal-specific-price-form") {
-                        console.log("✅ Popup détecté :", node);
+                        console.log("✅ Popup détecté !");
 
                         // Attendre que l'iframe soit complètement chargé
                         const iframe = node.querySelector('iframe');
@@ -186,7 +190,7 @@ function productActions() {
                             return;
                         }
                         iframe.addEventListener('load', () => {
-                            console.log("✅ Iframe chargé");
+                            console.log("✅ Iframe chargé !");
                             try {
                                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
@@ -221,7 +225,7 @@ function productActions() {
                                     // const checkbox = iframeDoc.querySelector('#specific_price_date_range_unlimited');
                                     // if (checkbox) {
                                     //     checkbox.addEventListener('change', () => {
-                                    //         console.log("🔄 Checkbox date range changed :", checkbox.checked);
+                                    //         console.log("🔄 Checkbox date ilimité changed :", checkbox.checked);
                                     //         if (!checkbox.checked) {
                                     //             // NE FONCTIONNE PAS .... :/
                                     //             let dateValue = divDateFin.querySelector('#specific_price_date_range_to').getAttribute('data-default-value');
@@ -275,7 +279,7 @@ else if (window.location.pathname.split("/")[window.location.pathname.split("/")
 // récupération du token dans l'url du site si page admin
 if (window.location.search.includes('token=')) {
     let token = window.location.search.split('=')[window.location.search.split('=').length - 1]; // récupère le dernier paramètre de l'URL
-    console.log("🔄 Token récupéré depuis l'URL :", token);
+    console.log("✅ Token récupéré depuis l'URL :", token);
     chrome.storage.sync.set({ token_admin: token }); // stock la valeur actuelle
 }
 

@@ -27,7 +27,8 @@ function addAdminLinkButton() {
     console.log("➡️ ID produit :", productId);
     if (!productId) return; // Si pas d'ID de produit, on ne fait rien
 
-    const adminLink = `https://concept-store-photo.dmu.sarl/logcncin/index.php/sell/catalog/products-v2/${productId}/edit?_token=${token}`;
+    const domain = window.location.hostname;
+    const adminLink = `https://${domain}/logcncin/index.php/sell/catalog/products-v2/${productId}/edit?_token=${token}`;
     const button = document.createElement("a");
     button.href = adminLink;
     button.target = "_blank";
