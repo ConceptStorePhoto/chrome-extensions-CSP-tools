@@ -83,6 +83,19 @@ function updateContextMenu() {
             });
         });
 
+        chrome.storage.sync.get("toggle_search_idealo", (data) => {
+            if (!data.toggle_search_idealo) return; // Ne rien faire si désactivé
+
+            chrome.contextMenus.create({
+                id: "recherche-idealo", // identifiant unique
+                title: "Rechercher sur Idealo",
+                contexts: ["selection", "link"],
+                documentUrlPatterns: [
+                    "*://concept-store-photo.dmu.sarl/*"
+                ]
+            });
+        });
+
     });
 }
 
@@ -106,6 +119,12 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             chrome.scripting.executeScript({
                 target: { tabId: tab.id },
                 function: rechercherSurMissNumerique
+            });
+            break;
+        case "recherche-idealo":
+            chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                function: rechercherSurIdealo
             });
             break;
     }
@@ -144,6 +163,27 @@ function rechercherSurMissNumerique() {
         const texte = element.innerText.trim();
         if (texte) {
             const url = `https://www.missnumerique.com/#75e9/embedded/m=and&q=${encodeURIComponent(texte)}`;
+            window.open(url, '_blank');
+        } else {
+            alert("Aucun texte trouvé dans l'élément cliqué.");
+        }
+    } else {
+        alert("Veuillez sélectionner un texte à rechercher.");
+    }
+}
+
+function rechercherSurIdealo() {
+    const selection = window.getSelection().toString().trim();
+    const element = document.activeElement;
+
+    if (selection) {
+        const url = `https://www.idealo.fr/prechcat.html?q=${encodeURIComponent(selection)}`;
+        window.open(url, '_blank');
+    }
+    else if (element) {
+        const texte = element.innerText.trim();
+        if (texte) {
+            const url = `https://www.idealo.fr/prechcat.html?q=${encodeURIComponent(texte)}`;
             window.open(url, '_blank');
         } else {
             alert("Aucun texte trouvé dans l'élément cliqué.");
