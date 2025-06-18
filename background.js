@@ -61,7 +61,7 @@ function updateContextMenu() {
 
             chrome.contextMenus.create({
                 id: "copier-ref", // identifiant unique
-                title: "Copier le texte",
+                title: "📋 Copier le texte",
                 contexts: ["selection", "link"], // selon ce que tu veux viser
                 documentUrlPatterns: [
                     "*://concept-store-photo.dmu.sarl/*",
@@ -75,7 +75,7 @@ function updateContextMenu() {
 
             chrome.contextMenus.create({
                 id: "recherche-missNumerique", // identifiant unique
-                title: "Rechercher sur Miss Numérique",
+                title: "🔎 Rechercher sur Miss Numérique",
                 contexts: ["selection", "link"],
                 documentUrlPatterns: [
                     "*://concept-store-photo.dmu.sarl/*"
@@ -88,7 +88,7 @@ function updateContextMenu() {
 
             chrome.contextMenus.create({
                 id: "recherche-idealo", // identifiant unique
-                title: "Rechercher sur Idealo",
+                title: "🔎 Rechercher sur Idealo",
                 contexts: ["selection", "link"],
                 documentUrlPatterns: [
                     "*://concept-store-photo.dmu.sarl/*"
