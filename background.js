@@ -177,8 +177,8 @@ function copierReferenceDepuisPage() {
         const aText = active.textContent.trim();
         const span = active.closest("td")?.querySelector("span");
         const spanText = span?.textContent.trim() ?? "";
-        const texteCombiné = `${aText} ${spanText}`.trim();
-        navigator.clipboard.writeText(texteCombiné);
+        const texteCombine = `${aText} ${spanText}`.trim();
+        navigator.clipboard.writeText(texteCombine);
     } else if (active) {
         const texte = active.textContent?.trim() ?? "";
         if (texte) {
@@ -197,7 +197,14 @@ function injecterRecherche(tabId, baseURL) {
         func: (baseURL) => {
             const selection = window.getSelection().toString().trim();
             const element = document.activeElement;
-            const texte = selection || (element?.innerText?.trim() ?? "");
+            let texte = selection || (element?.innerText?.trim() ?? "");
+
+            if (element?.tagName === "A" && element.href.includes("/logcncin/index.php/sell/catalog/products-v2/")) {
+                const aText = element.textContent.trim();
+                const span = element.closest("td")?.querySelector("span");
+                const spanText = span?.textContent.trim() ?? "";
+                texte = `${aText} ${spanText}`.trim();
+            }
 
             if (texte) {
                 const url = baseURL + encodeURIComponent(texte);
