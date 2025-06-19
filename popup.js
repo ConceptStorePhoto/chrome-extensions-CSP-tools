@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const url = new URL(rawUrl);
             const hostname = url.hostname;
 
-            if (hostname.includes("concept-store-photo.dmu.sarl")) {
+            if (hostname.includes("concept-store-photo.dmu.sarl") || hostname.includes("conceptstorephoto.fr")) {
                 console.log("✅ Concept Store Photo detected", hostname);
                 document.getElementById("toolsCSP").style.display = "flex";
             } else {

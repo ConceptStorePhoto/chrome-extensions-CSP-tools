@@ -1,8 +1,9 @@
 {
   "name": "CSP tools",
   "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto - DEV par QuentinPerou",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "manifest_version": 3,
+  "homepage_url": "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools",
   "action": {
     "default_popup": "popup.html",
     "default_icon": "logo.png"
@@ -20,7 +21,11 @@
     {
       "matches": [
         "https://concept-store-photo.dmu.sarl/logcncin/index.php/sell/catalog/products-v2/*",
-        "https://concept-store-photo.dmu.sarl/logcncin/*"
+        "https://concept-store-photo.dmu.sarl/logcncin/*",
+        "https://conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/*",
+        "https://conceptstorephoto.fr/logcncin/*",
+        "https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/*",
+        "https://www.conceptstorephoto.fr/logcncin/*"
       ],
       "js": [
         "content-admin.js"
@@ -28,10 +33,14 @@
     },
     {
       "matches": [
-        "https://concept-store-photo.dmu.sarl/*"
+        "https://concept-store-photo.dmu.sarl/*",
+        "https://conceptstorephoto.fr/*",
+        "https://www.conceptstorephoto.fr/*"
       ],
       "exclude_matches": [
-        "https://concept-store-photo.dmu.sarl/logcncin/*"
+        "https://concept-store-photo.dmu.sarl/logcncin/*",
+        "https://conceptstorephoto.fr/logcncin/*",
+        "https://www.conceptstorephoto.fr/logcncin/*"
       ],
       "js": [
         "content-client.js"
@@ -41,7 +50,8 @@
   "commands": {
     "backCatalog": {
       "suggested_key": {
-        "default": "Alt+Shift+Q"
+        "default": "Alt+Shift+Q",
+        "mac": "Alt+Shift+Q"
       },
       "description": "Retour au catalogue depuis modif produit"
     }
@@ -59,6 +69,8 @@
   "host_permissions": [
     "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/*",
     "https://raw.githubusercontent.com/ConceptStorePhoto/chrome-extensions-CSP-tools/*",
-    "https://concept-store-photo.dmu.sarl/*"
+    "https://concept-store-photo.dmu.sarl/*",
+    "https://conceptstorephoto.fr/*",
+    "https://www.conceptstorephoto.fr/*"
   ]
 }

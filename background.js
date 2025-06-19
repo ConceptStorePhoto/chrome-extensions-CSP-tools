@@ -65,7 +65,8 @@ function updateContextMenu() {
                 contexts: ["selection", "link"], // selon ce que tu veux viser
                 documentUrlPatterns: [
                     "*://concept-store-photo.dmu.sarl/*",
-                    "*://conceptstorephoto.fr/*"
+                    "*://conceptstorephoto.fr/*",
+                    "*://www.conceptstorephoto.fr/*"
                 ] // uniquement sur ton site
             });
         });
@@ -78,7 +79,9 @@ function updateContextMenu() {
                 title: "🔎 Rechercher sur Miss Numérique",
                 contexts: ["selection", "link"],
                 documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*"
+                    "*://concept-store-photo.dmu.sarl/*",
+                    "*://conceptstorephoto.fr/*",
+                    "*://www.conceptstorephoto.fr/*"
                 ]
             });
         });
@@ -91,7 +94,9 @@ function updateContextMenu() {
                 title: "🔎 Rechercher sur Idealo",
                 contexts: ["selection", "link"],
                 documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*"
+                    "*://concept-store-photo.dmu.sarl/*",
+                    "*://conceptstorephoto.fr/*",
+                    "*://www.conceptstorephoto.fr/*"
                 ]
             });
         });
@@ -104,7 +109,9 @@ function updateContextMenu() {
                 title: "🔎 Rechercher sur Panajou",
                 contexts: ["selection", "link"],
                 documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*"
+                    "*://concept-store-photo.dmu.sarl/*",
+                    "*://conceptstorephoto.fr/*",
+                    "*://www.conceptstorephoto.fr/*"
                 ]
             });
         });
@@ -117,7 +124,9 @@ function updateContextMenu() {
                 title: "🔎 Rechercher sur IPLN",
                 contexts: ["selection", "link"],
                 documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*"
+                    "*://concept-store-photo.dmu.sarl/*",
+                    "*://conceptstorephoto.fr/*",
+                    "*://www.conceptstorephoto.fr/*"
                 ]
             });
         });
