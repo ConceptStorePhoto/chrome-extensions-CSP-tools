@@ -12,9 +12,9 @@ chrome.storage.sync.get("token_admin", (data) => {
         console.log("🔄 Ajout du bouton d'édition admin");
 
         // Vérifie si on est sur une page PRODUIT côté client
-        const match = window.location.pathname.match(/^\/(\d{5})-/);
+        const match = window.location.pathname.match(/^\/(\d{2,5})-/);
         console.log("🔄 Vérification du type de page :", match);
-        if (!(window.location.pathname.startsWith("/logcncin/index.php/sell/catalog/products-v2/")) && match) {
+        if (!(window.location.pathname.startsWith("/logcncin/index.php/sell/catalog/products-v2/")) && match && document.body.id == "product") {
             addAdminLinkButton();
         }
     });
