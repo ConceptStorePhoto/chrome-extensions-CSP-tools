@@ -264,9 +264,58 @@ function productActions() {
             childList: true,
             subtree: true
         });
+    });
 
 
-        // } // fin de la condition pour l'url
+    chrome.storage.sync.get("toggle_taxe_ttc", (data) => {
+        if (!data.toggle_taxe_ttc) return; // Ne rien faire si désactivé
+        console.log("🔄 Ajout le bouton de swap de taxe et prix ttc");
+
+        const elemPrixHT = document.getElementById('product_pricing_retail_price_price_tax_excluded');
+        const select = document.querySelector('#product_pricing_retail_price_tax_rules_group_id'); // Récupère le <select>
+        const elemPrixTTC = document.getElementById('product_pricing_retail_price_price_tax_included');
+        const container = document.getElementById('product_pricing_retail_price');
+
+        if (select.value != "2") {
+            const button = document.createElement("span");
+            button.innerText = "Swap taxe standard";
+            button.className = "btn-swap";
+            const style = document.createElement('style');
+            style.textContent = `
+                .btn-swap {
+                    font-size: 16px;
+                    padding: 8px 15px;
+                    background-color: #007bff;
+                    color: #fff;
+                    border-radius: 5px;
+                    text-decoration: none;
+                    margin-left: 20px;
+                    margin-top: 25px;
+                    height: fit-content;
+                    cursor: pointer;
+                }
+
+                .btn-swap:hover {
+                    background-color: #0056b3;
+                }
+            `;
+            document.head.appendChild(style);
+
+            button.addEventListener('click', clique);
+            function clique() {
+                // Change la valeur (ex. : "2" pour "standard")
+                select.value = "2";
+                // Déclenche l'événement 'change' pour que Select2 se mette à jour
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+
+                elemPrixTTC.value = parseFloat(elemPrixHT.value);
+                elemPrixTTC.dispatchEvent(new Event('input', { bubbles: true }));
+                elemPrixTTC.dispatchEvent(new Event('change', { bubbles: true }));
+                button.removeEventListener('click', clique);
+                button.remove();
+            }
+            container.appendChild(button);
+        }
     });
 
 }
