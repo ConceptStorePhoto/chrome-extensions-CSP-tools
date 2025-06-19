@@ -182,12 +182,10 @@ function productActions() {
     });
 
 
-    chrome.storage.sync.get("toggle_remise_calcul", (data) => {
-        if (!data.toggle_remise_calcul) return; // Ne rien faire si désactivé
-        console.log("🔄 Ajout du calcul de remise");
+    chrome.storage.sync.get(["toggle_remise_calcul", "toggle_heureFin"], (data) => {
+        if (!data.toggle_remise_calcul && !data.toggle_heureFin) return; // Ne rien faire si désactivé
+        // console.log("🔄 Ajout du calcul de remise");
 
-        // si l'url contient "#tab-product_pricing-tab", on ajoute le bouton de calcul de remise
-        // if (window.location.hash.includes("#tab-product_pricing-tab")) {
         const prix_de_baseTTC = parseFloat(document.querySelector("#product_pricing_retail_price_price_tax_included").value); // Prix de base TTC
         console.log("🔄 Prix de base TTC :", prix_de_baseTTC);
 
@@ -208,47 +206,53 @@ function productActions() {
                             try {
                                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
-                                // Exemple : chercher un champ dans l'iframe
-                                const remise = iframeDoc.querySelector('#specific_price_impact_reduction_value');
-                                const divPrix = iframeDoc.querySelector('#specific_price_impact_reduction');
-                                if (divPrix) {
-                                    console.log('🎯 div prix trouvée :');
+                                if (data.toggle_remise_calcul) {
+                                    // Exemple : chercher un champ dans l'iframe
+                                    const remise = iframeDoc.querySelector('#specific_price_impact_reduction_value');
+                                    const divPrix = iframeDoc.querySelector('#specific_price_impact_reduction');
+                                    if (divPrix) {
+                                        console.log("🎯 div prix trouvée : ajout de l'input");
 
-                                    //cree l'imput pour le prix apres remise
-                                    const inputPrixApresRemise = document.createElement('input');
-                                    inputPrixApresRemise.type = 'text';
-                                    inputPrixApresRemise.setAttribute('style', 'width: 150px !important;');
-                                    inputPrixApresRemise.style.marginLeft = '20px';
-                                    inputPrixApresRemise.placeholder = 'Prix après remise TTC';
-                                    divPrix.prepend(inputPrixApresRemise);
-                                    inputPrixApresRemise.addEventListener('input', () => {
-                                        const prixApresRemise = parseFloat(inputPrixApresRemise.value);
-                                        console.log('🔄 Prix après remise TTC :', prixApresRemise);
-                                        remise.value = prix_de_baseTTC - prixApresRemise;
-                                    });
+                                        //cree l'imput pour le prix apres remise
+                                        const inputPrixApresRemise = document.createElement('input');
+                                        inputPrixApresRemise.type = 'text';
+                                        inputPrixApresRemise.title = "Calcul auto : [Prix TTC de l'article] - [cette zone] = [remise dans la case à coté]";
+                                        inputPrixApresRemise.setAttribute('style', 'width: 155px !important;');
+                                        inputPrixApresRemise.style.marginLeft = '20px';
+                                        inputPrixApresRemise.placeholder = 'Prix après remise TTC';
+                                        divPrix.prepend(inputPrixApresRemise);
+                                        inputPrixApresRemise.addEventListener('input', () => {
+                                            const prixApresRemise = parseFloat(inputPrixApresRemise.value);
+                                            console.log('🔄 Prix après remise TTC :', prixApresRemise);
+                                            remise.value = parseFloat(document.querySelector("#product_pricing_retail_price_price_tax_included").value) - prixApresRemise;
+                                        });
 
-                                } else {
-                                    console.log('❌ div prix introuvable dans iframe');
+                                    } else {
+                                        console.log('❌ div prix introuvable dans iframe');
+                                    }
                                 }
 
-                                const divDateFin = iframeDoc.querySelector('div.input-group.date-range.row>div:last-child');
-                                if (divDateFin) {
-                                    divDateFin.style.marginLeft = "100px";
+                                if (data.toggle_heureFin) {
+                                    const divDateFin = iframeDoc.querySelector('div.input-group.date-range.row>div:last-child');
+                                    if (divDateFin) {
+                                        divDateFin.style.marginLeft = "100px";
 
-                                    // quand la check box #specific_price_date_range_unlimited est décocher on change l'atribut 
-                                    // const checkbox = iframeDoc.querySelector('#specific_price_date_range_unlimited');
-                                    // if (checkbox) {
-                                    //     checkbox.addEventListener('change', () => {
-                                    //         console.log("🔄 Checkbox date ilimité changed :", checkbox.checked);
-                                    //         if (!checkbox.checked) {
-                                    //             // NE FONCTIONNE PAS .... :/
-                                    //             let dateValue = divDateFin.querySelector('#specific_price_date_range_to').getAttribute('data-default-value');
-                                    //             dateValue.split(' ')[1] = '23:59:59'; // Mettre l'heure à 23:59:59
-                                    //             divDateFin.querySelector('#specific_price_date_range_to').value = dateValue; // Mettre à jour la valeur de l'input
-                                    //             divDateFin.querySelector('#specific_price_date_range_to').focus();
-                                    //         }
-                                    //     });
-                                    // }
+                                        // quand la check box #specific_price_date_range_unlimited est décocher on change l'atribut 
+                                        const checkbox = iframeDoc.querySelector('#specific_price_date_range_unlimited');
+                                        if (checkbox) {
+                                            checkbox.addEventListener('change', () => {
+                                                console.log("🔄 Checkbox date ilimité changed :", checkbox.checked);
+                                                if (!checkbox.checked) {
+                                                    // NE FONCTIONNE PAS .... :/
+                                                    let dateValue = divDateFin.querySelector('#specific_price_date_range_to').getAttribute('data-default-value');
+                                                    let newDateValue = dateValue.split(' ')[0] + '23:59:59'; // Mettre l'heure à 23:59:59
+                                                    divDateFin.querySelector('#specific_price_date_range_to').value = newDateValue; // Mettre à jour la valeur de l'input
+                                                    divDateFin.querySelector('#specific_price_date_range_to').dispatchEvent(new Event('input', { bubbles: true }));
+                                                    divDateFin.querySelector('#specific_price_date_range_to').dispatchEvent(new Event('change', { bubbles: true }));
+                                                }
+                                            });
+                                        }
+                                    }
                                 }
 
                             } catch (err) {
