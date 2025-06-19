@@ -169,17 +169,23 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 function copierReferenceDepuisPage() {
     //copie le texte sélectionné ou le texte de l'élément cliqué
     const selection = window.getSelection().toString().trim();
-    const element = document.activeElement;
+    const active = document.activeElement;
 
     if (selection) {
-        navigator.clipboard.writeText(selection).then(() => {
-            // alert("Texte copié : " + selection);
-        });
-    } else if (element) {
-        const texte = element.innerText;
-        navigator.clipboard.writeText(texte).then(() => {
-            // alert("Texte copié : " + texte);
-        });
+        navigator.clipboard.writeText(selection);
+    } else if (active?.tagName === "A" && active.href.includes("/logcncin/index.php/sell/catalog/products-v2/")) {
+        const aText = active.textContent.trim();
+        const span = active.closest("td")?.querySelector("span");
+        const spanText = span?.textContent.trim() ?? "";
+        const texteCombiné = `${aText} ${spanText}`.trim();
+        navigator.clipboard.writeText(texteCombiné);
+    } else if (active) {
+        const texte = active.textContent?.trim() ?? "";
+        if (texte) {
+            navigator.clipboard.writeText(texte);
+        } else {
+            alert("Aucun texte trouvé à copier.");
+        }
     } else {
         alert("Aucun texte trouvé !");
     }
