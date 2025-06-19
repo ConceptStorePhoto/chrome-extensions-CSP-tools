@@ -48,7 +48,6 @@ function catalogActions() {
                     el.querySelector("a").innerText = "Aucun code AICM";
                     el.querySelector("a").setAttribute("style", "color: #e30000 !important"); // Met en rouge si pas de code
                     if (el.nextElementSibling.nextElementSibling && el.nextElementSibling.nextElementSibling.innerText == "0,00 €") {
-                        // console.log("✅ Élément suivant :", el.nextElementSibling.nextElementSibling.innerText);
                         el.querySelector("a").innerText = "Déclinaisons ?";
                     }
                 }
@@ -134,6 +133,7 @@ function catalogActions() {
                 //pour chaque élément du menu déroulant, on déplace les liens dans l'élément parent
                 el.querySelectorAll("a").forEach((link) => {
                     let icon = link.querySelector('i');
+                    link.title = link.textContent.split(' ')[14];
                     link.textContent = "";
                     link.appendChild(icon);
                     link.parentNode.parentNode.appendChild(link);
