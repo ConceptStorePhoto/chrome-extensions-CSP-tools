@@ -3,11 +3,11 @@
 Extension Chrome qui permet de corriger certains problèmes d'interface sur le site web.
 
 ## Fonctionnalités
-- **Correction des problèmes d'interface** : Permet de corriger les problèmes d'interface sur le site web.
-- **Commandes personnalisées** : Permet de personnaliser les fonctions de l'extension pour les adapter à vos besoins.
+- **Correction d'interface** : Permet de corriger des problèmes d'interface sur le site web.
+- **Commandes personnalisées** : La popup de l'extention permet de personnaliser les fonctions pour les adapter à vos besoins.
 - **Notifications** : Affiche des notifications pour informer l'utilisateur des mises à jour de l'extension.
-- **Menu contextuel** : Permet d'accéder aux fonctionnalités de l'extension depuis le menu contextuel du navigateur. (clique droit)
-- **Raccourcis clavier** : Permet d'utiliser des raccourcis clavier pour accéder rapidement aux fonctionnalités de l'extension. (PAS ENCORE IMPLEMENTE)
+- **Menu contextuel** : Fonctionnalités de l'extension dans le menu contextuel du navigateur. (clique droit)
+- **Raccourcis clavier** : Permet d'utiliser des raccourcis clavier pour accéder rapidement aux fonctionnalités de l'extension.
     - Alt+Shift+Q : Retour au catalogue depuis modification de produit
 
 
@@ -34,16 +34,11 @@ Pour mettre à jour l'extension, il suffit de télécharger à nouveau le fichie
 <br>
 
 
-## Basé sur la documentation officielle de Google Chrome
+## Basé sur la documentation de Google Chrome
 
 Getting Started With Google Chrome Extensions (Hello World)  
 This example demonstrates how to create a simple "Hello World" Chrome Extension.
 For more details, visit the [official tutorial](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world).
-
-
-Doc pour les commandes de l'extension :  
-https://developer.chrome.com/docs/extensions/reference/api/commands?hl=fr  
-https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples/default_command_override
 
 <br> 
 
@@ -52,4 +47,4 @@ https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples/
 
 Dev par [QuentinPerou](https://github.com/quentinperou)  
 
-Merci ChatGPT pour l'aide à la création de l'extension ^^
+Merci à ChatGPT et GitHub Copilot pour l'aide à la création de l'extension ^^

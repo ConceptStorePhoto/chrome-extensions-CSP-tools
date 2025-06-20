@@ -165,8 +165,8 @@ function catalogActions() {
 }
 
 function productActions() {
-    chrome.storage.sync.get("toggle_preview_buttons", (data) => {
-        if (!data.toggle_preview_buttons) return; // Ne rien faire si désactivé
+    chrome.storage.sync.get("toggle_product_preview_buttons", (data) => {
+        if (!data.toggle_product_preview_buttons) return; // Ne rien faire si désactivé
         console.log("🔄 Ajout des boutons de prévisualisation");
 
         const elements = document.querySelectorAll("#product_footer_actions_preview");
@@ -174,6 +174,7 @@ function productActions() {
             //copier le bouton sélectioner dans l'élément parent
             let element = document.createElement("a");
             element.href = el.href;
+            element.title = "Prévisualiser";
             element.target = "_blank";
             element.innerHTML = `<i class="material-icons">visibility</i>`;
             el.parentNode.parentNode.appendChild(element);
@@ -253,7 +254,7 @@ function productActions() {
                                         //cree l'imput pour le prix apres remise
                                         const inputPrixApresRemise = document.createElement('input');
                                         inputPrixApresRemise.type = 'text';
-                                        inputPrixApresRemise.title = "Calcul auto : [Prix TTC de l'article] - [cette zone] = [remise dans la case à coté]";
+                                        inputPrixApresRemise.title = `vCalcul auto : [Prix TTC de l'article] - [cette zone] = [remise dans la case à coté]  // Attention aux produits variable`;
                                         inputPrixApresRemise.setAttribute('style', 'width: 155px !important;');
                                         inputPrixApresRemise.style.marginLeft = '20px';
                                         inputPrixApresRemise.placeholder = 'Prix après remise TTC';
@@ -263,6 +264,28 @@ function productActions() {
                                             console.log('🔄 Prix après remise TTC :', prixApresRemise);
                                             remise.value = parseFloat(document.querySelector("#product_pricing_retail_price_price_tax_included").value) - prixApresRemise;
                                         });
+
+                                        // const declinaisonSelect = iframeDoc.querySelector('#specific_price_combination_id');
+                                        // if (declinaisonSelect) {
+                                        //     const affichePrixDecli = document.createElement('span');
+                                        //     affichePrixDecli.textContent = "test";
+                                        //  // NE FONCTIONNE PAS !!
+                                        //     declinaisonSelect.addEventListener('change', function () {
+                                        //         const selectedText = declinaisonSelect.options[declinaisonSelect.selectedIndex].text;
+                                        //         console.log('➡️ text select : ', selectedText); 
+
+                                        //         // Recherche dans le tableau l'objet qui correspond au texte sélectionné
+                                        //         const found = combinations.find(item => item.name === selectedText);
+
+                                        //         if (found) {
+                                        //             affichePrixDecli.textContent = `Prix final TTC : ${found.calcul_prix_ttc_final} €`;
+                                        //         } else {
+                                        //             affichePrixDecli.textContent = "Prix non dispo pour cette sélection";
+                                        //         }
+                                        //     });
+
+                                        //     declinaisonSelect.parentElement.appendChild(affichePrixDecli);
+                                        // }
 
                                     } else {
                                         console.log('❌ div prix introuvable dans iframe');
