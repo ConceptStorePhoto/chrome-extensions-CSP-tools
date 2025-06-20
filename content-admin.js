@@ -204,6 +204,28 @@ function productActions() {
         const prix_de_baseTTC = parseFloat(document.querySelector("#product_pricing_retail_price_price_tax_included").value); // Prix de base TTC
         console.log("🔄 Prix de base TTC :", prix_de_baseTTC);
 
+        // console.log('Produit avec déclinaison ? ', document.getElementById('product_combinations-tab-nav')); //attention au produit variable !!
+        // let combinations = [];
+        // if (document.getElementById('product_combinations-tab-nav')) {
+        //     new MutationObserver((_, obs) => {
+        //         const rows = document.querySelectorAll("tr.combination-list-row");
+        //         if (!rows.length) return;
+
+        //         obs.disconnect(); // stoppe l'observation après détection
+
+        //         combinations = Array.from(rows).map((row, i) => {
+        //             const name = row.querySelector(`input[name="combination_list[${i}][name]"]`)?.value?.trim();
+        //             const price = row.querySelector(`input[name="combination_list[${i}][impact_on_price_ti]"]`)?.value?.replace(',', '.');
+
+        //             return name && price ? { name, impact_price_ttc: parseFloat(price), calcul_prix_ttc_final: prix_de_baseTTC + parseFloat(price) } : null;
+        //         }).filter(Boolean);
+
+        //         // Tu peux maintenant utiliser `combinations` dans le reste de ton code
+        //         console.log("➡️ Déclinaisons chargées :", combinations);
+        //     }).observe(document.querySelector("#combination_list"), { childList: true, subtree: true });
+        // }
+
+
         const observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 mutation.addedNodes.forEach((node) => {
