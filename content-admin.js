@@ -181,6 +181,21 @@ function productActions() {
 
     });
 
+    chrome.storage.sync.get("toggle_product_ungroup_action", (data) => {
+        if (!data.toggle_product_ungroup_action) return; // Ne rien faire si désactivé
+        console.log("🔄 Dégroupage des boutons d'action du produit");
+
+        const elements = document.getElementById('product_footer_actions_dropdown');
+        elements.parentElement.querySelectorAll(".dropdown-menu>*").forEach((link) => {
+            link.style.whiteSpace = "nowrap";
+            link.style.marginLeft = "15px";
+            link.parentNode.parentNode.appendChild(link);
+        });
+        elements.parentNode.parentNode.querySelector('a.dropdown-toggle').style.display = "none"; // Supprimer le bouton de menu déroulant
+        elements.remove(); // Supprimer le menu déroulant
+        document.getElementById('product_footer_actions_catalog').style.whiteSpace = "nowrap";
+    });
+
 
     chrome.storage.sync.get(["toggle_remise_calcul", "toggle_heureFin"], (data) => {
         if (!data.toggle_remise_calcul && !data.toggle_heureFin) return; // Ne rien faire si désactivé
