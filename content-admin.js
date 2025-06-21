@@ -159,6 +159,43 @@ function catalogActions() {
         });
 
 
+        chrome.storage.sync.get("toogle_lbc_copy", (data) => {
+            if (!data.toogle_lbc_copy) return; // Ne rien faire si désactivé
+            console.log("🔄 Ajout bouton LBC copy");
+
+            const table = document.querySelectorAll('#product_grid_table tbody tr');
+            table.forEach((line) => {
+                //création du bouton
+                const boutonCopier = document.createElement('span');
+                boutonCopier.innerText = "📋LBC";
+                boutonCopier.style.marginRight = "8px";
+                boutonCopier.style.borderRadius = "10px";
+                boutonCopier.style.border = "none";
+                boutonCopier.style.outline = "none";
+                boutonCopier.style.backgroundColor = "#e7e7e7";
+                boutonCopier.style.padding = "4px 8px";
+                boutonCopier.style.cursor = "pointer";
+                boutonCopier.style.display = "flex";
+                boutonCopier.style.alignItems = "center";
+
+                line.querySelector('.column-actions>div').appendChild(boutonCopier);
+
+                boutonCopier.addEventListener('click', () => {
+                    const name = line.querySelector('.column-name').innerText;
+                    const aicm = line.querySelector('.column-reference>a').innerText.trim();
+                    const prix = line.querySelector('.column-price_tax_included').innerText;
+                    data = { name: name, aicm: aicm, prix: prix };
+                    chrome.storage.sync.set({ "lbc_copy_data": data });
+                    console.log("Donnée copiée : ", data);
+                    navigator.clipboard.writeText(aicm);
+                    boutonCopier.innerText = "✅LBC";
+                    setTimeout(() => (boutonCopier.innerText = "📋LBC"), 1500);
+                });
+            });
+
+        });
+
+
     } catch (error) {
         console.error("Erreur lors de l'ajout des boutons/actions dans le catalogue :", error);
     }

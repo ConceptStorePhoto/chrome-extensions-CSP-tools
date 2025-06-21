@@ -15,18 +15,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (hostname.includes("concept-store-photo.dmu.sarl") || hostname.includes("conceptstorephoto.fr")) {
                 console.log("✅ Concept Store Photo detected", hostname);
-                document.getElementById("toolsCSP").style.display = "flex";
+                document.getElementById("toolsCSP").classList.remove('hide');
+                // document.getElementById("LBCtools").classList.add('hide');
+                document.getElementById("refreshContainer").classList.remove('hide');
+            } else if (hostname.includes("leboncoin.fr")) {
+                console.log("✅ LeBonCoin detected", hostname);
+                // document.getElementById("toolsCSP").classList.add('hide');
+                document.getElementById("LBCtools").classList.remove('hide');
+                document.getElementById("refreshContainer").classList.remove('hide');
             } else {
                 console.log("ℹ️ Site non reconnu :", hostname);
                 document.getElementById("infoMessage").textContent = `Site non reconnu : ${hostname}`;
-                document.getElementById("toolsCSP").style.display = "none";
-                document.getElementById("infoMessage").style.display = "block";
+                // document.getElementById("toolsCSP").classList.add('hide');
+                //  document.getElementById("LBCtools").classList.add('hide');
+                document.getElementById("infoMessage").classList.remove('hide');
             }
         } catch (err) {
             console.error("❌ URL invalide ou inaccessible :", rawUrl, err);
             document.getElementById("infoMessage").textContent = "Impossible de détecter le site actif.";
-            document.getElementById("toolsCSP").style.display = "none";
-            document.getElementById("infoMessage").style.display = "block";
+            // document.getElementById("toolsCSP").classList.add('hide');
+            document.getElementById("infoMessage").classList.remove('hide');
         }
     });
 
@@ -99,9 +107,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             🚀 <strong>Mise à jour disponible</strong> (v${updateInfo.remoteVersion})
             <a href="${updateInfo.repoURL}" target="_blank" rel="noopener">Télécharger</a>
         `;
-        updateMsg.style.display = "block";
+        updateMsg.classList.remove('hide');
     } else {
         updateMsg.textContent = `✅ Extension à jour - Version : ${updateInfo.localVersion}`;
-        updateMsg.style.display = "block";
+        updateMsg.classList.remove('hide');
     }
 });
