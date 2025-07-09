@@ -177,11 +177,12 @@ function catalogActions() {
                 boutonCopier.style.cursor = "pointer";
                 boutonCopier.style.display = "flex";
                 boutonCopier.style.alignItems = "center";
+                boutonCopier.style.minWidth = "fit-content";
 
                 line.querySelector('.column-actions>div').appendChild(boutonCopier);
 
                 boutonCopier.addEventListener('click', () => {
-                    const name = line.querySelector('.column-name').innerText;
+                    const name = line.querySelector('.column-name').innerText.trim();
                     const aicm = line.querySelector('.column-reference>a').innerText.trim();
                     const prix = line.querySelector('.column-price_tax_included').innerText;
                     data = { name: name, aicm: aicm, prix: prix };
