@@ -32,7 +32,7 @@ chrome.runtime.onInstalled.addListener(() => {
     console.log("🔄 Extension installée");
 
     // définition des réglages par défaut si non déjà définis
-    chrome.storage.sync.get(["toggle_copy_aicm_buttons", "toggle_copy_text", "toggle_product_preview_buttons", "toggle_adminEdit_buttons", "toggle_heureFin"], (data) => {
+    chrome.storage.sync.get(["toggle_copy_aicm_buttons", "toggle_copy_text", "toggle_product_preview_buttons", "toggle_adminEdit_buttons", "toggle_heureFin","toogle_colissimo_confirm_annuler"], (data) => {
         if (data.toggle_copy_aicm_buttons === undefined) {
             chrome.storage.sync.set({ toggle_copy_aicm_buttons: true });
         }
@@ -47,6 +47,9 @@ chrome.runtime.onInstalled.addListener(() => {
         }
         if (data.toggle_heureFin === undefined) {
             chrome.storage.sync.set({ toggle_heureFin: true });
+        }
+        if (data.toogle_colissimo_confirm_annuler === undefined) {
+            chrome.storage.sync.set({ toogle_colissimo_confirm_annuler: true });
         }
     });
 

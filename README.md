@@ -13,6 +13,8 @@ Extension Chrome qui permet de corriger certains problèmes d'interface sur le s
 - **LeBonCoin** : 
     - **Création d'annonce** : Complétion automatique de la description pour simplifier la création des annonces
     - **Preset d'adresse** : Ajout de raccourcis pour changer l'adresse du produit
+- **Colissimo** : 
+    - **Collecte** : Ajout d'une confirmation avant l'annulation de la collecte
 
 
 ## Installation

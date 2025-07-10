@@ -1,7 +1,7 @@
 {
   "name": "CSP tools",
   "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto - DEV par QuentinPerou",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "manifest_version": 3,
   "homepage_url": "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools",
   "action": {
@@ -53,6 +53,14 @@
       ],
       "js": [
         "content-LBC.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://www.applications.colissimo.entreprise.laposte.fr/entreprise/collecte-ondemand/mes-collectes"
+      ],
+      "js": [
+        "content-colissimo.js"
       ]
     }
   ],

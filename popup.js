@@ -17,24 +17,23 @@ document.addEventListener("DOMContentLoaded", () => {
             if ((hostname.includes("concept-store-photo.dmu.sarl") || hostname.includes("conceptstorephoto.fr")) && !url.pathname.includes('wp-admin')) {
                 console.log("✅ Concept Store Photo detected", hostname);
                 document.getElementById("toolsCSP").classList.remove('hide');
-                // document.getElementById("LBCtools").classList.add('hide');
                 document.getElementById("refreshContainer").classList.remove('hide');
             } else if (hostname.includes("leboncoin.fr")) {
                 console.log("✅ LeBonCoin detected", hostname);
-                // document.getElementById("toolsCSP").classList.add('hide');
                 document.getElementById("LBCtools").classList.remove('hide');
+                document.getElementById("refreshContainer").classList.remove('hide');
+            } else if (hostname.includes("applications.colissimo.entreprise.laposte.fr")) {
+                console.log("✅ Colissimo detected", hostname);
+                document.getElementById("COLISSIMOtools").classList.remove('hide');
                 document.getElementById("refreshContainer").classList.remove('hide');
             } else {
                 console.log("ℹ️ Site non reconnu :", hostname);
                 document.getElementById("infoMessage").textContent = `Site non reconnu : ${hostname}`;
-                // document.getElementById("toolsCSP").classList.add('hide');
-                //  document.getElementById("LBCtools").classList.add('hide');
                 document.getElementById("infoMessage").classList.remove('hide');
             }
         } catch (err) {
             console.error("❌ URL invalide ou inaccessible :", rawUrl, err);
             document.getElementById("infoMessage").textContent = "Impossible de détecter le site actif.";
-            // document.getElementById("toolsCSP").classList.add('hide');
             document.getElementById("infoMessage").classList.remove('hide');
         }
     });
