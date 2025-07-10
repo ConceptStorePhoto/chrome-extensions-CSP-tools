@@ -63,6 +63,14 @@
       "js": [
         "content-colissimo.js"
       ]
+    },
+    {
+      "matches": [
+        "https://www.conceptstorephoto.fr/wp-admin/*"
+      ],
+      "js": [
+        "content-admin-WP.js"
+      ]
     }
   ],
   "commands": {
