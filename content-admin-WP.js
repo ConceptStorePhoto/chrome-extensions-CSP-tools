@@ -24,9 +24,9 @@ try {
             const name = line.querySelector('.column-name .row-title').innerText.trim();
             const aicm = line.querySelector('.column-sku').innerText.trim();
             const prix = line.querySelector('.column-price').innerText;
-            data = { name: name, aicm: aicm, prix: prix };
-            chrome.storage.sync.set({ "lbc_copy_data": data });
-            console.log("Donnée copiée : ", data);
+            let dataCopy = { name: name, aicm: aicm, prix: prix };
+            chrome.storage.sync.set({ "lbc_copy_data": dataCopy });
+            console.log("Donnée copiée : ", dataCopy);
             navigator.clipboard.writeText(aicm);
             boutonCopier.innerText = "✅LBC";
             setTimeout(() => (boutonCopier.innerText = "📋LBC"), 1500);
