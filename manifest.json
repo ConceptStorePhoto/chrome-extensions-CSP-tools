@@ -40,7 +40,8 @@
       "exclude_matches": [
         "https://concept-store-photo.dmu.sarl/logcncin/*",
         "https://conceptstorephoto.fr/logcncin/*",
-        "https://www.conceptstorephoto.fr/logcncin/*"
+        "https://www.conceptstorephoto.fr/logcncin/*",
+        "https://www.conceptstorephoto.fr/wp-admin/*"
       ],
       "js": [
         "content-client.js"
