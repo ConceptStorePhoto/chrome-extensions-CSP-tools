@@ -66,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 chrome.runtime.sendMessage({ type: "updateContextMenu" });
             });
         });
-
     });
 
     // Bouton "Recharger la page"
