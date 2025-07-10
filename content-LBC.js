@@ -17,9 +17,10 @@ style.textContent = `
                 }
 
                 .btn-swap:hover {
-                    background-color: #0056b3 !important;
-                    }
-                    `;
+                    /*background-color: #0056b3 !important;*/
+                    filter: brightness(0.85); /* 0.85 = 15% plus sombre */
+                }
+            `;
 document.head.appendChild(style);
 
 const divContainer = document.createElement('div');
@@ -145,7 +146,7 @@ function verificationUrlPage(url) {
 
 /////////// FONCTIONNALITES ///////////
 function actionPageCreation() {
-    chrome.storage.sync.get(["toogle_lbc_past", "lbc_copy_data"], (data) => {
+    chrome.storage.sync.get("toogle_lbc_past", (data) => {
         if (!data.toogle_lbc_past) return; // Ne rien faire si désactivé
 
         console.log("🔄 Ajout du bouton Coller Data");
@@ -283,6 +284,44 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
 
     });
 
+    chrome.storage.sync.get("toogle_lbc_livraison", (data) => {
+        if (!data.toogle_lbc_livraison) return; // Ne rien faire si désactivé
+
+        console.log("🔄 Ajout du bouton désélection livraison");
+
+        const bouton = document.createElement('span');
+        bouton.className = "btn-swap";
+        bouton.innerText = "Pas de livraison";
+        bouton.style.backgroundColor = ' #ad5820';
+        divContainer.appendChild(bouton);
+        bouton.addEventListener('click', () => {
+
+            // Liste des noms de checkbox à désélectionner si cochées
+            const checkboxNames = [
+                'courrier_suivi',
+                'shop2shop',
+                'mondial_relay',
+                'colissimo',
+                'relais_colis_dropoff'
+            ];
+
+            checkboxNames.forEach(name => {
+                const container = document.querySelector(`[data-rhf-name="${name}"]`);
+                if (!container) return;
+
+                const button = container.querySelector('button[role="checkbox"]');
+                if (!button) return;
+
+                const isChecked = button.getAttribute('aria-checked') === 'true';
+                if (isChecked) {
+                    button.click(); // Simule un clic pour décocher
+                }
+            });
+
+        });
+
+    });
+
 
     chrome.storage.sync.get("toogle_lbc_adress", (data) => {
         if (!data.toogle_lbc_adress) return; // Ne rien faire si désactivé
@@ -319,7 +358,6 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
             });
             divContainer.appendChild(btn);
         });
-
 
     });
 }
