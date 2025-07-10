@@ -6,24 +6,32 @@ chrome.storage.sync.get("toogle_colissimo_confirm_annuler", (data) => {
 
     const observer = new MutationObserver((mutations, obs) => {
         const boutonAnnuler = document.querySelector('button[data-target="#annulationCollecteModal"]');
+        // const boutonAnnuler = document.querySelector('#ewe-header-angular-colissimo-box-link');
         if (boutonAnnuler) {
             obs.disconnect();
             boutonAnnuler.setAttribute('style', 'background-color: #c51212 !important');
 
-            // Intercepter le clic
-            boutonAnnuler.addEventListener('click', function (e) {
-                e.preventDefault(); // Empêche le comportement par défaut (le clic)
+            // // Création d'un gestionnaire séparé pour pouvoir le retirer
+            // function onClick(e) {
+            //     e.preventDefault(); // Empêche le comportement par défaut (ouverture du modal)
+            //     e.stopImmediatePropagation();
 
-                const confirmation = confirm("Es-tu sûr de vouloir annuler cette collecte ?");
+            //     const confirmation = confirm("Es-tu sûr de vouloir annuler cette collecte ?");
 
-                if (confirmation) {
-                    // Si l'utilisateur confirme, simule un clic "réel"
-                    // Supprime l'écouteur temporairement pour éviter une boucle infinie
-                    boutonAnnuler.disabled = true; // éviter double clic
-                    boutonAnnuler.click(); // déclenche le clic original
-                }
-                // Sinon, rien ne se passe
-            }, true); // capture = true pour intercepter le plus tôt possible
+            //     if (confirmation) {
+            //         // Supprime l'écouteur pour ne pas intercepter le clic suivant
+            //         boutonAnnuler.removeEventListener('click', onClick, true);
+
+            //         // Déclenche un vrai clic qui sera cette fois non intercepté
+            //         boutonAnnuler.click();
+
+            //         // remet l'écouteur apres
+            //         boutonAnnuler.addEventListener('click', onClick, true);
+            //     }
+            // }
+
+            // // Utilise la phase de capture pour intercepter avant les autres gestionnaires
+            // boutonAnnuler.addEventListener('click', onClick, true);
 
         }
     });
