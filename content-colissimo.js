@@ -1,7 +1,7 @@
 console.log("✅ Script injecté !  content-colissimo.js");
 
-chrome.storage.sync.get("toogle_colissimo_confirm_annuler", (data) => {
-    if (!data.toogle_colissimo_confirm_annuler) return; // Ne rien faire si vide ou non défini
+chrome.storage.sync.get("toggle_colissimo_confirm_annuler", (data) => {
+    if (!data.toggle_colissimo_confirm_annuler) return; // Ne rien faire si vide ou non défini
     console.log("🔄 Ajout confirmation annulation collect colissimo");
 
     const observer = new MutationObserver((mutations, obs) => {

@@ -32,24 +32,23 @@ chrome.runtime.onInstalled.addListener(() => {
     console.log("🔄 Extension installée");
 
     // définition des réglages par défaut si non déjà définis
-    chrome.storage.sync.get(["toggle_copy_aicm_buttons", "toggle_copy_text", "toggle_product_preview_buttons", "toggle_adminEdit_buttons", "toggle_heureFin","toogle_colissimo_confirm_annuler"], (data) => {
-        if (data.toggle_copy_aicm_buttons === undefined) {
-            chrome.storage.sync.set({ toggle_copy_aicm_buttons: true });
+    const defaultSettings = {
+        toggle_copy_aicm_buttons: true,
+        toggle_copy_text: true,
+        toggle_product_preview_buttons: true,
+        toggle_adminEdit_buttons: true,
+        toggle_heureFin: true,
+        toggle_colissimo_confirm_annuler: true
+    };
+    chrome.storage.sync.get(Object.keys(defaultSettings), (data) => {
+        const settingsToSet = {};
+        for (const [key, defaultValue] of Object.entries(defaultSettings)) {
+            if (data[key] === undefined) {
+                settingsToSet[key] = defaultValue;
+            }
         }
-        if (data.toggle_copy_text === undefined) {
-            chrome.storage.sync.set({ toggle_copy_text: true });
-        }
-        if (data.toggle_product_preview_buttons === undefined) {
-            chrome.storage.sync.set({ toggle_product_preview_buttons: true });
-        }
-        if (data.toggle_adminEdit_buttons === undefined) {
-            chrome.storage.sync.set({ toggle_adminEdit_buttons: true });
-        }
-        if (data.toggle_heureFin === undefined) {
-            chrome.storage.sync.set({ toggle_heureFin: true });
-        }
-        if (data.toogle_colissimo_confirm_annuler === undefined) {
-            chrome.storage.sync.set({ toogle_colissimo_confirm_annuler: true });
+        if (Object.keys(settingsToSet).length > 0) {
+            chrome.storage.sync.set(settingsToSet);
         }
     });
 
