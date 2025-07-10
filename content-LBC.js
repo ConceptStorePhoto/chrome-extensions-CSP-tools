@@ -18,8 +18,8 @@ style.textContent = `
 
                 .btn-swap:hover {
                     background-color: #0056b3 !important;
-                }
-            `;
+                    }
+                    `;
 document.head.appendChild(style);
 
 const divContainer = document.createElement('div');
@@ -187,12 +187,11 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
                 }
                 const champEtat = document.querySelector('div[data-rhf-name="condition"] input');
                 const champUnivers = document.querySelector('div[data-rhf-name="image_sound_universe"] input');
-                if (champEtat && champUnivers)
+                const champProduit = document.querySelector('div[data-rhf-name="image_sound_product"] input');
+                const champMarque = document.querySelector('div[data-rhf-name="image_sound_brand"] input');
+                if (champEtat && champUnivers && champProduit && champMarque)
                     runSequence();
 
-                function sleep(ms) {
-                    return new Promise(resolve => setTimeout(resolve, ms));
-                }
                 async function runSequence() {
                     champEtat.value = '';
                     champEtat.focus();
@@ -203,12 +202,80 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
                     await sleep(10);
                     simulateKeyPress(champEtat, "Enter");
                     // await sleep(10);
+
                     champUnivers.value = "";
                     champUnivers.focus();
                     simulateKeyPress(champUnivers, "ArrowDown");
                     await sleep(10);
                     simulateKeyPress(champUnivers, "Enter");
+
+                    champMarque.value = "";
+                    champMarque.focus();
+                    for (const test of testMarques) {
+                        const regex = new RegExp(test.regex, "i");
+                        if (regex.test(data.lbc_copy_data.name.slice(0, 15).toUpperCase())) {
+                            console.log("➡️ Test marque : ", data.lbc_copy_data.name, " ➡️ ", test.marque);
+                            simulateTyping(champMarque, test.marque);
+                            await sleep(200);
+                            simulateKeyPress(champMarque, "ArrowDown");
+                            await sleep(10);
+                            simulateKeyPress(champMarque, "Enter");
+                        }
+                    }
+
+                    champProduit.value = '';
+                    champProduit.focus();
+                    for (const test of testCategorie) {
+                        const regex = new RegExp(test.regex, "i"); // "i" pour ignorer la casse
+                        if (regex.test(data.lbc_copy_data.name)) {
+                            console.log("➡️ Test catégorie : ", data.lbc_copy_data.name, " ➡️ ", test.categorie);
+                            simulateTyping(champProduit, test.categorie);
+                            await sleep(200);
+                            simulateKeyPress(champProduit, "ArrowDown");
+                            await sleep(10);
+                            simulateKeyPress(champProduit, "Enter");
+                        }
+                    }
+
+
                 }
+
+                const testCategorie = [
+                    {
+                        regex: "EXTENDER|TELECONVERTER|BAGUE|FLASH|FTZ|PROFOTO|GRIP",
+                        categorie: "Accessoires"
+                    },
+                    {
+                        regex: "XF \\d{1,}|EF \\d{1,}|RF \\d{1,}|AF \\d{1,}|FE \\d{1,}|Z \\d{1,}|SL \\d{1,}|\\d+-\\d+|\\d+ [F]?\\d+(\\.\\d+)?|SUMMILUX|SUMMICRON",
+                        categorie: "Objectifs"
+                    },
+                    {
+                        regex: "FUJIFILM X-|FUJI X-|NIKON D\\d{1,}",
+                        categorie: "Appareil photos"
+                    }
+                ];
+
+                const testMarques = [
+                    { regex: "SIGMA", marque: "Sigma" },
+                    { regex: "TAMRON", marque: "Tamron" },
+                    { regex: "SAMYANG", marque: "Samyang" },
+                    { regex: "CANON", marque: "Canon" },
+                    { regex: "NIKON", marque: "Nikon" },
+                    { regex: "PENTAX", marque: "Pentax" },
+                    { regex: "LEICA", marque: "Leica" },
+                    { regex: "LAOWA", marque: "Laowa" },
+                    { regex: "FUJIFILM|FUJI|XF", marque: "Fujifilm" },
+                    { regex: "GODOX", marque: "Godox" },
+                    { regex: "PANASONIC|LUMIX", marque: "Panasonic" },
+                    { regex: "SONY", marque: "Sony" },
+                    { regex: "OLYMPUS", marque: "Olympus" },
+                    { regex: "PROFOTO", marque: "Profoto" },
+                    { regex: "\\bRF\\b", marque: "Canon" },        // correspond à " RF "
+                    { regex: "\\bAF\\b|AF-S", marque: "Nikon" }    // correspond à " AF " ou "AF-S"
+                ];
+
+
+                // console.log("➡️ Test catégorie : ", trouverCategorie(data.lbc_copy_data.name));
 
             });
 
@@ -310,3 +377,49 @@ function actionPageActivite() {
 
 
 }
+
+
+/////////// FONCTION ///////////
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// function trouverCategorie(nomProduit) {
+//     const testProduit = [
+//         {
+//             regex: "EXTENDER|TELECONVERTER|BAGUE|FLASH|FTZ|PROFOTO|GRIP",
+//             categorie: "Accessoires"
+//         },
+//         {
+//             regex: "XF \\d{1,}|EF \\d{1,}|RF \\d{1,}|AF \\d{1,}|FE \\d{1,}|Z \\d{1,}|SL \\d{1,}|\\d+-\\d+|\\d+ [F]?\\d+(\\.\\d+)?|SUMMILUX|SUMMICRON",
+//             categorie: "Objectifs"
+//         },
+//         {
+//             regex: "FUJIFILM X-|FUJI X-|NIKON D\\d{1,}",
+//             categorie: "Appareil photos"
+//         }
+//     ];
+//     for (const test of testProduit) {
+//         const regex = new RegExp(test.regex, "i"); // "i" pour ignorer la casse
+//         if (regex.test(nomProduit)) {
+//             return test.categorie;
+//         }
+//     }
+//     return "Catégorie inconnue";
+// }
+
+
+// function trouverMarque(nomProduit) {
+//   const debut = nomProduit.slice(0, 15).toUpperCase();
+
+//   for (const test of testMarques) {
+//     const regex = new RegExp(test.regex, "i");
+//     if (regex.test(debut)) {
+//       return test.marque;
+//     }
+//   }
+
+//   return "Marque inconnue";
+// }
+
