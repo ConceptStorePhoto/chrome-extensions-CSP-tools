@@ -18,7 +18,7 @@ export async function checkForUpdate() {
 
         if (isNewerVersion(remoteVersion, localVersion)) {
             console.log("🚀 Mise à jour disponible !");
-            return { updateAvailable: true, remoteVersion, repoURL: GITHUB_REPO_URL };
+            return { updateAvailable: true, remoteVersion, repoURL: GITHUB_REPO_URL, localVersion };
         } else {
             console.log("✅ Extension à jour.");
             return { updateAvailable: false, localVersion };
