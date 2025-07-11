@@ -1,9 +1,9 @@
 console.log("✅ Script injecté !  content-admin-WP.js");
 
-console.log("🔄 Ajout bouton LBC copy");
 try {
     const table = document.querySelectorAll('tbody#the-list tr');
     if (table.length >= 1) {
+        console.log("🔄 Ajout bouton LBC copy");
         table.forEach((line) => {
             //création du bouton
             const boutonCopier = document.createElement('span');
@@ -35,5 +35,5 @@ try {
         });
     }
 } catch (error) {
-    console.error("Erreur lors de l'ajout des boutons/actions dans le catalogue :", error);
+    console.error("Erreur lors de l'ajout des boutons/actions dans le catalogue WordPress :", error);
 }
