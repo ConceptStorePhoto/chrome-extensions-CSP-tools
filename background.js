@@ -1,4 +1,4 @@
-import { checkForUpdate } from './update-check.js';
+import { checkForUpdate } from './functions/update-check.js';
 // Vérification des mises à jour à l'initialisation de l'extension
 console.log("🔄 Vérification des mises à jour au démarrage de l'extension...");
 checkForUpdate().then(result => {
@@ -34,7 +34,7 @@ chrome.runtime.onInstalled.addListener(() => {
     // définition des réglages par défaut si non déjà définis
     const defaultSettings = {
         toggle_copy_aicm_buttons: true,
-        toggle_copy_text: true,
+        toggle_contextMenu_copy_text: true,
         toggle_product_preview_buttons: true,
         toggle_adminEdit_buttons: true,
         toggle_heureFin: true,
@@ -62,8 +62,8 @@ function updateContextMenu() {
     console.log("🔄 Création du menu contextuel");
     chrome.contextMenus.removeAll(() => {
 
-        chrome.storage.sync.get("toggle_copy_text", (data) => {
-            if (!data.toggle_copy_text) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_contextMenu_copy_text", (data) => {
+            if (!data.toggle_contextMenu_copy_text) return; // Ne rien faire si désactivé
 
             chrome.contextMenus.create({
                 id: "copier-ref", // identifiant unique
@@ -77,8 +77,8 @@ function updateContextMenu() {
             });
         });
 
-        chrome.storage.sync.get("toggle_search_miss_num", (data) => {
-            if (!data.toggle_search_miss_num) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_contextMenu_search_miss_num", (data) => {
+            if (!data.toggle_contextMenu_search_miss_num) return; // Ne rien faire si désactivé
 
             chrome.contextMenus.create({
                 id: "recherche-missNumerique", // identifiant unique
@@ -92,8 +92,8 @@ function updateContextMenu() {
             });
         });
 
-        chrome.storage.sync.get("toggle_search_idealo", (data) => {
-            if (!data.toggle_search_idealo) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_contextMenu_search_idealo", (data) => {
+            if (!data.toggle_contextMenu_search_idealo) return; // Ne rien faire si désactivé
 
             chrome.contextMenus.create({
                 id: "recherche-idealo", // identifiant unique
@@ -107,8 +107,8 @@ function updateContextMenu() {
             });
         });
 
-        chrome.storage.sync.get("toggle_search_panajou", (data) => {
-            if (!data.toggle_search_panajou) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_contextMenu_search_panajou", (data) => {
+            if (!data.toggle_contextMenu_search_panajou) return; // Ne rien faire si désactivé
 
             chrome.contextMenus.create({
                 id: "recherche-panajou", // identifiant unique
@@ -122,8 +122,8 @@ function updateContextMenu() {
             });
         });
 
-        chrome.storage.sync.get("toggle_search_ipln", (data) => {
-            if (!data.toggle_search_ipln) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_contextMenu_search_ipln", (data) => {
+            if (!data.toggle_contextMenu_search_ipln) return; // Ne rien faire si désactivé
 
             chrome.contextMenus.create({
                 id: "recherche-ipln", // identifiant unique

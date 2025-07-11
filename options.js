@@ -1,3 +1,6 @@
+import { gestionToggle } from './functions/gestion-toggle.js';
+import { gestionColorInput } from './functions/gestion-color-input.js';
+
 document.addEventListener("DOMContentLoaded", () => {
 
     // Charger le contenu de popup.html
@@ -17,34 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     element.classList.remove('hide');
                 });;
 
-                // fonction pour gérer les toogles
-                const toggleButtons = document.querySelectorAll('.toggle-button');
-                toggleButtons.forEach(button => {
-                    const id = button.id;
-                    const groupe = button.dataset.groupe;
-
-                    // Charger l'état actuel pour chaque bouton
-                    chrome.storage.sync.get(id, (data) => {
-                        button.checked = !!data[id];
-                    });
-
-                    // Mise à jour de l'état 
-                    button.addEventListener('change', () => {
-                        // Si le bouton fait partie d'un groupe
-                        if (groupe && button.checked) {
-                            // Désactiver les autres boutons du même groupe
-                            toggleButtons.forEach(other => {
-                                if (other !== button && other.dataset.groupe === groupe && other.checked) {
-                                    other.checked = false;
-                                    other.dispatchEvent(new Event('change'));
-                                }
-                            });
-                        }
-                        chrome.storage.sync.set({ [button.id]: button.checked }, () => {
-                            chrome.runtime.sendMessage({ type: "updateContextMenu" });
-                        });
-                    });
-                });
+                gestionToggle();
+                gestionColorInput();
 
             } else {
                 document.querySelector('.mainContainer').textContent = 'Contenu introuvable';

@@ -1,5 +1,8 @@
 console.log('This is a popup!');
 
+import { gestionToggle } from './functions/gestion-toggle.js';
+import { gestionColorInput } from './functions/gestion-color-input.js';
+
 document.addEventListener("DOMContentLoaded", () => {
 
     // Vérification de l'URL de l'onglet actif et affichage de contenu spécifique
@@ -38,58 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-
-    // fonction pour gérer les toogles
-    const toggleButtons = document.querySelectorAll('.toggle-button');
-    toggleButtons.forEach(button => {
-        const id = button.id;
-        const groupe = button.dataset.groupe;
-
-        // Charger l'état actuel pour chaque bouton
-        chrome.storage.sync.get(id, (data) => {
-            button.checked = !!data[id];
-        });
-
-        // Mise à jour de l'état 
-        button.addEventListener('change', () => {
-            // Si le bouton fait partie d'un groupe
-            if (groupe && button.checked) {
-                // Désactiver les autres boutons du même groupe
-                toggleButtons.forEach(other => {
-                    if (other !== button && other.dataset.groupe === groupe && other.checked) {
-                        other.checked = false;
-                        other.dispatchEvent(new Event('change'));
-                    }
-                });
-            }
-            chrome.storage.sync.set({ [button.id]: button.checked }, () => {
-                chrome.runtime.sendMessage({ type: "updateContextMenu" });
-            });
-        });
-    });
-
-    // Gestion de l'input color
-    const colorInput = document.getElementById('color_remplacement');
-    let defaultColor = "";
-    // Charger la couleur enregistrée (ou mettre la valeur par défaut)
-    chrome.storage.sync.get(["catalog_color_remplacement", "catalog_color_remplacement_default"], (data) => {
-        colorInput.value = data.catalog_color_remplacement || data.catalog_color_remplacement_default;
-        defaultColor = data.catalog_color_remplacement_default;
-    });
-    // Enregistrer la nouvelle couleur quand elle change
-    colorInput.addEventListener('input', () => {
-        const nouvelleCouleur = colorInput.value;
-        chrome.storage.sync.set({ catalog_color_remplacement: nouvelleCouleur }, () => {
-            console.log("🎨 Couleur de remplacement enregistrée :", nouvelleCouleur);
-        });
-    });
-    // Clic sur le bouton de réinitialisation
-    document.getElementById('reset_color').addEventListener('click', () => {
-        colorInput.value = defaultColor;
-        chrome.storage.sync.remove('catalog_color_remplacement', () => {
-            console.log('🎨 Couleur personnalisée supprimée ; retour au réglage par défaut.');
-        });
-    });
+    gestionToggle();
+    gestionColorInput();
 
     // Bouton "Recharger la page"
     const refreshBtn = document.getElementById("refresh");
@@ -117,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Vérification des mises à jour
-import { checkForUpdate } from './update-check.js';
+import { checkForUpdate } from './functions/update-check.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const updateMsg = document.getElementById("update-message");
