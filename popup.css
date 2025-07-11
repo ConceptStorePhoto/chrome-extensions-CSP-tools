@@ -176,3 +176,42 @@
      z-index: 1000;
      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
  }
+
+ /*************** Input color ***************/
+
+ .divSliderButton input[type="color"] {
+     appearance: none;
+     -webkit-appearance: none;
+     border: none;
+     width: 25px;
+     height: 25px;
+     border-radius: 6px;
+     background: transparent;
+     cursor: pointer;
+     padding: 0;
+     margin-left: 10px;
+ }
+
+ .divSliderButton input[type="color"]::-webkit-color-swatch-wrapper {
+     padding: 0;
+     border-radius: 6px;
+ }
+
+ .divSliderButton input[type="color"]::-webkit-color-swatch {
+     border: none;
+     border-radius: 6px;
+ }
+
+ .reset-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #888;
+  padding: 0 6px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+.reset-btn:hover {
+  color: #000;
+}

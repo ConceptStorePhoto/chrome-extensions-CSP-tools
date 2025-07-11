@@ -38,7 +38,8 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_product_preview_buttons: true,
         toggle_adminEdit_buttons: true,
         toggle_heureFin: true,
-        toggle_colissimo_confirm_annuler: true
+        toggle_colissimo_confirm_annuler: true,
+        catalog_color_remplacement_default: '#0052a3'
     };
     chrome.storage.sync.get(Object.keys(defaultSettings), (data) => {
         const settingsToSet = {};

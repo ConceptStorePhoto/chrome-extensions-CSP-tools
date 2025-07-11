@@ -27,7 +27,7 @@ function catalogActions() {
                 bouton.style.padding = "4px 8px";
                 bouton.onclick = (event) => {
                     event.preventDefault();
-                    event.stopPropagation(); // évite les comportements attachés ailleurs
+                    // event.stopPropagation(); // évite les comportements attachés ailleurs
                     navigator.clipboard.writeText(texte).then(() => {
                         bouton.innerText = "✅";
                         setTimeout(() => (bouton.innerText = "📋"), 1500);
@@ -193,7 +193,59 @@ function catalogActions() {
                     setTimeout(() => (boutonCopier.innerText = "📋LBC"), 1500);
                 });
             });
+        });
 
+        chrome.storage.sync.get("toogle_catalog_color_line", (data) => {
+            if (!data.toogle_catalog_color_line) return; // Ne rien faire si désactivé
+            console.log("🔄 Activer Colorer ligne cliquée");
+
+            const HIGHLIGHT = 'ps‑row‑highlight';
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .${HIGHLIGHT} {
+                background-color: #fff7c6 !important;   /* couleur de surbrillance */
+                transition: background-color 120ms ease;
+                }
+            `;
+            document.head.appendChild(style);
+
+            /* Délégation d’événements : Avantage : une seule écoute pour tous les <tr>, même ajoutés dynamiquement. */
+            document.addEventListener('click', (e) => {
+                const tr = e.target.closest('tr');        // monte jusqu’au <tr> le plus proche
+                if (!tr) return;                          // on a cliqué ailleurs
+
+                // 3. Retire la surbrillance éventuelle
+                const actif = document.querySelector(`.${HIGHLIGHT}`);
+                if (actif && actif !== tr) actif.classList.remove(HIGHLIGHT);
+
+                // 4. Ajoute la surbrillance à la ligne cliquée
+                tr.classList.add(HIGHLIGHT);
+            });
+        });
+
+        chrome.storage.sync.get(["toogle_catalog_color_swap", "catalog_color_remplacement", "catalog_color_remplacement_default"], (data) => {
+            if (!data.toogle_catalog_color_swap) return; // Ne rien faire si désactivé
+            console.log("🔄 Remplacement du bleu ilisible");
+
+            // const ancienneCouleur = 'rgb(37, 185, 215)'; // équivalent de #25b9d7 en RGB
+            const ancienneCouleur = hexToRGB('#25b9d7'); // équivalent de #25b9d7 en RGB
+            const nouvelleCouleur = data.catalog_color_remplacement || data.catalog_color_remplacement_default;
+
+            // Parcourt tous les éléments visibles de la page
+            document.querySelectorAll('*').forEach(el => {
+                const style = getComputedStyle(el);
+                if (style.color === ancienneCouleur) {
+                    el.setAttribute('style', `color: ${nouvelleCouleur} !important`);
+                }
+            });
+
+            function hexToRGB(hex) {
+                const r = parseInt(hex.slice(1, 3), 16);
+                const g = parseInt(hex.slice(3, 5), 16);
+                const b = parseInt(hex.slice(5, 7), 16);
+                return `rgb(${r}, ${g}, ${b})`;
+            }
         });
 
 
