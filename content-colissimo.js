@@ -5,12 +5,12 @@ chrome.storage.sync.get("toggle_colissimo_confirm_annuler", (data) => {
     console.log("🔄 Ajout confirmation annulation collect colissimo");
 
     const observer = new MutationObserver((mutations, obs) => {
-        const boutonAnnuler = document.querySelector('button[data-target="#annulationCollecteModal"]');
-        // const boutonAnnuler = document.querySelector('#requestCollectionID'); //teste avec bouton demande
-        if (boutonAnnuler && !document.getElementById('btnAnnulerCustom')) {
+        const boutonAnnuler = document.getElementById('annulationCollecteButton');
+        // const boutonAnnuler = document.getElementById('demandeCollecteButton'); //teste avec bouton demande
+        if (boutonAnnuler && !document.getElementById('btnAnnulerCustom') && boutonAnnuler.style.display !== "none") {
             obs.disconnect();
             // boutonAnnuler.setAttribute('style', 'background-color: #c51212 !important');
-            boutonAnnuler.parentElement.style.display = "none";
+            boutonAnnuler.style.display = "none";
 
             const customBouton = document.createElement('button');
             customBouton.id = 'btnAnnulerCustom';
@@ -21,13 +21,11 @@ chrome.storage.sync.get("toggle_colissimo_confirm_annuler", (data) => {
             customBouton.style.border = 'none';
             customBouton.style.width = '100%';
 
-            boutonAnnuler.parentElement.parentElement.prepend(customBouton);
+            boutonAnnuler.parentElement.prepend(customBouton);
 
             customBouton.addEventListener('click', () => {
-                // const confirmation = confirm("Es-tu sûr de vouloir annuler cette collecte ?");
-                // if (confirmation) {
-                boutonAnnuler.parentElement.style.display = "bloc";
-                // }
+                console.log("🔄 Bouton custom cliqué");
+                boutonAnnuler.removeAttribute('style');
             });
             console.log("✅ Bouton custom ajouté avec succès !");
         }
