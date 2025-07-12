@@ -226,7 +226,7 @@ function injecterRecherche(tabId, baseURL) {
 
 //// Gestion des raccourcis clavier
 chrome.commands.onCommand.addListener((command) => {
-    if (command === "backCatalog") {
+    if (command === "PrestaShopBackCatalog") {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]?.id) {
                 chrome.scripting.executeScript({

@@ -74,12 +74,12 @@
     }
   ],
   "commands": {
-    "backCatalog": {
+    "PrestaShopBackCatalog": {
       "suggested_key": {
         "default": "Alt+Shift+Q",
         "mac": "Alt+Shift+Q"
       },
-      "description": "Retour au catalogue depuis modif produit"
+      "description": "PrestaShop : Retour au catalogue depuis modif produit"
     }
   },
   "permissions": [
