@@ -195,7 +195,7 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get(["toogle_catalog_color_line","catalog_color_highlight","catalog_color_highlight_default"], (data) => {
+        chrome.storage.sync.get(["toogle_catalog_color_line", "catalog_color_highlight", "catalog_color_highlight_default"], (data) => {
             if (!data.toogle_catalog_color_line) return; // Ne rien faire si désactivé
             console.log("🔄 Activer Colorer ligne cliquée");
 
@@ -484,7 +484,7 @@ console.log("🔄 Vérification du type de page :", window.location.pathname.spl
 if (window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "" && window.location.pathname.includes("catalog")) {
     console.log("✅ Page catalogue détectée, ajout des actions...");
     catalogActions();
-
+    document.title = "Catalogue " + document.title; // Change le titre de la page pour le catalogue
     // MutationObserver pour suivre les changements du DOM => je crois que ce n'est pas nécessaire ici
     // observerCatalog = new MutationObserver(catalogActions);
     // observerCatalog.observe(document.body, { childList: true, subtree: true });
@@ -492,6 +492,11 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
 else if (window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "edit" && window.location.pathname.includes("products-v2")) {
     console.log("✅ Page produit détectée, ajout des actions...");
     productActions();
+    const productName = document.getElementById('product_header_name_1').value;
+    if (productName)
+        document.title = "Modifier  « " + productName + " » | " + document.title; // Change le titre de la page pour le catalogue
+    else
+        document.title = "Modifier " + document.title; // Change le titre de la page pour le catalogue
 }
 
 // récupération du token dans l'url du site si page admin
