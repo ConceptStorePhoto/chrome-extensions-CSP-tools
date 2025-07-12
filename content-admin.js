@@ -225,8 +225,8 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get(["toogle_catalog_color_swap", "catalog_color_remplacement", "catalog_color_remplacement_default"], (data) => {
-            if (!data.toogle_catalog_color_swap) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get(["toogle_catalog_color_remplacement", "catalog_color_remplacement", "catalog_color_remplacement_default"], (data) => {
+            if (!data.toogle_catalog_color_remplacement) return; // Ne rien faire si désactivé
             console.log("🔄 Remplacement du bleu ilisible");
 
             // const ancienneCouleur = 'rgb(37, 185, 215)'; // équivalent de #25b9d7 en RGB

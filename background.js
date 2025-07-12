@@ -39,6 +39,7 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_adminEdit_buttons: true,
         toggle_heureFin: true,
         toggle_colissimo_confirm_annuler: true,
+        toogle_catalog_color_remplacement: true,
         catalog_color_remplacement_default: '#0052a3',
         catalog_color_highlight_default: '#fff7c6'
     };
