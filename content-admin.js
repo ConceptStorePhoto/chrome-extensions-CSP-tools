@@ -195,16 +195,17 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get("toogle_catalog_color_line", (data) => {
+        chrome.storage.sync.get(["toogle_catalog_color_line","catalog_color_highlight","catalog_color_highlight_default"], (data) => {
             if (!data.toogle_catalog_color_line) return; // Ne rien faire si désactivé
             console.log("🔄 Activer Colorer ligne cliquée");
 
             const HIGHLIGHT = 'ps‑row‑highlight';
+            const highlightColor = data.catalog_color_highlight || data.catalog_color_highlight_default
 
             const style = document.createElement('style');
             style.textContent = `
                 .${HIGHLIGHT} {
-                background-color: #fff7c6 !important;   /* couleur de surbrillance */
+                background-color: ${highlightColor} !important;   /* couleur de surbrillance */
                 transition: background-color 120ms ease;
                 }
             `;
@@ -212,8 +213,8 @@ function catalogActions() {
 
             /* Délégation d’événements : Avantage : une seule écoute pour tous les <tr>, même ajoutés dynamiquement. */
             document.addEventListener('click', (e) => {
-                const tr = e.target.closest('tr');        // monte jusqu’au <tr> le plus proche
-                if (!tr) return;                          // on a cliqué ailleurs
+                const tr = e.target.closest('tr');  // monte jusqu’au <tr> le plus proche
+                if (!tr || tr.matches('.column-headers, .column-filters')) return;  // on a cliqué ailleurs on ignore en‑têtes & filtres
 
                 // 3. Retire la surbrillance éventuelle
                 const actif = document.querySelector(`.${HIGHLIGHT}`);

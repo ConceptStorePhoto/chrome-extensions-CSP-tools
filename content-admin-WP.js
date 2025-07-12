@@ -35,5 +35,5 @@ try {
         });
     }
 } catch (error) {
-    console.error("Erreur lors de l'ajout des boutons/actions dans le catalogue WordPress :", error);
+    console.error(`[${new Date().toLocaleString()}] Erreur lors de l'ajout des boutons/actions dans le catalogue WordPress :`, error);
 }
