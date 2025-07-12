@@ -46,7 +46,7 @@ function catalogActions() {
                 // Vérifie que l'élément a du texte
                 if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM") || el.innerText.includes("Déclinaisons ?")) {
                     el.querySelector("a").innerText = "Aucun code AICM";
-                    el.querySelector("a").setAttribute("style", "color: #e30000 !important"); // Met en rouge si pas de code
+                    el.querySelector("a").setAttribute("style", "color: #c90000 !important"); // Met en rouge si pas de code
                     if (el.nextElementSibling.nextElementSibling && el.nextElementSibling.nextElementSibling.innerText == "0,00 €") {
                         el.querySelector("a").innerText = "Déclinaisons ?";
                     }
@@ -62,8 +62,8 @@ function catalogActions() {
                 // Vérifie que l'élément existe et a du texte
                 if (el.innerText && el.innerText.trim() !== "" && el.innerText != "0,00 €") {
                     if (el.innerText == el.nextElementSibling.innerText) {
-                        el.querySelector("a").setAttribute("style", "color: #e30000 !important"); // Met en rouge si pas de code
-                        el.nextElementSibling.querySelector("a").setAttribute("style", "color: #e30000 !important"); // Met en rouge si pas de code
+                        el.querySelector("a").setAttribute("style", "color: #c90000 !important"); // Met en rouge si pas de code
+                        el.nextElementSibling.querySelector("a").setAttribute("style", "color: #c90000 !important"); // Met en rouge si pas de code
                     }
                 }
             });
