@@ -58,7 +58,7 @@
     },
     {
       "matches": [
-        "https://www.applications.colissimo.entreprise.laposte.fr/entreprise/collecte-ondemand/mes-collectes"
+        "https://www.applications.colissimo.entreprise.laposte.fr/entreprise/collecte-ondemand/*"
       ],
       "js": [
         "content-colissimo.js"
