@@ -473,6 +473,78 @@ function productActions() {
         }
     });
 
+
+    chrome.storage.sync.get("toggle_product_stock_display", (data) => {
+        if (!data.toggle_product_stock_display) return; // Ne rien faire si désactivé
+
+        // Attendre que la zone existe
+        function waitForZone(cb) {
+            const zone = document.querySelector('#prestatillstockperstore');
+            if (zone) return cb(zone);
+            const waiter = new MutationObserver(() => {
+                const found = document.querySelector('#prestatillstockperstore');
+                if (found) {
+                    waiter.disconnect();
+                    cb(found);
+                }
+            });
+            waiter.observe(document.body, { childList: true, subtree: true });
+        }
+        // Lance l'observation dès que la zone est présente
+        waitForZone((zone) => {
+            console.log('🔍 Surveillance activée sur #prestatillstockperstore');
+            let debounceTimer = null;
+            const observer = new MutationObserver((mutations) => {
+                const hasRealChange = mutations.some(
+                    m => m.type === 'childList' &&
+                        (m.addedNodes.length || m.removedNodes.length)
+                );
+                if (!hasRealChange) return;
+
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    console.log('♻️ Rechargement détecté !');
+
+                    // 🔁 TEMPORAIREMENT suspendre l’observation
+                    observer.disconnect();
+
+                    const selectMagasin = document.querySelector('#sbs_store_list');
+                    if (selectMagasin) {
+                        selectMagasin.disabled = true;
+                    }
+
+                    const magasin1 = document.querySelector('#sbs_table_box_6');
+                    if (magasin1) {
+                        magasin1.classList.add('active');
+                        magasin1.style.paddingBottom = "40px";
+                        magasin1.style.marginBottom = "40px";
+                        magasin1.style.borderBottom = "solid black 2px";
+                    }
+                    const magasin2 = document.querySelector('#sbs_table_box_7');
+                    if (magasin2) {
+                        magasin2.classList.add('active');
+                        magasin2.style.paddingBottom = "40px";
+                        magasin2.style.marginBottom = "40px";
+                        magasin2.style.borderBottom = "solid black 2px";
+                    }
+                    const magasin3 = document.querySelector('#sbs_table_box_8');
+                    if (magasin3) {
+                        magasin3.classList.add('active');
+                        magasin3.style.paddingBottom = "40px";
+                        magasin3.style.marginBottom = "40px";
+                        magasin3.style.borderBottom = "solid black 2px";
+                    }
+
+                    // ✅ Puis tu réactives l’observer
+                    observer.observe(zone, { childList: true, subtree: true });
+                }, 100);
+            });
+            observer.observe(zone, { childList: true, subtree: true });
+        });
+
+    });
+
+
 }
 
 
