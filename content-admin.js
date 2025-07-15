@@ -105,24 +105,25 @@ function catalogActions() {
             });
         });
 
-        // chrome.storage.sync.get("toggle_catalogue_preview_buttons", (data) => {
-        //     if (!data.toggle_catalogue_preview_buttons) return; // Ne rien faire si désactivé
-        //     console.log("🔄 Ajout des boutons de prévisualisation au catalogue");
+        chrome.storage.sync.get("toggle_catalogue_preview_buttons", (data) => {
+            if (!data.toggle_catalogue_preview_buttons) return; // Ne rien faire si désactivé
+            console.log("🔄 Ajout des boutons de prévisualisation au catalogue");
 
-        //     const elements = document.querySelectorAll(".grid-prévisualiser-row-link");
-        //     elements.forEach((el) => {
-        //         // Évite d'ajouter le bouton plusieurs fois
-        //         if (el.parentNode.parentNode.querySelector("a.preview-btn")) return;
+            const elements = document.querySelectorAll(".grid-prévisualiser-row-link");
+            elements.forEach((el) => {
+                // Évite d'ajouter le bouton plusieurs fois
+                if (el.parentNode.parentNode.querySelector("a.preview-btn")) return;
 
-        //         //copier le bouton sélectioner dans l'élément parent
-        //         let element = document.createElement("a");
-        //         element.href = el.href;
-        //         element.className = "preview-btn";
-        //         element.target = "_blank";
-        //         element.innerHTML = `<i class="material-icons">visibility</i>`;
-        //         el.parentNode.parentNode.appendChild(element);
-        //     });
-        // });
+                //copier le bouton sélectioner dans l'élément parent
+                let element = document.createElement("a");
+                element.href = el.href;
+                element.className = "preview-btn";
+                element.target = "_blank";
+                element.innerHTML = `<i class="material-icons">visibility</i>`;
+                element.style.marginRight = "8px";
+                el.parentNode.parentNode.appendChild(element);
+            });
+        });
 
         chrome.storage.sync.get("toggle_catalog_ungroup_action", (data) => {
             if (!data.toggle_catalog_ungroup_action) return; // Ne rien faire si désactivé
@@ -513,27 +514,17 @@ function productActions() {
                         selectMagasin.disabled = true;
                     }
 
-                    const magasin1 = document.querySelector('#sbs_table_box_6');
-                    if (magasin1) {
-                        magasin1.classList.add('active');
-                        magasin1.style.paddingBottom = "40px";
-                        magasin1.style.marginBottom = "40px";
-                        magasin1.style.borderBottom = "solid black 2px";
-                    }
-                    const magasin2 = document.querySelector('#sbs_table_box_7');
-                    if (magasin2) {
-                        magasin2.classList.add('active');
-                        magasin2.style.paddingBottom = "40px";
-                        magasin2.style.marginBottom = "40px";
-                        magasin2.style.borderBottom = "solid black 2px";
-                    }
-                    const magasin3 = document.querySelector('#sbs_table_box_8');
-                    if (magasin3) {
-                        magasin3.classList.add('active');
-                        magasin3.style.paddingBottom = "40px";
-                        magasin3.style.marginBottom = "40px";
-                        magasin3.style.borderBottom = "solid black 2px";
-                    }
+                    // const coloneGauche = document.getElementById('store_list');
+                    // if (coloneGauche) {
+                    //     coloneGauche.style.display = "none";
+                    // }
+
+                    document.querySelectorAll('.sbs_table_box').forEach((el) => {
+                        el.classList.add('active');
+                        el.style.paddingBottom = "40px";
+                        el.style.marginBottom = "40px";
+                        el.style.borderBottom = "solid black 2px";
+                    });
 
                     // ✅ Puis tu réactives l’observer
                     observer.observe(zone, { childList: true, subtree: true });
@@ -541,7 +532,6 @@ function productActions() {
             });
             observer.observe(zone, { childList: true, subtree: true });
         });
-
     });
 
 
