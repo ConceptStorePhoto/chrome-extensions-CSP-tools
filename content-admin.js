@@ -521,9 +521,13 @@ function productActions() {
 
                     document.querySelectorAll('.sbs_table_box').forEach((el) => {
                         el.classList.add('active');
-                        el.style.paddingBottom = "40px";
+                        // el.style.paddingBottom = "40px";
                         el.style.marginBottom = "40px";
-                        el.style.borderBottom = "solid black 2px";
+                        // el.style.borderBottom = "solid black 2px";
+                        el.style.border = "solid black 1px";
+                        el.style.padding = "20px";
+                        el.style.backgroundColor = "#ffc99413";
+                        el.style.borderRadius = "10px";
                     });
 
                     document.querySelectorAll('.shortcuts .affect_quantities').forEach((el) => {
