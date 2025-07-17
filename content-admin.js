@@ -526,6 +526,10 @@ function productActions() {
                         el.style.borderBottom = "solid black 2px";
                     });
 
+                    document.querySelectorAll('.shortcuts .affect_quantities').forEach((el) => {
+                        el.classList.add('disabled'); // désactive les boutons car ne fonctionne pas quand les 3 stocks sont affichés
+                    });
+
                     // ✅ Puis tu réactives l’observer
                     observer.observe(zone, { childList: true, subtree: true });
                 }, 100);
