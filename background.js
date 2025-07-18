@@ -139,6 +139,21 @@ function updateContextMenu() {
             });
         });
 
+        chrome.storage.sync.get("toggle_contextMenu_search_fnac", (data) => {
+            if (!data.toggle_contextMenu_search_fnac) return; // Ne rien faire si désactivé
+
+            chrome.contextMenus.create({
+                id: "recherche-fnac", // identifiant unique
+                title: "🔎 Rechercher sur Fnac",
+                contexts: ["selection", "link"],
+                documentUrlPatterns: [
+                    "*://concept-store-photo.dmu.sarl/*",
+                    "*://conceptstorephoto.fr/*",
+                    "*://www.conceptstorephoto.fr/*"
+                ]
+            });
+        });
+
     });
 }
 
@@ -169,6 +184,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             break;
         case "recherche-ipln":
             injecterRecherche(tab.id, "https://ipln.fr/recherche?controller=search&s=");
+            break;
+        case "recherche-fnac":
+            injecterRecherche(tab.id, "https://www.fnac.com/SearchResult/ResultList.aspx?Search=");
             break;
     }
 });
