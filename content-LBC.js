@@ -146,8 +146,8 @@ function verificationUrlPage(url) {
 
 /////////// FONCTIONNALITES ///////////
 function actionPageCreation() {
-    chrome.storage.sync.get("toogle_lbc_past", (data) => {
-        if (!data.toogle_lbc_past) return; // Ne rien faire si désactivé
+    chrome.storage.sync.get("toggle_lbc_past", (data) => {
+        if (!data.toggle_lbc_past) return; // Ne rien faire si désactivé
 
         console.log("🔄 Ajout du bouton Coller Data");
 
@@ -284,8 +284,8 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
 
     });
 
-    chrome.storage.sync.get("toogle_lbc_livraison", (data) => {
-        if (!data.toogle_lbc_livraison) return; // Ne rien faire si désactivé
+    chrome.storage.sync.get("toggle_lbc_livraison", (data) => {
+        if (!data.toggle_lbc_livraison) return; // Ne rien faire si désactivé
 
         console.log("🔄 Ajout du bouton désélection livraison");
 
@@ -323,8 +323,8 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
     });
 
 
-    chrome.storage.sync.get("toogle_lbc_adress", (data) => {
-        if (!data.toogle_lbc_adress) return; // Ne rien faire si désactivé
+    chrome.storage.sync.get("toggle_lbc_adress", (data) => {
+        if (!data.toggle_lbc_adress) return; // Ne rien faire si désactivé
 
         console.log("🔄 Ajout boutons Adresse");
 
@@ -364,8 +364,8 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
 
 function actionPageActivite() {
 
-    chrome.storage.sync.get("toogle_lbc_activite_copy_ref", (data) => {
-        if (!data.toogle_lbc_activite_copy_ref) return; // Ne rien faire si désactivé
+    chrome.storage.sync.get("toggle_lbc_activite_copy_ref", (data) => {
+        if (!data.toggle_lbc_activite_copy_ref) return; // Ne rien faire si désactivé
 
         const observer = new MutationObserver((mutations, obs) => {
             const rows = document.querySelectorAll('tr[data-test-id="list-item"] p.truncate');

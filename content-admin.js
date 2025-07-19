@@ -160,8 +160,8 @@ function catalogActions() {
         });
 
 
-        chrome.storage.sync.get("toogle_lbc_copy", (data) => {
-            if (!data.toogle_lbc_copy) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_lbc_copy", (data) => {
+            if (!data.toggle_lbc_copy) return; // Ne rien faire si désactivé
             console.log("🔄 Ajout bouton LBC copy");
 
             const table = document.querySelectorAll('#product_grid_table tbody tr');
@@ -196,8 +196,8 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get(["toogle_catalog_color_line", "catalog_color_highlight", "catalog_color_highlight_default"], (data) => {
-            if (!data.toogle_catalog_color_line) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get(["toggle_catalog_color_line", "catalog_color_highlight", "catalog_color_highlight_default"], (data) => {
+            if (!data.toggle_catalog_color_line) return; // Ne rien faire si désactivé
             console.log("🔄 Activer Colorer ligne cliquée");
 
             const HIGHLIGHT = 'ps‑row‑highlight';
@@ -226,8 +226,8 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get(["toogle_catalog_color_remplacement", "catalog_color_remplacement", "catalog_color_remplacement_default"], (data) => {
-            if (!data.toogle_catalog_color_remplacement) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get(["toggle_catalog_color_remplacement", "catalog_color_remplacement", "catalog_color_remplacement_default"], (data) => {
+            if (!data.toggle_catalog_color_remplacement) return; // Ne rien faire si désactivé
             console.log("🔄 Remplacement du bleu ilisible");
 
             // const ancienneCouleur = 'rgb(37, 185, 215)'; // équivalent de #25b9d7 en RGB
