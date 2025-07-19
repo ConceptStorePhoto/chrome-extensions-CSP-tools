@@ -2,8 +2,8 @@ console.log("✅ Script injecté !  content-admin.js");
 
 function catalogActions() {
     try {
-        chrome.storage.sync.get("toggle_copy_aicm_buttons", (data) => {
-            if (!data.toggle_copy_aicm_buttons) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_catalog_copy_aicm_buttons", (data) => {
+            if (!data.toggle_catalog_copy_aicm_buttons) return; // Ne rien faire si désactivé
             console.log("🔄 Ajout des boutons de copie du code AICM");
 
             const elements = document.querySelectorAll(".column-reference");
@@ -38,8 +38,8 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get("toggle_no_aicm_warning", (data) => {
-            if (!data.toggle_no_aicm_warning) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_catalog_no_aicm_warning", (data) => {
+            if (!data.toggle_catalog_no_aicm_warning) return; // Ne rien faire si désactivé
 
             const elements = document.querySelectorAll(".column-reference");
             elements.forEach((el) => {
@@ -54,8 +54,8 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get("toggle_warning_HT_TTC", (data) => {
-            if (!data.toggle_warning_HT_TTC) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_catalog_warning_HT_TTC", (data) => {
+            if (!data.toggle_catalog_warning_HT_TTC) return; // Ne rien faire si désactivé
 
             const elements = document.querySelectorAll(".column-final_price_tax_excluded");
             elements.forEach((el) => {
@@ -69,8 +69,8 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get("toggle_copy_name_buttons", (data) => {
-            if (!data.toggle_copy_name_buttons) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_catalog_copy_name_buttons", (data) => {
+            if (!data.toggle_catalog_copy_name_buttons) return; // Ne rien faire si désactivé
             console.log("🔄 Ajout des boutons de copie du nom");
 
             const elements = document.querySelectorAll(".column-name");
@@ -105,8 +105,8 @@ function catalogActions() {
             });
         });
 
-        chrome.storage.sync.get("toggle_catalogue_preview_buttons", (data) => {
-            if (!data.toggle_catalogue_preview_buttons) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_catalog_preview_buttons", (data) => {
+            if (!data.toggle_catalog_preview_buttons) return; // Ne rien faire si désactivé
             console.log("🔄 Ajout des boutons de prévisualisation au catalogue");
 
             const elements = document.querySelectorAll(".grid-prévisualiser-row-link");
@@ -145,8 +145,8 @@ function catalogActions() {
         });
 
 
-        chrome.storage.sync.get("toggle_catalogue_masquer_horsTaxe", (data) => {
-            if (!data.toggle_catalogue_masquer_horsTaxe) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_catalog_masquer_horsTaxe", (data) => {
+            if (!data.toggle_catalog_masquer_horsTaxe) return; // Ne rien faire si désactivé
             console.log("🔄 Masquage hors taxe du catalogue");
 
             document.querySelectorAll("[data-column-id='final_price_tax_excluded']").forEach((el) => {
@@ -160,8 +160,8 @@ function catalogActions() {
         });
 
 
-        chrome.storage.sync.get("toggle_lbc_copy", (data) => {
-            if (!data.toggle_lbc_copy) return; // Ne rien faire si désactivé
+        chrome.storage.sync.get("toggle_catalog_lbc_copy", (data) => {
+            if (!data.toggle_catalog_lbc_copy) return; // Ne rien faire si désactivé
             console.log("🔄 Ajout bouton LBC copy");
 
             const table = document.querySelectorAll('#product_grid_table tbody tr');
@@ -290,8 +290,8 @@ function productActions() {
     });
 
 
-    chrome.storage.sync.get(["toggle_remise_calcul", "toggle_heureFin"], (data) => {
-        if (!data.toggle_remise_calcul && !data.toggle_heureFin) return; // Ne rien faire si désactivé
+    chrome.storage.sync.get(["toggle_product_remise_calcul", "toggle_product_heureFin"], (data) => {
+        if (!data.toggle_product_remise_calcul && !data.toggle_product_heureFin) return; // Ne rien faire si désactivé
         // console.log("🔄 Ajout du calcul de remise");
 
         const prix_de_baseTTC = parseFloat(document.querySelector("#product_pricing_retail_price_price_tax_included").value); // Prix de base TTC
@@ -336,7 +336,7 @@ function productActions() {
                             try {
                                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
-                                if (data.toggle_remise_calcul) {
+                                if (data.toggle_product_remise_calcul) {
                                     // Exemple : chercher un champ dans l'iframe
                                     const remise = iframeDoc.querySelector('#specific_price_impact_reduction_value');
                                     const divPrix = iframeDoc.querySelector('#specific_price_impact_reduction');
@@ -384,7 +384,7 @@ function productActions() {
                                     }
                                 }
 
-                                if (data.toggle_heureFin) {
+                                if (data.toggle_product_heureFin) {
                                     const divDateFin = iframeDoc.querySelector('div.input-group.date-range.row>div:last-child');
                                     if (divDateFin) {
                                         divDateFin.style.marginLeft = "100px";
@@ -423,8 +423,8 @@ function productActions() {
     });
 
 
-    chrome.storage.sync.get("toggle_taxe_ttc", (data) => {
-        if (!data.toggle_taxe_ttc) return; // Ne rien faire si désactivé
+    chrome.storage.sync.get("toggle_product_taxe_ttc", (data) => {
+        if (!data.toggle_product_taxe_ttc) return; // Ne rien faire si désactivé
         console.log("🔄 Ajout le bouton de swap de taxe et prix ttc");
 
         const elemPrixHT = document.getElementById('product_pricing_retail_price_price_tax_excluded');

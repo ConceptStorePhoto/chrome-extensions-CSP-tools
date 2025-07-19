@@ -7,8 +7,8 @@ chrome.storage.local.get("token_admin", (data) => {
     console.log("✅ Token récupéré depuis le stockage :", data.token_admin);
     token = data.token_admin; //récupere la valeur de la mémoire
 
-    chrome.storage.sync.get("toggle_adminEdit_buttons", (data) => {
-        if (!data.toggle_adminEdit_buttons) return; // Ne rien faire si désactivé
+    chrome.storage.sync.get("toggle_client_adminEdit_buttons", (data) => {
+        if (!data.toggle_client_adminEdit_buttons) return; // Ne rien faire si désactivé
         console.log("🔄 Ajout du bouton d'édition admin");
 
         // Vérifie si on est sur une page PRODUIT côté client
