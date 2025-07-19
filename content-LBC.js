@@ -156,7 +156,7 @@ function actionPageCreation() {
         bouton.innerText = "Coller data";
         divContainer.appendChild(bouton);
         bouton.addEventListener('click', () => {
-            chrome.storage.sync.get("lbc_copy_data", (data) => {
+            chrome.storage.local.get("lbc_copy_data", (data) => {
                 if (data.lbc_copy_data == "" || !data.lbc_copy_data) return; // Ne rien faire si vide OU non défini
                 console.log("✅ Données récupéré depuis le stockage :", data.lbc_copy_data);
 

@@ -2,7 +2,7 @@ console.log("✅ Script injecté !  content-client.js");
 
 let token = "";
 
-chrome.storage.sync.get("token_admin", (data) => {
+chrome.storage.local.get("token_admin", (data) => {
     if (data.token_admin == "" || !data.token_admin) return; // Ne rien faire si vide ou non défini
     console.log("✅ Token récupéré depuis le stockage :", data.token_admin);
     token = data.token_admin; //récupere la valeur de la mémoire

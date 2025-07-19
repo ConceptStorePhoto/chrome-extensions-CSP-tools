@@ -26,7 +26,7 @@ try {
                 const aicm = line.querySelector('.column-sku').innerText.trim();
                 const prix = line.querySelector('.column-price').innerText;
                 let dataCopy = { name: name, aicm: aicm, prix: prix };
-                chrome.storage.sync.set({ "lbc_copy_data": dataCopy });
+                chrome.storage.local.set({ "lbc_copy_data": dataCopy });
                 console.log("Donnée copiée : ", dataCopy);
                 navigator.clipboard.writeText(aicm);
                 boutonCopier.innerText = "✅LBC";

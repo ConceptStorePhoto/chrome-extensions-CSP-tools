@@ -187,7 +187,7 @@ function catalogActions() {
                     const aicm = line.querySelector('.column-reference>a').innerText.trim();
                     const prix = line.querySelector('.column-price_tax_included').innerText;
                     let dataCopy = { name: name, aicm: aicm, prix: prix };
-                    chrome.storage.sync.set({ "lbc_copy_data": dataCopy });
+                    chrome.storage.local.set({ "lbc_copy_data": dataCopy });
                     console.log("Donnée copiée : ", dataCopy);
                     navigator.clipboard.writeText(aicm);
                     boutonCopier.innerText = "✅LBC";
@@ -573,6 +573,6 @@ else if (window.location.pathname.split("/")[window.location.pathname.split("/")
 if (window.location.search.includes('token=')) {
     let token = window.location.search.split('=')[window.location.search.split('=').length - 1]; // récupère le dernier paramètre de l'URL
     console.log("✅ Token récupéré depuis l'URL :", token);
-    chrome.storage.sync.set({ token_admin: token }); // stock la valeur actuelle
+    chrome.storage.local.set({ token_admin: token }); // stock la valeur actuelle
 }
 
