@@ -31,6 +31,7 @@ function addAdminLinkButton() {
     const adminLink = `https://${domain}/logcncin/index.php/sell/catalog/products-v2/${productId}/edit?_token=${token}`;
     const button = document.createElement("a");
     button.href = adminLink;
+    button.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
     // button.target = "_blank";
     button.innerText = "Modifier Produit";
     button.style.fontSize = "16px";
