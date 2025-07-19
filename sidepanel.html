@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP Tools - Side Panel</title>
+    <script type="module" src="sidepanel.js"></script>
+</head>
+
+<style>
+    body {
+        font-family: sans-serif;
+        padding: 1rem;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    th,
+    td {
+        border: 1px solid #ccc;
+        padding: 0.5rem;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f0f0f0;
+    }
+
+    input[type="file"] {
+        margin-top: 1rem;
+    }
+</style>
+
+<body>
+    <h2>Importer un fichier CSV</h2>
+    <input type="file" id="csvFileInput" accept=".csv" />
+
+    <div id="tableContainer"></div>
+</body>
+
+</html>
