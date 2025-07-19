@@ -251,7 +251,7 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
                         categorie: "Objectifs"
                     },
                     {
-                        regex: "FUJIFILM X-|FUJI X-|NIKON D\\d{1,}",
+                        regex: "FUJIFILM X-|FUJI X-|NIKON D\\d{1,}|ALPHA|SONY A\\d{1,}|CANON EOS|OLYMPUS OM-D",
                         categorie: "Appareil photos"
                     }
                 ];
