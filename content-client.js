@@ -31,7 +31,7 @@ function addAdminLinkButton() {
     const adminLink = `https://${domain}/logcncin/index.php/sell/catalog/products-v2/${productId}/edit?_token=${token}`;
     const button = document.createElement("a");
     button.href = adminLink;
-    button.target = "_blank";
+    // button.target = "_blank";
     button.innerText = "Modifier Produit";
     button.style.fontSize = "16px";
     button.style.position = "fixed";
@@ -43,6 +43,19 @@ function addAdminLinkButton() {
     button.style.borderRadius = "5px";
     button.style.textDecoration = "none";
     button.style.zIndex = "9999";
+
+    // Comportement normal sur clic gauche
+    button.addEventListener("click", (e) => {
+        if (e.button === 2) { // clic droit
+            e.preventDefault();
+            window.open(adminLink, "_blank");
+        }
+    });
+    // Empêche le menu contextuel natif si besoin (optionnel)
+    button.addEventListener("contextmenu", (e) => {
+        e.preventDefault(); // empêche le menu contextuel si tu veux un comportement propre
+        window.open(adminLink, "_blank");
+    });
 
     document.body.appendChild(button);
 }
