@@ -1,7 +1,7 @@
 {
   "name": "CSP tools",
   "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto - DEV par QuentinPerou",
-  "version": "1.5.4",
+  "version": "1.6.1",
   "manifest_version": 3,
   "homepage_url": "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools",
   "options_page": "options.html",
@@ -87,6 +87,13 @@
         "mac": "Alt+Shift+Q"
       },
       "description": "PrestaShop : Retour au catalogue depuis modif produit"
+    },
+    "PrestaShopPreviewCatalog": {
+      "suggested_key": {
+        "default": "Alt+Shift+D",
+        "mac": "Alt+Shift+D"
+      },
+      "description": "PrestaShop : Ouverir preview depuis modif produit"
     }
   },
   "permissions": [

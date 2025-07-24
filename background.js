@@ -259,4 +259,18 @@ chrome.commands.onCommand.addListener((command) => {
             }
         });
     }
+    else if (command === "PrestaShopPreviewCatalog") {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs[0]?.id) {
+                chrome.scripting.executeScript({
+                    target: { tabId: tabs[0].id },
+                    func: () => {
+                        // Remplace ici par le sélecteur du bouton
+                        const bouton = document.querySelector('#product_footer_actions_preview');
+                        if (bouton) bouton.click();
+                    }
+                });
+            }
+        });
+    }
 });
