@@ -247,7 +247,7 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
                         categorie: "Accessoires"
                     },
                     {
-                        regex: "XF \\d{1,}|EF \\d{1,}|RF \\d{1,}|AF \\d{1,}|FE \\d{1,}|Z \\d{1,}|SL \\d{1,}|\\d+-\\d+|\\d+ [F]?\\d+(\\.\\d+)?|SUMMILUX|SUMMICRON",
+                        regex: "XF \\d{1,}|EF \\d{1,}|RF \\d{1,}|AF-?S? \\d{1,}|FE \\d{1,}|Z \\d{1,}|SL \\d{1,}|\\d+-\\d+|\\d+ [F]?\\d+(\\.\\d+)?|SUMMILUX|SUMMICRON",
                         categorie: "Objectifs"
                     },
                     {
@@ -353,7 +353,7 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
                             champTel.value = "";
                             simulateTyping(champTel, entry.tel);
                         }
-                    }, 1000);
+                    }, 900);
                 }
             });
             divContainer.appendChild(btn);
