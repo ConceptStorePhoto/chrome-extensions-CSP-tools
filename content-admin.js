@@ -257,6 +257,36 @@ function catalogActions() {
 }
 
 function productActions() {
+    chrome.storage.sync.get("toggle_product_subtitle_display", (data) => {
+        if (!data.toggle_product_subtitle_display) return; // Ne rien faire si désactivé
+        console.log("🔄 Ajout du sous titre");
+
+        updateSubtitleDisplay(); // Appel initial pour afficher le sous-titre si déjà présent
+        const productSubTitle = document.getElementById('product_description_subtitle');
+        if (productSubTitle) {
+            productSubTitle.addEventListener('input', () => {
+                updateSubtitleDisplay();
+                console.log("🔄 Sous-titre mis à jour :", productSubTitle.value);
+            });
+        }
+
+        function updateSubtitleDisplay() {
+            const productSubTitle = document.getElementById('product_description_subtitle');
+            if (!productSubTitle) return; // Ne rien faire
+            // Supprimer l'ancien sous-titre s'il existe
+            const oldSubtitle = document.getElementById("product_subtitle_display");
+            if (oldSubtitle) {
+                oldSubtitle.textContent = productSubTitle.value;
+            } else {
+                const span = document.createElement('span');
+                span.textContent = productSubTitle.value;
+                span.id = "product_subtitle_display";
+                span.style.color = "#888";
+                document.querySelector('#product_header > div').appendChild(span);
+            }
+        }
+    });
+
     chrome.storage.sync.get("toggle_product_preview_buttons", (data) => {
         if (!data.toggle_product_preview_buttons) return; // Ne rien faire si désactivé
         console.log("🔄 Ajout des boutons de prévisualisation");
@@ -271,7 +301,6 @@ function productActions() {
             element.innerHTML = `<i class="material-icons">visibility</i>`;
             el.parentNode.parentNode.appendChild(element);
         });
-
     });
 
     chrome.storage.sync.get("toggle_product_ungroup_action", (data) => {
@@ -563,8 +592,9 @@ else if (window.location.pathname.split("/")[window.location.pathname.split("/")
     console.log("✅ Page produit détectée, ajout des actions...");
     productActions();
     const productName = document.getElementById('product_header_name_1').value;
+    const productSubTitle = document.getElementById('product_description_subtitle').value || "";
     if (productName)
-        document.title = "Modifier  « " + productName + " » | " + document.title; // Change le titre de la page pour le catalogue
+        document.title = "Modifier  « " + productName + " " + productSubTitle + " » | " + document.title; // Change le titre de la page pour le catalogue
     else
         document.title = "Modifier " + document.title; // Change le titre de la page pour le catalogue
 }
