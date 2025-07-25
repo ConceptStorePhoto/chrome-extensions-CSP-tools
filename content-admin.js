@@ -571,6 +571,27 @@ function productActions() {
         });
     });
 
+    chrome.storage.sync.get("toggle_product_focus_auto", (data) => {
+        if (!data.toggle_product_focus_auto) return; // Ne rien faire si désactivé
+        console.log("🔄 Activation du focus automatique");
+
+        const select = document.querySelector('#product_description_manufacturer'); // Récupère le <select>
+        if (select && select.nextElementSibling) {
+            select.nextElementSibling.addEventListener('click', () => {
+                const input = document.querySelector('.select2-search__field[aria-controls="select2-product_description_manufacturer-results"]');
+                if (input) input.focus();
+            });
+        }
+
+        const attributSelect = document.querySelectorAll('[id^="product_details_features_feature_values"]');
+        attributSelect.forEach((select) => {
+            select.addEventListener('click', () => {
+                const input = document.querySelector('.select2-search__field[aria-controls^="select2-product_details_features_feature_values_"]');
+                if (input) input.focus();
+            });
+        });
+
+    });
 
 }
 
