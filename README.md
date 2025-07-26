@@ -8,6 +8,8 @@ Extension Chrome qui permet de corriger certains problèmes d'interface sur le s
 - **Menu contextuel** : Fonctionnalités de l'extension dans le menu contextuel du navigateur. (clique droit)
 - **Site web du magasin** :
     - **Correction d'interface** : Permet de corriger des problèmes d'interface sur le site web.
+    - **Amélioration de l'expérience utilisateur** : Ajout de fonctionnalités pour améliorer l'expérience utilisateur ADMIN sur le site web.
+    - **Noms des onglets** : Permet de renommer les onglets du site web pour une meilleure compréhension.
     - **Raccourcis clavier** : Permet d'utiliser des raccourcis clavier pour accéder rapidement aux fonctionnalités de l'extension.
         - Alt+Shift+Q : Retour au catalogue depuis modification de produit
 - **LeBonCoin** : 
