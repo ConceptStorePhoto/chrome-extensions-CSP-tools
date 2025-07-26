@@ -425,6 +425,11 @@ function productActions() {
         if (isNaN(prixBaseTTC)) return;
         console.log("🔄 Prix de base TTC :", prixBaseTTC);
 
+        let combinations = [];
+        chargerCombinationsDepuisAPI((liste) => {
+            combinations = liste;
+        });
+
         const observer = new MutationObserver((mutations) => {
             mutations.forEach(({ addedNodes }) => {
                 addedNodes.forEach((node) => {
@@ -441,6 +446,7 @@ function productActions() {
 
                         if (data.toggle_product_remise_calcul) {
                             ajouterChampPrixApresRemise(iframeDoc, prixBaseTTC);
+                            afficherPrixDeclinaison(iframeDoc, combinations);
                         }
 
                         if (data.toggle_product_heureFin) {
@@ -451,6 +457,72 @@ function productActions() {
             });
         });
         observer.observe(document.body, { childList: true, subtree: true });
+
+        function chargerCombinationsDepuisAPI(callback) {
+            const url = new URL(window.location.href);
+            const pathnameParts = url.pathname.split("/");
+            const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
+            const token = url.searchParams.get("_token");
+
+            if (!productId || !token) {
+                console.warn("❌ Impossible de détecter l'ID produit ou le token.");
+                return;
+            }
+
+            const shopId = 1;
+            const apiUrl = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${productId}/combinations?shopId=${shopId}&product_combinations_${productId}[offset]=0&product_combinations_${productId}[limit]=100&_token=${token}`;
+
+            fetch(apiUrl, { credentials: "same-origin" })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.combinations || !Array.isArray(data.combinations)) {
+                        console.warn("❌ Format de données inattendu :", data);
+                        return;
+                    }
+
+                    const prixBaseInput = document.querySelector("#product_pricing_retail_price_price_tax_included");
+                    const prixBaseTTC = parseFloat(prixBaseInput?.value);
+
+                    const liste = data.combinations.map(c => {
+                        const impact = parseFloat(c.impact_on_price_te.replace(',', '.'));
+                        return {
+                            name: c.name,
+                            impact_price_ttc: impact,
+                            calcul_prix_ttc_final: prixBaseTTC + impact
+                        };
+                    });
+
+                    console.log("📦 Déclinaisons récupérées via API :", liste);
+                    callback(liste);
+                })
+                .catch(err => {
+                    console.error("❌ Erreur lors du chargement des déclinaisons :", err);
+                });
+        }
+
+        function detecterCombinations(prixBaseTTC, callback) {
+            const combiTab = document.getElementById('product_combinations-tab-nav');
+            if (!combiTab) return;
+
+            new MutationObserver((_, obs) => {
+                const rows = document.querySelectorAll("tr.combination-list-row");
+                if (!rows.length) return;
+                obs.disconnect();
+
+                const liste = Array.from(rows).map((row, i) => {
+                    const name = row.querySelector(`input[name="combination_list[${i}][name]"]`)?.value?.trim();
+                    const price = row.querySelector(`input[name="combination_list[${i}][impact_on_price_ti]"]`)?.value?.replace(',', '.');
+                    return name && price ? {
+                        name,
+                        impact_price_ttc: parseFloat(price),
+                        calcul_prix_ttc_final: prixBaseTTC + parseFloat(price)
+                    } : null;
+                }).filter(Boolean);
+
+                console.log("➡️ Déclinaisons chargées :", liste);
+                callback(liste);
+            }).observe(document.querySelector("#combination_list"), { childList: true, subtree: true });
+        }
 
         function ajouterChampPrixApresRemise(doc, prixBaseTTC) {
             const remise = doc.querySelector('#specific_price_impact_reduction_value');
@@ -471,6 +543,46 @@ function productActions() {
             });
             divPrix.prepend(inputPrixApresRemise);
         }
+
+        function afficherPrixDeclinaison(doc, combinations) {
+            const decliSelect = doc.querySelector('#specific_price_combination_id');
+            if (!decliSelect) return;
+
+            const spanPrixDecli = document.createElement('span');
+            spanPrixDecli.style.marginLeft = "10px";
+            decliSelect.parentElement.appendChild(spanPrixDecli);
+
+            const getLabelText = () => {
+                const container = doc.querySelector('#select2-specific_price_combination_id-container');
+                return container?.getAttribute('title')?.trim();
+            };
+
+            const updateDisplay = () => {
+                const selectedLabel = getLabelText();
+                if (!selectedLabel) return;
+                const found = combinations.find(c => c.name === selectedLabel);
+
+                if (found) {
+                    spanPrixDecli.textContent = `Prix final TTC : ${found.calcul_prix_ttc_final.toFixed(2)} €`;
+                } else {
+                    spanPrixDecli.textContent = "Prix non dispo pour cette sélection";
+                }
+            };
+
+            // Initial check
+            updateDisplay();
+
+            // Mutation observer for changes in select2 label
+            const labelObserver = new MutationObserver(() => updateDisplay());
+            const labelContainer = doc.querySelector('#select2-specific_price_combination_id-container');
+            if (labelContainer) {
+                labelObserver.observe(labelContainer, { childList: true, subtree: true, characterData: true });
+            }
+
+            // Listen to change on the actual <select> as well (fallback)
+            decliSelect.addEventListener('change', updateDisplay);
+        }
+
 
         function fixerHeureFinPromo(doc) {
             const divDateFin = doc.querySelector('div.input-group.date-range.row>div:last-child');
