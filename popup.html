@@ -17,312 +17,318 @@
     <div id="toolsCSP" class="hide">
       <p style="margin-top: 0;">Ajoute des outils au site sur <b>PrestaShop</b></p>
 
-      <div class="conteneur">
-        <h3>Admin : Catalogue produit</h3>
+      <div class="optionContainer">
+        <div class="conteneur">
+          <h3>Admin : Catalogue produit</h3>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_copy_name_buttons">
-            <span class="slider round"></span>
-          </label>
-          <span>Boutons "copier" le <b>Nom</b></span>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_copy_name_buttons">
+              <span class="slider round"></span>
+            </label>
+            <span>Boutons "copier" le <b>Nom</b></span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_copy_aicm_buttons">
+              <span class="slider round"></span>
+            </label>
+            <span>Boutons "copier" le code <b>AICM</b></span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_no_aicm_warning">
+              <span class="slider round"></span>
+            </label>
+            <span>Affiche un lien "Aucun code AICM"</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_masquer_horsTaxe">
+              <span class="slider round"></span>
+            </label>
+            <span>Masquer colonne hors taxe</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_warning_HT_TTC">
+              <span class="slider round"></span>
+            </label>
+            <span>Rouge si HT = TTC</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_preview_buttons" data-groupe="catalogAction">
+              <span class="slider round"></span>
+            </label>
+            <span>Boutons prévisualisation</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_ungroup_action" data-groupe="catalogAction">
+              <span class="slider round"></span>
+            </label>
+            <span>Dégrouper les boutons d'action</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_lbc_copy">
+              <span class="slider round"></span>
+            </label>
+            <span>Bouton copier data pour LeBonCoin</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_color_line">
+              <span class="slider round"></span>
+            </label>
+            <span>Colorer la dernière ligne cliquée</span>
+            <input type="color" id="catalog_color_highlight">
+            <button title="Couleur par défaut" class="reset-btn">↺</button>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_color_remplacement">
+              <span class="slider round"></span>
+            </label>
+            <span>Remplace le bleu clair illisible</span>
+            <input type="color" id="catalog_color_remplacement">
+            <button title="Couleur par défaut" class="reset-btn">↺</button>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_patch_category_filter">
+              <span class="slider round"></span>
+            </label>
+            <span>Patch taille filtre catégorie</span>
+          </div>
+
+          <div class="divSliderButton" title="⚠️ Le chargement des déclinaisons peut être long !">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_display_combinations">
+              <span class="slider round"></span>
+            </label>
+            <span>Afficher les détails des déclinaisons</span>
+          </div>
+
         </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_copy_aicm_buttons">
-            <span class="slider round"></span>
-          </label>
-          <span>Boutons "copier" le code <b>AICM</b></span>
+        <div class="conteneur">
+          <h3>Admin : Fiche produit</h3>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_product_subtitle_display">
+              <span class="slider round"></span>
+            </label>
+            <span>Affiche le sous-titre du produit</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_product_taxe_ttc">
+              <span class="slider round"></span>
+            </label>
+            <span>Bouton pour swap en taxe stantard</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_product_heureFin">
+              <span class="slider round"></span>
+            </label>
+            <span>Heure de fin à 23:59:59 (prix spécifique)</span>
+          </div>
+
+          <div class="divSliderButton" title="⚠️ Le calcul de remise ne fonctionne pas avec les déclinaisons !">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_product_remise_calcul">
+              <span class="slider round"></span>
+            </label>
+            <span>Calcul de remise (prix spécifique) ⚠️</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_product_preview_buttons" data-groupe="productAction">
+              <span class="slider round"></span>
+            </label>
+            <span> Bouton vers la prévisu du produit</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_product_ungroup_action" data-groupe="productAction">
+              <span class="slider round"></span>
+            </label>
+            <span> Dégrouper les boutons d'action</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_product_stock_display">
+              <span class="slider round"></span>
+            </label>
+            <span>Afficher les 3 stocks en même temps</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_product_focus_auto">
+              <span class="slider round"></span>
+            </label>
+            <span>Focus auto dans champ de saisie des menus déroulants</span>
+          </div>
+
         </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_no_aicm_warning">
-            <span class="slider round"></span>
-          </label>
-          <span>Affiche un lien "Aucun code AICM"</span>
+        <div class="conteneur">
+          <h3>Client : Fiche produit</h3>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_client_adminEdit_buttons">
+              <span class="slider round"></span>
+            </label>
+            <span> Bouton vers l'édition du produit</span>
+          </div>
+
         </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_masquer_horsTaxe">
-            <span class="slider round"></span>
-          </label>
-          <span>Masquer colonne hors taxe</span>
-        </div>
+        <div class="conteneur">
+          <h3 title="Ajoute des options au clique droit - groupé dans un dossier si plusieurs sélectionés">Menu Contextuel
+          </h3>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_warning_HT_TTC">
-            <span class="slider round"></span>
-          </label>
-          <span>Rouge si HT = TTC</span>
-        </div>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_contextMenu_copy_text">
+              <span class="slider round"></span>
+            </label>
+            <span>Copier texte</span>
+          </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_preview_buttons" data-groupe="catalogAction">
-            <span class="slider round"></span>
-          </label>
-          <span>Boutons prévisualisation</span>
-        </div>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_miss_num">
+              <span class="slider round"></span>
+            </label>
+            <span>Recherche Miss Numérique</span>
+          </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_ungroup_action" data-groupe="catalogAction">
-            <span class="slider round"></span>
-          </label>
-          <span>Dégrouper les boutons d'action</span>
-        </div>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_idealo">
+              <span class="slider round"></span>
+            </label>
+            <span>Recherche Idealo</span>
+          </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_lbc_copy">
-            <span class="slider round"></span>
-          </label>
-          <span>Bouton copier data pour LeBonCoin</span>
-        </div>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_panajou">
+              <span class="slider round"></span>
+            </label>
+            <span>Recherche Panajou</span>
+          </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_color_line">
-            <span class="slider round"></span>
-          </label>
-          <span>Colorer la dernière ligne cliquée</span>
-          <input type="color" id="catalog_color_highlight">
-          <button title="Couleur par défaut" class="reset-btn">↺</button>
-        </div>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_ipln">
+              <span class="slider round"></span>
+            </label>
+            <span>Recherche IPLN</span>
+          </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_color_remplacement">
-            <span class="slider round"></span>
-          </label>
-          <span>Remplace le bleu clair illisible</span>
-          <input type="color" id="catalog_color_remplacement">
-          <button title="Couleur par défaut" class="reset-btn">↺</button>
-        </div>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_fnac">
+              <span class="slider round"></span>
+            </label>
+            <span>Recherche Fnac</span>
+          </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_patch_category_filter">
-            <span class="slider round"></span>
-          </label>
-          <span>Patch taille filtre catégorie</span>
-        </div>
-
-        <div class="divSliderButton" title="⚠️ Le chargement des déclinaisons peut être long !">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_catalog_display_combinations">
-            <span class="slider round"></span>
-          </label>
-          <span>Afficher les détails des déclinaisons</span>
         </div>
 
       </div>
-
-      <div class="conteneur">
-        <h3>Admin : Fiche produit</h3>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_product_subtitle_display">
-            <span class="slider round"></span>
-          </label>
-          <span>Affiche le sous-titre du produit</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_product_taxe_ttc">
-            <span class="slider round"></span>
-          </label>
-          <span>Bouton pour swap en taxe stantard</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_product_heureFin">
-            <span class="slider round"></span>
-          </label>
-          <span>Heure de fin à 23:59:59 (prix spécifique)</span>
-        </div>
-
-        <div class="divSliderButton" title="⚠️ Le calcul de remise ne fonctionne pas avec les déclinaisons !">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_product_remise_calcul">
-            <span class="slider round"></span>
-          </label>
-          <span>Calcul de remise (prix spécifique) ⚠️</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_product_preview_buttons" data-groupe="productAction">
-            <span class="slider round"></span>
-          </label>
-          <span> Bouton vers la prévisu du produit</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_product_ungroup_action" data-groupe="productAction">
-            <span class="slider round"></span>
-          </label>
-          <span> Dégrouper les boutons d'action</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_product_stock_display">
-            <span class="slider round"></span>
-          </label>
-          <span>Afficher les 3 stocks en même temps</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_product_focus_auto">
-            <span class="slider round"></span>
-          </label>
-          <span>Focus auto dans champ de saisie des menus déroulants</span>
-        </div>
-
-      </div>
-
-      <div class="conteneur">
-        <h3>Client : Fiche produit</h3>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_client_adminEdit_buttons">
-            <span class="slider round"></span>
-          </label>
-          <span> Bouton vers l'édition du produit</span>
-        </div>
-
-      </div>
-
-      <div class="conteneur">
-        <h3 title="Ajoute des options au clique droit - groupé dans un dossier si plusieurs sélectionés">Menu Contextuel
-        </h3>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_contextMenu_copy_text">
-            <span class="slider round"></span>
-          </label>
-          <span>Copier texte</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_miss_num">
-            <span class="slider round"></span>
-          </label>
-          <span>Recherche Miss Numérique</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_idealo">
-            <span class="slider round"></span>
-          </label>
-          <span>Recherche Idealo</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_panajou">
-            <span class="slider round"></span>
-          </label>
-          <span>Recherche Panajou</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_ipln">
-            <span class="slider round"></span>
-          </label>
-          <span>Recherche IPLN</span>
-        </div>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_contextMenu_search_fnac">
-            <span class="slider round"></span>
-          </label>
-          <span>Recherche Fnac</span>
-        </div>
-
-      </div>
-
     </div>
 
     <div id="LBCtools" class="hide">
       <p style="margin-top: 0;">Ajoute des outils sur <b>LeBonCoin</b></p>
 
-      <div class="conteneur">
-        <h3>Création annonce</h3>
+      <div class="optionContainer">
+        <div class="conteneur">
+          <h3>Création annonce</h3>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_lbc_past">
-            <span class="slider round"></span>
-          </label>
-          <span>Bouton Coller data</span>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_lbc_past">
+              <span class="slider round"></span>
+            </label>
+            <span>Bouton Coller data</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_lbc_livraison">
+              <span class="slider round"></span>
+            </label>
+            <span>Bouton pour désélectioner la livraison</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_lbc_adress">
+              <span class="slider round"></span>
+            </label>
+            <span>Boutons Adresses</span>
+          </div>
+
         </div>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_lbc_livraison">
-            <span class="slider round"></span>
-          </label>
-          <span>Bouton pour désélectioner la livraison</span>
-        </div>
+        <div class="conteneur">
+          <h3>Mon activité</h3>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_lbc_adress">
-            <span class="slider round"></span>
-          </label>
-          <span>Boutons Adresses</span>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_lbc_activite_copy_ref">
+              <span class="slider round"></span>
+            </label>
+            <span>Boutons "Copier" référence</span>
+          </div>
+
         </div>
 
       </div>
-
-      <div class="conteneur">
-        <h3>Mon activité</h3>
-
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_lbc_activite_copy_ref">
-            <span class="slider round"></span>
-          </label>
-          <span>Boutons "Copier" référence</span>
-        </div>
-
-      </div>
-
     </div>
 
     <div id="COLISSIMOtools" class="hide">
       <p style="margin-top: 0;">Ajoute des outils sur <b>Colissimo</b></p>
 
-      <div class="conteneur">
-        <h3>Demande Collecte</h3>
+      <div class="optionContainer">
+        <div class="conteneur">
+          <h3>Demande Collecte</h3>
 
-        <div class="divSliderButton">
-          <label class="switchButton">
-            <input type="checkbox" class="toggle-button" id="toggle_colissimo_confirm_annuler">
-            <span class="slider round"></span>
-          </label>
-          <span>Ajout d'une confirmation avant l'annulation de la collecte</span>
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_colissimo_confirm_annuler">
+              <span class="slider round"></span>
+            </label>
+            <span>Ajout d'une confirmation avant l'annulation de la collecte</span>
+          </div>
+
         </div>
 
       </div>
-
     </div>
 
   </div>

@@ -18,9 +18,9 @@
         align-items: flex-start;
         flex-wrap: wrap;
 
-        /* column-count: auto;
-        column-width: 400px;
-        column-gap: 20px; */
+        /* column-count: auto; */
+        /* column-width: 400px; */
+        /* column-gap: 20px; */
     }
 
     .mainContainer>div {
@@ -29,8 +29,36 @@
         border-radius: 16px;
         flex-grow: 1;
 
-        /* break-inside: avoid;
-        margin-bottom: 20px; */
+        /* break-inside: avoid; */
+        /* margin-bottom: 20px; */
+
+        align-self: normal;
+    }
+
+    .optionContainer {
+        /* display: flex; */
+        gap: 20px;
+        flex-wrap: wrap;
+        column-width: 400px;
+    }
+
+    .conteneur {
+        /* align-self: flex-start; */
+        width: auto;
+        flex-grow: 1;
+        /* margin-bottom: 0; */
+        column-count: 3;
+        column-width: 400px;
+    }
+
+    .divSliderButton {
+        break-inside: avoid;
+    }
+
+    @media (max-width: 800px) {
+        .optionContainer {
+            flex-direction: column;
+        }
     }
 </style>
 
