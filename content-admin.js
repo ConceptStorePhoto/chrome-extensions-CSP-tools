@@ -21,8 +21,9 @@ else if (window.location.pathname.split("/")[window.location.pathname.split("/")
 }
 
 // récupération du token dans l'url du site si page admin
+let token = "";
 if (window.location.search.includes('token=')) {
-    let token = window.location.search.split('=')[window.location.search.split('=').length - 1]; // récupère le dernier paramètre de l'URL
+    token = window.location.search.split('=')[window.location.search.split('=').length - 1]; // récupère le dernier paramètre de l'URL
     console.log("✅ Token récupéré depuis l'URL :", token);
     chrome.storage.local.set({ token_admin: token }); // stock la valeur actuelle
 }
@@ -35,6 +36,7 @@ function catalogActions() {
             "toggle_catalog_patch_category_filter",
             "toggle_catalog_copy_aicm_buttons",
             "toggle_catalog_no_aicm_warning",
+            "toggle_catalog_display_combinations",
             "toggle_catalog_warning_HT_TTC",
             "toggle_catalog_copy_name_buttons",
             "toggle_catalog_preview_buttons",
@@ -92,8 +94,8 @@ function catalogActions() {
             if (data.toggle_catalog_no_aicm_warning) {
                 const elements = document.querySelectorAll(".column-reference");
                 elements.forEach((el) => {
-                    // Vérifie que l'élément a du texte
-                    if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM") || el.innerText.includes("Déclinaisons ?")) {
+                    // Vérifie que l'élément n'a pas de texte ou est vide
+                    if ((!el.innerText || el.innerText.trim() === "") && (!el.innerText.includes("Aucun code AICM") || !el.innerText.includes("Déclinaisons ?"))) {
                         el.querySelector("a").innerText = "Aucun code AICM";
                         el.querySelector("a").setAttribute("style", "color: #c90000 !important"); // Met en rouge si pas de code
                         if (el.nextElementSibling.nextElementSibling && el.nextElementSibling.nextElementSibling.innerText == "0,00 €") {
@@ -101,6 +103,28 @@ function catalogActions() {
                         }
                     }
                 });
+            }
+
+            if (data.toggle_catalog_display_combinations) {
+                const elements = document.querySelectorAll(".column-reference");
+                elements.forEach((el) => {
+                    // Vérifie que l'élément n'a pas de texte ou est vide
+                    if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM") || el.innerText.includes("Déclinaisons ?")) {
+                        getCombinations(el.previousElementSibling.previousElementSibling.previousElementSibling.innerText, token, "", "", (liste) => {
+                            const refsConcatenees = liste.map(c => c.ref).filter(ref => ref).join(" ");
+                            // console.log("💡Référence concaténée :", refsConcatenees);
+                            if (refsConcatenees) {
+                                el.style.maxWidth = "250px";
+                                el.querySelector("a").innerText = `${liste.length} Déclinaisons :\n`;
+                                const elem = document.createElement('span');
+                                elem.style.cssText = 'white-space: normal !important;';
+                                elem.innerText = refsConcatenees;
+                                el.appendChild(elem);
+                            }
+                        });
+                    }
+                });
+
             }
 
             if (data.toggle_catalog_warning_HT_TTC) {
@@ -420,15 +444,27 @@ function productActions() {
     chrome.storage.sync.get(["toggle_product_remise_calcul", "toggle_product_heureFin"], (data) => {
         if (!data.toggle_product_remise_calcul && !data.toggle_product_heureFin) return;
 
-        const prixBaseInput = document.querySelector("#product_pricing_retail_price_price_tax_included");
-        const prixBaseTTC = parseFloat(prixBaseInput?.value);
+        const prixBaseInputTTC = document.querySelector("#product_pricing_retail_price_price_tax_included");
+        const prixBaseTTC = parseFloat(prixBaseInputTTC?.value.replace(',', '.'));
         if (isNaN(prixBaseTTC)) return;
         console.log("🔄 Prix de base TTC :", prixBaseTTC);
 
+        const prixBaseInputHT = document.querySelector("#product_pricing_retail_price_price_tax_excluded");
+        const prixBaseHT = parseFloat(prixBaseInputHT?.value.replace(',', '.'));
+        if (isNaN(prixBaseHT)) return;
+        console.log("🔄 Prix de base HT :", prixBaseHT);
+
         let combinations = [];
-        chargerCombinationsDepuisAPI((liste) => {
-            combinations = liste;
-        });
+        if (document.getElementById('product_combinations-tab-nav')) {
+            const url = new URL(window.location.href);
+            const pathnameParts = url.pathname.split("/");
+            const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
+            const token = url.searchParams.get("_token");
+            // console.log("🔄 DEMA NDE DE Chargement des déclinaisons depuis l'API ", productId);
+            getCombinations(productId, token, prixBaseTTC, prixBaseHT, (liste) => {
+                combinations = liste;
+            });
+        }
 
         const observer = new MutationObserver((mutations) => {
             mutations.forEach(({ addedNodes }) => {
@@ -458,70 +494,9 @@ function productActions() {
         });
         observer.observe(document.body, { childList: true, subtree: true });
 
-        function chargerCombinationsDepuisAPI(callback) {
-            const url = new URL(window.location.href);
-            const pathnameParts = url.pathname.split("/");
-            const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
-            const token = url.searchParams.get("_token");
-
-            if (!productId || !token) {
-                console.warn("❌ Impossible de détecter l'ID produit ou le token.");
-                return;
-            }
-
-            const shopId = 1;
-            const apiUrl = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${productId}/combinations?shopId=${shopId}&product_combinations_${productId}[offset]=0&product_combinations_${productId}[limit]=100&_token=${token}`;
-
-            fetch(apiUrl, { credentials: "same-origin" })
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.combinations || !Array.isArray(data.combinations)) {
-                        console.warn("❌ Format de données inattendu :", data);
-                        return;
-                    }
-
-                    const prixBaseInput = document.querySelector("#product_pricing_retail_price_price_tax_included");
-                    const prixBaseTTC = parseFloat(prixBaseInput?.value);
-
-                    const liste = data.combinations.map(c => {
-                        const impact = parseFloat(c.impact_on_price_te.replace(',', '.'));
-                        return {
-                            name: c.name,
-                            impact_price_ttc: impact,
-                            calcul_prix_ttc_final: prixBaseTTC + impact
-                        };
-                    });
-
-                    console.log("📦 Déclinaisons récupérées via API :", liste);
-                    callback(liste);
-                })
-                .catch(err => {
-                    console.error("❌ Erreur lors du chargement des déclinaisons :", err);
-                });
-        }
-
-        function detecterCombinations(prixBaseTTC, callback) {
-            const combiTab = document.getElementById('product_combinations-tab-nav');
-            if (!combiTab) return;
-
-            new MutationObserver((_, obs) => {
-                const rows = document.querySelectorAll("tr.combination-list-row");
-                if (!rows.length) return;
-                obs.disconnect();
-
-                const liste = Array.from(rows).map((row, i) => {
-                    const name = row.querySelector(`input[name="combination_list[${i}][name]"]`)?.value?.trim();
-                    const price = row.querySelector(`input[name="combination_list[${i}][impact_on_price_ti]"]`)?.value?.replace(',', '.');
-                    return name && price ? {
-                        name,
-                        impact_price_ttc: parseFloat(price),
-                        calcul_prix_ttc_final: prixBaseTTC + parseFloat(price)
-                    } : null;
-                }).filter(Boolean);
-
-                console.log("➡️ Déclinaisons chargées :", liste);
-                callback(liste);
-            }).observe(document.querySelector("#combination_list"), { childList: true, subtree: true });
+        function getDeclinaisonSelectionnee(doc, combinations) {
+            const label = doc.querySelector('#select2-specific_price_combination_id-container')?.getAttribute('title')?.trim();
+            return combinations.find(c => c.name === label);
         }
 
         function ajouterChampPrixApresRemise(doc, prixBaseTTC) {
@@ -531,14 +506,20 @@ function productActions() {
 
             console.log("🎯 div remise trouvée : ajout de l'input");
             const inputPrixApresRemise = document.createElement('input');
+            inputPrixApresRemise.id = 'custom_input_prix_apres_remise';
             inputPrixApresRemise.type = 'text';
             inputPrixApresRemise.placeholder = 'Prix après remise TTC';
-            inputPrixApresRemise.title = `vCalcul auto : [Prix TTC de l'article] - [cette zone] = [remise dans la case à coté]  // Attention aux produits variable`;
+            inputPrixApresRemise.title = `Calcul auto : [Prix TTC de l'article] - [cette zone] = [remise dans la case à coté]  // Attention aux produits variable`;
             inputPrixApresRemise.style.cssText = 'width: 155px !important; margin-left: 20px;';
             inputPrixApresRemise.addEventListener('input', () => {
                 const prixApresRemise = parseFloat(inputPrixApresRemise.value);
+                let prixDeReference = prixBaseTTC;
+
+                const found = getDeclinaisonSelectionnee(doc, combinations);
+                if (found) prixDeReference = found.calcul_prix_ttc_final;
+
                 if (!isNaN(prixApresRemise)) {
-                    remise.value = (prixBaseTTC - prixApresRemise).toFixed(2);
+                    remise.value = (prixDeReference - prixApresRemise).toFixed(2);
                 }
             });
             divPrix.prepend(inputPrixApresRemise);
@@ -582,7 +563,6 @@ function productActions() {
             // Listen to change on the actual <select> as well (fallback)
             decliSelect.addEventListener('change', updateDisplay);
         }
-
 
         function fixerHeureFinPromo(doc) {
             const divDateFin = doc.querySelector('div.input-group.date-range.row>div:last-child');
@@ -668,4 +648,46 @@ function productActions() {
             observer.observe(zone, { childList: true, subtree: true });
         });
     });
+}
+
+//////////////////////////
+
+function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
+    if (!productId || !token) {
+        console.warn("❌ Impossible de détecter l'ID produit ou le token.");
+        return;
+    }
+
+    const shopId = 1;
+    const apiUrl = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${productId}/combinations?shopId=${shopId}&product_combinations_${productId}[offset]=0&product_combinations_${productId}[limit]=100&_token=${token}`;
+
+    fetch(apiUrl, { credentials: "same-origin" })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.combinations || !Array.isArray(data.combinations)) {
+                console.warn("❌ Format de données inattendu :", data);
+                return;
+            }
+            // console.log("📦 DATA Déclinaisons récupérées via API :", data);
+
+            const liste = data.combinations.map(c => {
+                const impact = parseFloat(c.impact_on_price_te.replace(',', '.'));
+                return {
+                    id: c.combination_id,
+                    name: c.name,
+                    ref: c.reference,
+                    quantity: c.quantity,
+                    impact_price_ht: impact,
+                    calcul_prix_ttc_final: prixBaseTTC + (impact * 1.2),
+                    calcul_prix_ttc_TEST: (prixBaseHT + impact) * 1.2
+                };
+            });
+
+            console.log("📦 Déclinaisons récupérées via API :", liste);
+            if (typeof callback === "function") callback(liste);
+        })
+        .catch(err => {
+            console.error("❌ Erreur lors du chargement des déclinaisons :", err);
+            if (typeof callback === "function") callback([]);
+        });
 }
