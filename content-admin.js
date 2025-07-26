@@ -114,12 +114,26 @@ function catalogActions() {
                             const refsConcatenees = liste.map(c => c.ref).filter(ref => ref).join(" ");
                             // console.log("💡Référence concaténée :", refsConcatenees);
                             if (refsConcatenees) {
-                                el.style.maxWidth = "250px";
+                                el.style.maxWidth = "200px";
                                 el.querySelector("a").innerText = `${liste.length} Déclinaisons :\n`;
                                 const elem = document.createElement('span');
                                 elem.style.cssText = 'white-space: normal !important;';
                                 elem.innerText = refsConcatenees;
                                 el.appendChild(elem);
+                            } else if (liste.length != 0)
+                                el.querySelector("a").innerText = `${liste.length} Déclinaisons :\nAucun code AICM`;
+
+                            const prixListe = liste.map(c => parseFloat(c.calcul_prix_ttc_final)).filter(p => !isNaN(p));
+                            if (prixListe.length > 0) {
+                                const min = Math.min(...prixListe);
+                                const max = Math.max(...prixListe);
+
+                                const intervalPrix = document.createElement('div');
+                                 intervalPrix.style.cssText = 'white-space: nowrap !important;';
+                                intervalPrix.innerText = (min === max)
+                                    ? `${min.toFixed(2)}€`
+                                    : `${min.toFixed(2)}€ - ${max.toFixed(2)}€`;
+                                el.nextElementSibling.nextElementSibling.nextElementSibling.appendChild(intervalPrix);
                             }
                         });
                     }
