@@ -129,7 +129,7 @@ function catalogActions() {
                                 const max = Math.max(...prixListe);
 
                                 const intervalPrix = document.createElement('div');
-                                 intervalPrix.style.cssText = 'white-space: nowrap !important;';
+                                intervalPrix.style.cssText = 'white-space: nowrap !important;';
                                 intervalPrix.innerText = (min === max)
                                     ? `${min.toFixed(2)}€`
                                     : `${min.toFixed(2)}€ - ${max.toFixed(2)}€`;
@@ -279,18 +279,23 @@ function catalogActions() {
                  `;
                 document.head.appendChild(style);
 
-                /* Délégation d’événements : Avantage : une seule écoute pour tous les <tr>, même ajoutés dynamiquement. */
-                document.addEventListener('click', (e) => {
-                    const tr = e.target.closest('tr');  // monte jusqu’au <tr> le plus proche
+                // Fonction pour gérer la mise en surbrillance d'une ligne <tr>
+                function handleRowHighlight(e) {
+                    const tr = e.target.closest('tr'); // monte jusqu’au <tr> le plus proche
                     if (!tr || tr.matches('.column-headers, .column-filters')) return;  // on a cliqué ailleurs on ignore en‑têtes & filtres
 
-                    // 3. Retire la surbrillance éventuelle
+                    // Retire la surbrillance éventuelle
                     const actif = document.querySelector(`.${HIGHLIGHT}`);
                     if (actif && actif !== tr) actif.classList.remove(HIGHLIGHT);
 
-                    // 4. Ajoute la surbrillance à la ligne cliquée
+                    // Ajoute la surbrillance à la ligne cliquée
                     tr.classList.add(HIGHLIGHT);
-                });
+                }
+                
+                // Délégation d’événements pour click et clic droit
+                ['click', 'contextmenu'].forEach(evt =>
+                    document.addEventListener(evt, handleRowHighlight)
+                );
             }
 
             if (data.toggle_catalog_color_remplacement) {
@@ -701,7 +706,7 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
             if (typeof callback === "function") callback(liste);
         })
         .catch(err => {
-            console.error("❌ Erreur lors du chargement des déclinaisons :", err);
+            console.error(`[${new Date().toLocaleString()}] ❌ Erreur lors du chargement des déclinaisons :`, err);
             if (typeof callback === "function") callback([]);
         });
 }
