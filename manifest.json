@@ -26,12 +26,8 @@
       "matches": [
         "https://concept-store-photo.dmu.sarl/logcncin/index.php/sell/catalog/products-v2/*",
         "https://concept-store-photo.dmu.sarl/logcncin/*",
-        "https://conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/*",
-        "https://conceptstorephoto.fr/logcncin/*",
         "https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/*",
-        "https://www.conceptstorephoto.fr/logcncin/*",
-        "https://preprod.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/*",
-        "https://preprod.conceptstorephoto.fr/logcncin/*"
+        "https://www.conceptstorephoto.fr/logcncin/*"
       ],
       "js": [
         "content-admin.js"
@@ -40,15 +36,11 @@
     {
       "matches": [
         "https://concept-store-photo.dmu.sarl/*",
-        "https://conceptstorephoto.fr/*",
-        "https://www.conceptstorephoto.fr/*",
-        "https://preprod.conceptstorephoto.fr/*"
+        "https://www.conceptstorephoto.fr/*"
       ],
       "exclude_matches": [
         "https://concept-store-photo.dmu.sarl/logcncin/*",
-        "https://conceptstorephoto.fr/logcncin/*",
         "https://www.conceptstorephoto.fr/logcncin/*",
-        "https://preprod.conceptstorephoto.fr/logcncin/*",
         "https://www.conceptstorephoto.fr/wp-admin/*"
       ],
       "js": [
@@ -111,7 +103,6 @@
     "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/*",
     "https://raw.githubusercontent.com/ConceptStorePhoto/chrome-extensions-CSP-tools/*",
     "https://concept-store-photo.dmu.sarl/*",
-    "https://conceptstorephoto.fr/*",
     "https://www.conceptstorephoto.fr/*"
   ]
 }

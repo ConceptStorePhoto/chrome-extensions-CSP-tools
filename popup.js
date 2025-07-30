@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const hostname = url.hostname;
             console.log(url)
 
-            if ((hostname.includes("concept-store-photo.dmu.sarl") || hostname.includes("conceptstorephoto.fr")) && !url.pathname.includes('wp-admin')) {
+            if ((hostname.includes("concept-store-photo.dmu.sarl") || hostname.includes("conceptstorephoto.fr"))) {
                 console.log("✅ Concept Store Photo detected", hostname);
                 document.getElementById("toolsCSP").classList.remove('hide');
                 document.getElementById("refreshContainer").classList.remove('hide');
