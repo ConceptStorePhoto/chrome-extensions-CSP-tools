@@ -33,13 +33,15 @@ chrome.runtime.onInstalled.addListener(() => {
 
     // définition des réglages par défaut si non déjà définis
     const defaultSettings = {
+        toggle_product_rename_tabs: true,
         toggle_catalog_copy_aicm_buttons: true,
+        toggle_catalog_color_remplacement: true,
+        toggle_catalog_patch_category_filter: true,
         toggle_contextMenu_copy_text: true,
         toggle_product_preview_buttons: true,
-        toggle_client_adminEdit_buttons: true,
         toggle_product_heureFin: true,
+        toggle_client_adminEdit_buttons: true,
         toggle_colissimo_confirm_annuler: true,
-        toggle_catalog_color_remplacement: true,
         catalog_color_remplacement_default: '#0052a3',
         catalog_color_highlight_default: '#fff7c6'
     };
