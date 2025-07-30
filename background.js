@@ -64,6 +64,11 @@ chrome.runtime.onInstalled.addListener(() => {
 function updateContextMenu() {
     // Création du menu contextuel
     console.log("🔄 Création du menu contextuel");
+    const whitelistContextMenu = [
+        "*://concept-store-photo.dmu.sarl/*",
+        "*://conceptstorephoto.fr/*",
+        "*://www.conceptstorephoto.fr/*"
+    ];
     chrome.contextMenus.removeAll(() => {
 
         chrome.storage.sync.get("toggle_contextMenu_copy_text", (data) => {
@@ -73,11 +78,7 @@ function updateContextMenu() {
                 id: "copier-ref", // identifiant unique
                 title: "📋 Copier le texte",
                 contexts: ["selection", "link"], // selon ce que tu veux viser
-                documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*",
-                    "*://conceptstorephoto.fr/*",
-                    "*://www.conceptstorephoto.fr/*"
-                ] // uniquement sur ton site
+                documentUrlPatterns: whitelistContextMenu // uniquement sur ton site
             });
         });
 
@@ -88,11 +89,7 @@ function updateContextMenu() {
                 id: "recherche-missNumerique", // identifiant unique
                 title: "🔎 Rechercher sur Miss Numérique",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*",
-                    "*://conceptstorephoto.fr/*",
-                    "*://www.conceptstorephoto.fr/*"
-                ]
+                documentUrlPatterns: whitelistContextMenu
             });
         });
 
@@ -103,11 +100,7 @@ function updateContextMenu() {
                 id: "recherche-idealo", // identifiant unique
                 title: "🔎 Rechercher sur Idealo",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*",
-                    "*://conceptstorephoto.fr/*",
-                    "*://www.conceptstorephoto.fr/*"
-                ]
+                documentUrlPatterns: whitelistContextMenu
             });
         });
 
@@ -118,11 +111,7 @@ function updateContextMenu() {
                 id: "recherche-panajou", // identifiant unique
                 title: "🔎 Rechercher sur Panajou",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*",
-                    "*://conceptstorephoto.fr/*",
-                    "*://www.conceptstorephoto.fr/*"
-                ]
+                documentUrlPatterns: whitelistContextMenu
             });
         });
 
@@ -133,11 +122,7 @@ function updateContextMenu() {
                 id: "recherche-ipln", // identifiant unique
                 title: "🔎 Rechercher sur IPLN",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*",
-                    "*://conceptstorephoto.fr/*",
-                    "*://www.conceptstorephoto.fr/*"
-                ]
+                documentUrlPatterns: whitelistContextMenu
             });
         });
 
@@ -148,11 +133,7 @@ function updateContextMenu() {
                 id: "recherche-fnac", // identifiant unique
                 title: "🔎 Rechercher sur Fnac",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: [
-                    "*://concept-store-photo.dmu.sarl/*",
-                    "*://conceptstorephoto.fr/*",
-                    "*://www.conceptstorephoto.fr/*"
-                ]
+                documentUrlPatterns: whitelistContextMenu
             });
         });
 
