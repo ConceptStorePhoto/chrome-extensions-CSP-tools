@@ -12,12 +12,6 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
 else if (window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "edit" && window.location.pathname.includes("products-v2")) {
     console.log("✅ Page produit détectée, ajout des actions...");
     productActions();
-    const productName = document.getElementById('product_header_name_1').value;
-    const productSubTitle = document.getElementById('product_description_subtitle').value || "";
-    if (productName)
-        document.title = "Modifier  « " + productName + " " + productSubTitle + " » | " + document.title; // Change le titre de la page pour le catalogue
-    else
-        document.title = "Modifier " + document.title; // Change le titre de la page pour le catalogue
 }
 
 // récupération du token dans l'url du site si page admin
@@ -291,7 +285,7 @@ function catalogActions() {
                     // Ajoute la surbrillance à la ligne cliquée
                     tr.classList.add(HIGHLIGHT);
                 }
-                
+
                 // Délégation d’événements pour click et clic droit
                 ['click', 'contextmenu'].forEach(evt =>
                     document.addEventListener(evt, handleRowHighlight)
@@ -327,6 +321,7 @@ function catalogActions() {
 
 function productActions() {
     const keys = [
+        "toggle_product_rename_tabs",
         "toggle_product_subtitle_display",
         "toggle_product_preview_buttons",
         "toggle_product_ungroup_action",
@@ -334,6 +329,15 @@ function productActions() {
         "toggle_product_taxe_ttc"
     ];
     chrome.storage.sync.get(keys, (data) => {
+        if (data.toggle_product_rename_tabs) {
+            const productName = document.getElementById('product_header_name_1').value;
+            const productSubTitle = document.getElementById('product_description_subtitle').value || "";
+            if (productName)
+                document.title = "Modifier  « " + productName + " " + productSubTitle + " » | " + document.title; // Change le titre de la page pour le catalogue
+            else
+                document.title = "Modifier " + document.title; // Change le titre de la page pour le catalogue
+        }
+
         if (data.toggle_product_subtitle_display) {
             console.log("🔄 Ajout du sous titre");
 
