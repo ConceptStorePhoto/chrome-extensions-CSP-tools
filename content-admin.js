@@ -326,7 +326,8 @@ function productActions() {
         "toggle_product_preview_buttons",
         "toggle_product_ungroup_action",
         "toggle_product_focus_auto",
-        "toggle_product_taxe_ttc"
+        "toggle_product_taxe_ttc",
+        "toggle_product_auto_occasion"
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_product_rename_tabs) {
@@ -459,6 +460,21 @@ function productActions() {
                 }
                 container.appendChild(button);
             }
+        }
+
+        if (data.toggle_product_auto_occasion) {
+            const html = document.getElementById("product_description_categories_product_categories").innerText;
+            const contientOccasion = /occasion(s)?/i.test(html);
+
+            if (contientOccasion) {
+                console.log("➡️ La catégorie contient 'Occasion' ou 'Occasions'");
+                document.querySelector('#product_details_show_condition_1')?.click();
+                document.querySelector('#product_details_condition').value = 'used';
+                document.querySelector('#product_details_condition').dispatchEvent(new Event('input', { bubbles: true }));
+            } else {
+                console.log("➡️ La catégorie ne contient pas 'Occasion' ou 'Occasions'");
+            }
+
         }
 
 
