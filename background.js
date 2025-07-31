@@ -40,6 +40,7 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_contextMenu_copy_text: true,
         toggle_product_preview_buttons: true,
         toggle_product_heureFin: true,
+        toggle_product_heureDebut: true,
         toggle_client_adminEdit_buttons: true,
         toggle_colissimo_confirm_annuler: true,
         catalog_color_remplacement_default: '#0052a3',

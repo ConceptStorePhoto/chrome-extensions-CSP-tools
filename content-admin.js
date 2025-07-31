@@ -66,6 +66,7 @@ function catalogActions() {
                     let texte = el.innerText;
                     const bouton = document.createElement("button");
                     bouton.innerText = "📋";
+                    bouton.title = "Copier le code AICM";
                     bouton.className = "copier-btn";
                     bouton.style.marginLeft = "8px";
                     bouton.style.borderRadius = "10px";
@@ -160,6 +161,7 @@ function catalogActions() {
                     let texte = el.innerText;
                     const bouton = document.createElement("button");
                     bouton.innerText = "📋";
+                    bouton.title = "Copier le nom du produit";
                     bouton.className = "copier-btn";
                     bouton.style.marginRight = "8px";
                     bouton.style.borderRadius = "10px";
