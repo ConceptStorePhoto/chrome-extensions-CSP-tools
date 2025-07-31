@@ -467,13 +467,13 @@ function productActions() {
             const contientOccasion = /occasion(s)?/i.test(html);
 
             if (contientOccasion && document.querySelector('#product_details_show_condition_1')?.checked === false) {
-                console.log("➡️ La catégorie contient 'Occasion' ou 'Occasions'");
+                console.log("➡️ La catégorie contient 'Occasion'");
                 document.querySelector('#product_details_show_condition_1')?.click();
                 document.querySelector('#product_details_condition').value = 'used';
                 document.querySelector('#product_details_condition').dispatchEvent(new Event('input', { bubbles: true }));
                 displayNotif("✅ État 'Occasion' activé automatiquement");
             } else {
-                console.log("➡️ La catégorie ne contient pas 'Occasion' ou 'Occasions'");
+                console.log("➡️ La catégorie ne contient pas 'Occasion' ou l'état est déjà activé");
             }
         }
 
@@ -757,6 +757,7 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
         })
         .catch(err => {
             console.error(`[${new Date().toLocaleString()}] ❌ Erreur lors du chargement des déclinaisons :`, err);
+            displayNotif("❌ Erreur lors du chargement des déclinaisons. Changer de page et revenir pour réessayer.");
             if (typeof callback === "function") callback([]);
         });
 }
@@ -807,6 +808,8 @@ function displayNotif(message) {
             document.head.appendChild(style);
         }
     }
+    // Si une notification avec le même message existe déjà, on ne fait rien
+    if (document.querySelector('.CSP_tools-custom-notif')?.textContent === message) return;
 
     // Crée une notification individuelle
     const notif = document.createElement('div');
@@ -817,9 +820,9 @@ function displayNotif(message) {
     // Animation d'apparition
     setTimeout(() => notif.classList.add('show'), 10);
 
-    // Disparition au bout de 2 secondes
+    // Disparition au bout de 2.5 secondes
     setTimeout(() => {
         notif.classList.remove('show');
         setTimeout(() => notif.remove(), 300);
-    }, 2000);
+    }, 2500);
 }
