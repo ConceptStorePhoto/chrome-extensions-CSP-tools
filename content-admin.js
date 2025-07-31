@@ -464,8 +464,8 @@ function productActions() {
 
     });
 
-    chrome.storage.sync.get(["toggle_product_remise_calcul", "toggle_product_heureFin"], (data) => {
-        if (!data.toggle_product_remise_calcul && !data.toggle_product_heureFin) return;
+    chrome.storage.sync.get(["toggle_product_remise_calcul", "toggle_product_heureFin", "toggle_product_heureDebut"], (data) => {
+        if (!data.toggle_product_remise_calcul && !data.toggle_product_heureFin && !data.toggle_product_heureDebut) return;
 
         const prixBaseInputTTC = document.querySelector("#product_pricing_retail_price_price_tax_included");
         const prixBaseTTC = parseFloat(prixBaseInputTTC?.value.replace(',', '.'));
@@ -510,6 +510,10 @@ function productActions() {
 
                         if (data.toggle_product_heureFin) {
                             fixerHeureFinPromo(iframeDoc);
+                        }
+
+                        if (data.toggle_product_heureDebut) {
+                            fixerHeureDebutPromo(iframeDoc);
                         }
                     });
                 });
@@ -603,6 +607,32 @@ function productActions() {
                     inputDateFin.value = newDateTime;
                     inputDateFin.dispatchEvent(new Event('input', { bubbles: true }));
                     inputDateFin.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
+        }
+
+        function fixerHeureDebutPromo(doc) {
+            const divDateDebut = doc.querySelector('div.input-group.date-range.row>div:first-child');
+            const inputDateDebut = doc.querySelector('#specific_price_date_range_from');
+            if (!divDateDebut || !inputDateDebut) return;
+
+            inputDateDebut.addEventListener('click', () => {
+                let dateValue = inputDateDebut.value?.split(' ')[0];
+                console.log("🔄 Date de début :", inputDateDebut.value);
+                if (!dateValue) return;
+                if (dateValue.includes('00:00:00')) return; // Si déjà formaté, ne rien faire
+
+                // Si l'heure et la minute actuelles, on remplace par 00:00:00
+                if (inputDateDebut.value && inputDateDebut.value.split(' ')[1]) {
+                    const heureMinute = inputDateDebut.value.split(' ')[1].slice(0, 5); // "HH:MM"
+                    const now = new Date();
+                    const nowStr = now.toTimeString().slice(0, 5); // "HH:MM"
+                    if (heureMinute === nowStr) {
+                        // On remplace par 00:00:00
+                        inputDateDebut.value = `${dateValue} 00:00:00`;
+                        inputDateDebut.dispatchEvent(new Event('input', { bubbles: true }));
+                        inputDateDebut.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
                 }
             });
         }
