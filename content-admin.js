@@ -499,15 +499,23 @@ function productActions() {
                 {
                     type: "Objectif",
                     specs: [
+                        // { spec: "Ouverture maximale", value: "" },
+                        { spec: "Diamètre du filtre", value: "" },
+                        { spec: "Distance minimale de mise au point", value: "" },
+                        { spec: "Nombre de lamelles du diaphragme", value: "" },
+                        { spec: "Stabilisation de l'objectif", value: "" },
+                        { spec: "Moteur AF", value: "" },
+                        // { spec: "Zoom Motorisé", value: "" },
+                        // { spec: "Zoom Interne", value: "" },
+                        { spec: "Diamètre x longueur", value: "" },
                         { spec: "Poids", value: "" },
-                        { spec: "Dimensions (LxHxP)", value: "" }
                     ]
                 },
                 {
                     type: "Occasion",
                     specs: [
                         { spec: "État (Occasion)", value: "" },
-                        { spec: "Monture d'objectif", value: "" }
+                        // { spec: "Monture d'objectif", value: "" }
                     ]
                 }
             ];
@@ -521,7 +529,8 @@ function productActions() {
                 btn.className = 'btn btn-sm btn-outline-primary ml-2';
                 btn.style.marginLeft = "10px";
                 btn.addEventListener('click', () => applyPreset(template.specs));
-                buttonAddSpecs.parentNode.insertBefore(btn, buttonAddSpecs.nextSibling);
+                // buttonAddSpecs.parentNode.insertBefore(btn, buttonAddSpecs.nextSibling);
+                buttonAddSpecs.parentNode.appendChild(btn);
             });
 
             function applyPreset(specsList) {
@@ -571,6 +580,39 @@ function productActions() {
                     }, delay * index);
                 });
             }
+
+            // Bouton pour supprimer toutes les caractéristiques
+            const deleteAllBtn = document.createElement('button');
+            deleteAllBtn.type = 'button';
+            deleteAllBtn.textContent = '🗑 Supprimer toutes les caractéristiques';
+            deleteAllBtn.className = 'btn btn-danger ml-2';
+            deleteAllBtn.style.marginLeft = '10px';
+            deleteAllBtn.addEventListener('click', () => {
+                const confirmed = window.confirm("⚠️ Cette action va supprimer toutes les caractéristiques. Voulez-vous continuer ?");
+                if (confirmed) deleteAllFeatures();
+            });
+            const target = document.getElementById('product_details_features_add_feature');
+            target.parentNode.insertBefore(deleteAllBtn, target.nextSibling);
+            function deleteAllFeatures() {
+                const deleteButtons = document.querySelectorAll('.delete-feature-value');
+                let i = 0;
+                function nextDelete() {
+                    if (i >= deleteButtons.length) return;
+                    deleteButtons[i].click(); // ouvre le popup
+                    i++;
+                    setTimeout(() => {
+                        const confirmBtn = document.querySelector('.modal .btn-confirm-submit');
+                        if (confirmBtn) {
+                            confirmBtn.click(); // clique sur "Supprimer" du modal
+                            setTimeout(nextDelete, 200); // attente pour enchaîner
+                        } else {
+                            console.warn('Bouton de confirmation non trouvé');
+                        }
+                    }, 150); // temps pour le popup à apparaître
+                }
+                nextDelete(); // lancer la boucle
+            }
+
         }
 
     });
