@@ -662,9 +662,14 @@ function productActions() {
         if (!data.toggle_product_remise_calcul && !data.toggle_product_heureFin && !data.toggle_product_heureDebut) return;
 
         const prixBaseInputTTC = document.querySelector("#product_pricing_retail_price_price_tax_included");
-        const prixBaseTTC = parseFloat(prixBaseInputTTC?.value.replace(',', '.'));
+        let prixBaseTTC = parseFloat(prixBaseInputTTC?.value.replace(',', '.'));
         if (isNaN(prixBaseTTC)) return;
         console.log("🔄 Prix de base TTC :", prixBaseTTC);
+        prixBaseInputTTC.addEventListener('change', () => {
+            prixBaseTTC = parseFloat(prixBaseInputTTC.value.replace(',', '.'));
+            if (isNaN(prixBaseTTC)) return;
+            console.log("🔄 Prix de base TTC mis à jour :", prixBaseTTC);
+        });
 
         const prixBaseInputHT = document.querySelector("#product_pricing_retail_price_price_tax_excluded");
         const prixBaseHT = parseFloat(prixBaseInputHT?.value.replace(',', '.'));
@@ -677,7 +682,7 @@ function productActions() {
             const pathnameParts = url.pathname.split("/");
             const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
             const token = url.searchParams.get("_token");
-            // console.log("🔄 DEMA NDE DE Chargement des déclinaisons depuis l'API ", productId);
+            // console.log("🔄 DEMANDE de Chargement des déclinaisons depuis l'API ", productId);
             getCombinations(productId, token, prixBaseTTC, prixBaseHT, (liste) => {
                 combinations = liste;
             });

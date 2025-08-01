@@ -15,7 +15,7 @@ chrome.storage.local.get("token_admin", (data) => {
             if (data.toggle_client_adminEdit_buttons)
                 addAdminLinkButton();
         }
-        else if (!(window.location.pathname.startsWith("/logcncin/index.php/sell/catalog/products-v2/")) && document.body.id == "search") {
+        else if (!(window.location.pathname.startsWith("/logcncin/index.php/sell/catalog/products-v2/")) && (document.body.id == "search") || document.body.id == "category") {
 
             if (data.toggle_client_search_adminEditBtn) {
                 console.log("🔄 Page de recherche de produits, ajout du bouton pour chaque produit");
@@ -30,6 +30,9 @@ chrome.storage.local.get("token_admin", (data) => {
                         button.innerText = "Modifier Produit";
                         button.style.fontSize = "16px";
                         button.style.position = "absolute";
+                        button.style.top = "160px";
+                        button.style.right = "50%";
+                        button.style.transform = "translateX(50%)";
                         button.style.padding = "8px 15px";
                         button.style.backgroundColor = "#007bff";
                         button.style.color = "#fff";
