@@ -329,7 +329,8 @@ function productActions() {
         "toggle_product_ungroup_action",
         "toggle_product_focus_auto",
         "toggle_product_taxe_ttc",
-        "toggle_product_auto_occasion"
+        "toggle_product_auto_occasion",
+        "toggle_product_preset_specs"
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_product_rename_tabs) {
@@ -479,6 +480,98 @@ function productActions() {
             }
         }
 
+        if (data.toggle_product_preset_specs) {
+            const specsTemplate = [
+                {
+                    type: "Appareil photo",
+                    specs: [
+                        { spec: "Millions pixels", value: "" },
+                        { spec: "Capteur", value: "" },
+                        { spec: "Stockage", value: "" },
+                        { spec: "Connectivité", value: "Bluetooth, Wi-Fi" },
+                        { spec: "Écran", value: "" },
+                        { spec: "Viseur", value: "" },
+                        { spec: "Vidéo", value: "" },
+                        { spec: "Dimensions (LxHxP)", value: "" },
+                        { spec: "Poids", value: "" }
+                    ]
+                },
+                {
+                    type: "Objectif",
+                    specs: [
+                        { spec: "Poids", value: "" },
+                        { spec: "Dimensions (LxHxP)", value: "" }
+                    ]
+                },
+                {
+                    type: "Occasion",
+                    specs: [
+                        { spec: "État (Occasion)", value: "" },
+                        { spec: "Monture d'objectif", value: "" }
+                    ]
+                }
+            ];
+
+            const buttonAddSpecs = document.getElementById('product_details_features_add_feature');
+
+            specsTemplate.forEach(template => {
+                const btn = document.createElement('button');
+                btn.type = "button"; // ← Empêche le submit
+                btn.textContent = `Preset ${template.type}`;
+                btn.className = 'btn btn-sm btn-outline-primary ml-2';
+                btn.style.marginLeft = "10px";
+                btn.addEventListener('click', () => applyPreset(template.specs));
+                buttonAddSpecs.parentNode.insertBefore(btn, buttonAddSpecs.nextSibling);
+            });
+
+            function applyPreset(specsList) {
+                const delay = 200;
+
+                // Obtenir les caractéristiques déjà utilisées
+                const existingFeatures = Array.from(document.querySelectorAll('.product-feature select.feature-selector'))
+                    .map(select => select.options[select.selectedIndex]?.textContent?.trim().toLowerCase())
+                    .filter(Boolean);
+
+                specsList.forEach((spec, index) => {
+                    if (existingFeatures.includes(spec.spec.toLowerCase())) {
+                        console.log(`Caractéristique déjà présente : ${spec.spec}, ignorée.`);
+                        return;
+                    }
+
+                    setTimeout(() => {
+                        // 1. Clic sur "ajouter"
+                        document.getElementById('product_details_features_add_feature').click();
+
+                        // 2. Attente courte, puis remplissage
+                        setTimeout(() => {
+                            const featureBlocks = document.querySelectorAll('.product-feature');
+                            const lastBlock = featureBlocks[featureBlocks.length - 1];
+
+                            // 3. Remplissage du champ "Caractéristique"
+                            const selectFeature = lastBlock.querySelector('.feature-selector');
+                            if (selectFeature) {
+                                const matchingOption = [...selectFeature.options].find(opt => opt.textContent.trim().toLowerCase() === spec.spec.toLowerCase());
+                                if (matchingOption) {
+                                    selectFeature.value = matchingOption.value;
+                                    selectFeature.dispatchEvent(new Event('change', { bubbles: true }));
+                                } else {
+                                    console.warn(`Caractéristique introuvable : ${spec.spec}`);
+                                    displayNotif(`⚠️ Caractéristique introuvable : ${spec.spec}`);
+                                }
+                            }
+
+                            // 4. Remplissage de la valeur personnalisée
+                            const input = lastBlock.querySelector('input[type="text"]');
+                            if (input) {
+                                input.value = spec.value;
+                                input.dispatchEvent(new Event('input', { bubbles: true }));
+                            }
+
+                        }, 100);
+                    }, delay * index);
+                });
+            }
+        }
 
     });
 
