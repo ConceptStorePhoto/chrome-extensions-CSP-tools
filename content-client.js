@@ -26,18 +26,14 @@ chrome.storage.local.get("token_admin", (data) => {
                         const adminLink = `https://${window.location.hostname}/logcncin/index.php/sell/catalog/products-v2/${productId}/edit?_token=${token}`;
                         const button = document.createElement("a");
                         button.href = adminLink;
+                        button.className = "CSP_tools-custom-btn";
                         button.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
                         button.innerText = "Modifier Produit";
-                        button.style.fontSize = "16px";
                         button.style.position = "absolute";
                         button.style.top = "160px";
                         button.style.right = "50%";
                         button.style.transform = "translateX(50%)";
-                        button.style.padding = "8px 15px";
-                        button.style.backgroundColor = "#007bff";
-                        button.style.color = "#fff";
-                        button.style.borderRadius = "5px";
-                        button.style.textDecoration = "none";
+                        insertBtnStyle();
 
                         // Comportement normal sur clic gauche
                         button.addEventListener("click", (e) => {
@@ -72,19 +68,15 @@ function addAdminLinkButton() {
     const adminLink = `https://${domain}/logcncin/index.php/sell/catalog/products-v2/${productId}/edit?_token=${token}`;
     const button = document.createElement("a");
     button.href = adminLink;
+    button.className = "CSP_tools-custom-btn";
     button.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
     // button.target = "_blank";
     button.innerText = "Modifier Produit";
-    button.style.fontSize = "16px";
     button.style.position = "fixed";
     button.style.top = "129px";
     button.style.right = "20px";
-    button.style.padding = "8px 15px";
-    button.style.backgroundColor = "#007bff";
-    button.style.color = "#fff";
-    button.style.borderRadius = "5px";
-    button.style.textDecoration = "none";
     button.style.zIndex = "9999";
+    insertBtnStyle();
 
     // Comportement normal sur clic gauche
     button.addEventListener("click", (e) => {
@@ -100,4 +92,19 @@ function addAdminLinkButton() {
     });
 
     document.body.appendChild(button);
+}
+
+function insertBtnStyle() {
+    const style = document.createElement("style");
+    style.textContent = `
+        .CSP_tools-custom-btn {
+            font-size: 16px;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    `;
+    document.head.appendChild(style);
 }
