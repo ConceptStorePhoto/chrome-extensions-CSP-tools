@@ -330,7 +330,8 @@ function productActions() {
         "toggle_product_focus_auto",
         "toggle_product_taxe_ttc",
         "toggle_product_auto_occasion",
-        "toggle_product_preset_specs"
+        "toggle_product_preset_specs",
+        "toggle_product_delete_specs",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_product_rename_tabs) {
@@ -580,7 +581,8 @@ function productActions() {
                     }, delay * index);
                 });
             }
-
+        }
+        if (data.toggle_product_delete_specs) {
             // Bouton pour supprimer toutes les caractéristiques
             const deleteAllBtn = document.createElement('button');
             deleteAllBtn.type = 'button';
@@ -612,7 +614,6 @@ function productActions() {
                 }
                 nextDelete(); // lancer la boucle
             }
-
         }
 
     });
