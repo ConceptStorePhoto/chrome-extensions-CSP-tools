@@ -42,7 +42,8 @@ function catalogActions() {
             "catalog_color_highlight_default",
             "toggle_catalog_color_remplacement",
             "catalog_color_remplacement",
-            "catalog_color_remplacement_default"
+            "catalog_color_remplacement_default",
+            "toggle_catalog_shift_selection"
         ];
         chrome.storage.sync.get(keys, (data) => {
             if (data.toggle_catalog_patch_category_filter) {
@@ -312,6 +313,45 @@ function catalogActions() {
                     const g = parseInt(hex.slice(3, 5), 16);
                     const b = parseInt(hex.slice(5, 7), 16);
                     return `rgb(${r}, ${g}, ${b})`;
+                }
+            }
+
+            if (data.toggle_catalog_shift_selection) {
+                let lastCheckedIndex = null;
+                const checkboxes = Array.from(document.querySelectorAll(".js-bulk-action-checkbox"));
+                checkboxes.forEach((checkbox, index) => {
+                    // On intercepte le clic sur le label
+                    const label = checkbox.closest("label");
+                    if (label) {
+                        label.addEventListener("click", function (e) {
+                            // Si shift + clic
+                            if (e.shiftKey && lastCheckedIndex !== null) {
+                                e.preventDefault(); // empêcher comportement natif
+                                const currentIndex = index;
+                                const [start, end] = [lastCheckedIndex, currentIndex].sort((a, b) => a - b);
+                                for (let i = start; i <= end; i++) {
+                                    checkboxes[i].checked = true;
+                                }
+                            }
+                            lastCheckedIndex = index;
+                        });
+                    }
+                });
+                const style = document.createElement("style");
+                style.textContent = `
+                    .no-text-select {
+                    user-select: none !important;
+                    }
+                `;
+                document.head.appendChild(style);
+                const table = document.querySelector("#product_grid_table");
+                if (table) {
+                    document.addEventListener("keydown", (e) => {
+                        if (e.key === "Shift") table.classList.add("no-text-select");
+                    });
+                    document.addEventListener("keyup", (e) => {
+                        if (e.key === "Shift") table.classList.remove("no-text-select");
+                    });
                 }
             }
 
