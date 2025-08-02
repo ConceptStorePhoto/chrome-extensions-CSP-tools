@@ -681,16 +681,14 @@ function productActions() {
                         if (hasHandled) return;
                         hasHandled = true;
                         observer.disconnect();
-
-                        console.log("🔄 Exécution unique de la logique après ajout des images");
+                        // console.log("🔄 Exécution unique de la logique après ajout des images");
 
                         const previews = document.querySelectorAll('.dz-preview.dz-complete');
-                        // console.log('les images : ', previews);
+                        // console.log('➡️ Les images : ', previews);
 
                         let isInternalClick = false;
-
                         previews.forEach(prev => {
-                            console.log("🔄 Image détectée : ", prev);
+                            // console.log("🔄 Image détectée : ", prev);
                             prev.addEventListener('click', (e) => {
                                 if (isInternalClick) return; // ⛔ ignore si clic programmatique
 
