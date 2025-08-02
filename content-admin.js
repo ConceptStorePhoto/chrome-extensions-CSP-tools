@@ -541,6 +541,7 @@ function productActions() {
                     type: "Objectif",
                     specs: [
                         // { spec: "Ouverture maximale", value: "" },
+                        // { spec: "Compatibilité Objectif", value: "" },
                         { spec: "Diamètre du filtre", value: "" },
                         { spec: "Distance minimale de mise au point", value: "" },
                         { spec: "Nombre de lamelles du diaphragme", value: "" },
