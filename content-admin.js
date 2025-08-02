@@ -659,31 +659,6 @@ function productActions() {
         }
 
         if (data.toggle_product_image_selection) {
-            // //// tentative de changement de la logique de sélection des images sur un fiche produit
-            // const container = document.querySelector("#product-images-container");
-            // if (!container) return;
-            // const observer = new MutationObserver(mutations => {
-            //     mutations.forEach(mutation => {
-            //         mutation.addedNodes.forEach(node => {
-            //             if (node.nodeType === 1) {
-            //                 if (node.matches(".dz-preview")) {
-            //                     observer.disconnect();
-            //                     console.log("🔄 Nœud ajouté est une image :", node);
-            //                     //// code a ajouter ici
-            //                     console.log("avant clique", document.querySelectorAll('.dz-preview')[2].querySelector('.dz-preview input[type="checkbox"]').checked);
-            //                     document.querySelectorAll('.dz-preview')[2].click();
-            //                     console.log("apres clique", document.querySelectorAll('.dz-preview')[2].querySelector('.dz-preview input[type="checkbox"]').checked);
-            //                     setTimeout(() => {
-            //                         document.querySelectorAll('.dz-preview')[2].click()
-            //                         console.log("apres 2eme clique", document.querySelectorAll('.dz-preview')[2].querySelector('.dz-preview input[type="checkbox"]').checked);
-            //                     }, 2000);
-            //                 }
-            //             }
-            //         });
-            //     });
-            // });
-            // observer.observe(container, { childList: true, subtree: true });
-
             const container = document.querySelector("#product-images-container");
             if (!container) return;
 
@@ -721,7 +696,6 @@ function productActions() {
 
                                 const isCtrlPressed = e.ctrlKey || e.metaKey;
                                 console.log('CTRL :', isCtrlPressed);
-
                                 if (!isCtrlPressed) {
                                     isInternalClick = true; // ✅ bloquer récursion
                                     previews.forEach(prev2 => {
@@ -731,25 +705,13 @@ function productActions() {
                                     });
                                     isInternalClick = false; // ✅ on réactive après
                                 }
+
                             });
                         });
-
-                        // const checkbox = previews[2].querySelector('input[type="checkbox"]');
-                        // console.log("avant clique", checkbox?.checked);
-                        // previews[2].click();
-                        // console.log("apres clique", checkbox?.checked);
-                        // setTimeout(() => {
-                        //     previews[2].click();
-                        //     console.log("apres 2eme clique", checkbox?.checked);
-                        // }, 2000);
-
                     }, 100); // ⏳ petit délai pour laisser les mutations s'accumuler
                 }
             });
-
             observer.observe(container, { childList: true, subtree: true });
-
-
         }
 
 
