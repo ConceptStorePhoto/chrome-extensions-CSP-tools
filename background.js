@@ -38,6 +38,7 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_catalog_color_remplacement: true,
         toggle_catalog_patch_category_filter: true,
         toggle_contextMenu_copy_text: true,
+        toggle_product_subtitle_display: true,
         toggle_product_preview_buttons: true,
         toggle_product_heureFin: true,
         toggle_product_heureDebut: true,
