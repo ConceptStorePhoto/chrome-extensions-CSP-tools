@@ -18,7 +18,7 @@
       <p style="margin-top: 0;">Ajoute des outils au site sur <b>PrestaShop</b></p>
 
       <div class="optionContainer">
-        <div class="conteneur">
+        <div class="conteneur admin-catalog">
           <h3>Admin : Catalogue produit</h3>
 
           <div class="divSliderButton">
@@ -131,8 +131,8 @@
 
         </div>
 
-        <div class="conteneur">
-          <h3>Admin : Fiche produit</h3>
+        <div class="conteneur admin-catalog">
+          <h3>Admin : Catalogue : Fiche produit</h3>
 
           <div class="divSliderButton">
             <label class="switchButton">
@@ -238,12 +238,25 @@
             <span>Bouton supprimer toutes les caractéristiques</span>
           </div>
 
-          <div class="divSliderButton">
+          <div class="divSliderButton" title="Change la logique de sélection par défaut">
             <label class="switchButton">
               <input type="checkbox" class="toggle-button" id="toggle_product_image_selection">
               <span class="slider round"></span>
             </label>
-            <span>Change le comportement de la sélection des images</span>
+            <span>Sélection multiple d'image avec CTRL</span>
+          </div>
+
+        </div>
+
+        <div class="conteneur admin-orders">
+          <h3>Admin : Commandes : Commande</h3>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_orders_view_copyAicm">
+              <span class="slider round"></span>
+            </label>
+            <span>Bouton pour copier le code  AICM</span>
           </div>
 
         </div>

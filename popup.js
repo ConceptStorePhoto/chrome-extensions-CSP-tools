@@ -21,6 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("✅ Concept Store Photo detected", hostname);
                 document.getElementById("toolsCSP").classList.remove('hide');
                 document.getElementById("refreshContainer").classList.remove('hide');
+                // if (url.pathname.includes('catalog'))
+                //     document.querySelectorAll('.admin-catalog').forEach((elem) => {
+                //         elem.classList.remove('hide');
+                //     })
             } else if (hostname.includes("leboncoin.fr")) {
                 console.log("✅ LeBonCoin detected", hostname);
                 document.getElementById("LBCtools").classList.remove('hide');

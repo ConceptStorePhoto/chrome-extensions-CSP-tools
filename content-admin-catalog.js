@@ -1,4 +1,4 @@
-console.log("✅ Script injecté !  content-admin.js");
+console.log("✅ Script injecté !  content-admin-catalog.js");
 
 /////// Exécution initiale ///////
 
