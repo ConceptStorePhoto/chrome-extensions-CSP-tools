@@ -1,4 +1,4 @@
-console.log("✅ Script injecté !  content-admin-catalog.js");
+console.log("✅ Script injecté !  content-admin-orders.js");
 
 /////// Exécution initiale ///////
 
@@ -40,6 +40,14 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
             });
         }
 
+    });
+
+}
+else if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "") {
+    console.log("✅ Page Liste des commandes, ajout des actions...");
+
+    document.querySelectorAll('.column-id_order').forEach((el) => {
+        el.style.minWidth = "80px";
     });
 
 }
