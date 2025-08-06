@@ -72,7 +72,7 @@ function addAdminLinkButtonMiniature() {
     console.log("🔄 Ajout du bouton pour chaque produit");
     const products = document.querySelectorAll("article.product-miniature");
     products.forEach((product) => {
-        createAdminButton(product.getAttribute("data-id-product"), { position: "fixed", top: "160px", right: "50%", transform: "translateX(50%)" }, product);
+        createAdminButton(product.getAttribute("data-id-product"), { position: "absolute", top: "160px", right: "50%", transform: "translateX(50%)" }, product);
     });
 }
 
@@ -87,10 +87,9 @@ function createAdminButton(productId, style, container) {
     button.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
     button.innerText = "Modifier Produit";
     Object.assign(button.style, {
-        position: style.position || "",
-        top: style.top || "",
-        right: style.right || "",
-        left: style.left || "",
+        position: style.position,
+        top: style.top,
+        right: style.right,
         zIndex: style.zIndex || "",
         transform: style.transform || ""
     });
