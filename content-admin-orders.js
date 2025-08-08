@@ -41,13 +41,16 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
         }
 
     });
-
 }
 else if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "") {
     console.log("✅ Page Liste des commandes, ajout des actions...");
 
-    document.querySelectorAll('.column-id_order').forEach((el) => {
-        el.style.minWidth = "80px";
-    });
+    chrome.storage.sync.get(["toggle_orders_idWidth"], (data) => {
+        if (data.toggle_orders_idWidth) {
+            document.querySelectorAll('.column-id_order').forEach((el) => {
+                el.style.minWidth = "80px";
+            });
+        }
 
+    });
 }
