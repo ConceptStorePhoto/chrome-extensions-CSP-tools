@@ -1,7 +1,7 @@
 {
   "name": "CSP tools",
   "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto - DEV par QuentinPerou",
-  "version": "1.17.1",
+  "version": "1.18.0",
   "manifest_version": 3,
   "homepage_url": "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools",
   "options_page": "options.html",
@@ -38,6 +38,15 @@
       ],
       "js": [
         "content-admin-orders.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://www.conceptstorephoto.fr/logcncin/index.php?controller=AdminDmuBackToNew&*",
+        "https://www.conceptstorephoto.fr/logcncin/index.php?controller=admindmubacktonew&*"
+      ],
+      "js": [
+        "content-admin-newProduct.js"
       ]
     },
     {
