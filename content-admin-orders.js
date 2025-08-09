@@ -2,10 +2,22 @@ console.log("✅ Script injecté !  content-admin-orders.js");
 
 /////// Exécution initiale ///////
 
+const style = document.createElement("style");
+style.textContent = `
+        .CSP_tools-copier-btn {
+            margin-left: 8px;
+            border-radius: 10px;
+            border: none;
+            outline: none !important;
+            background-color: #e7e7e7;
+            padding: 4px 8px;
+        }`;
+document.head.appendChild(style);
+
 if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "view") {
     console.log("✅ Page Détail de commande, ajout des actions...");
 
-    chrome.storage.sync.get(["toggle_orders_view_copyAicm"], (data) => {
+    chrome.storage.sync.get(["toggle_orders_view_copyAicm", "toggle_orders_view_copyCommandeNumber"], (data) => {
         if (data.toggle_orders_view_copyAicm) {
             console.log("🔄 Ajout des boutons de copie du code AICM");
             const elements = document.querySelectorAll(".productReference");
@@ -21,13 +33,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 const bouton = document.createElement("button");
                 bouton.innerText = "📋";
                 bouton.title = "Copier le code AICM";
-                bouton.className = "copier-btn";
-                bouton.style.marginLeft = "8px";
-                bouton.style.borderRadius = "10px";
-                bouton.style.border = "none";
-                bouton.style.outline = "none";
-                bouton.style.backgroundColor = "#e7e7e7";
-                bouton.style.padding = "4px 8px";
+                bouton.className = "CSP_tools-copier-btn";
                 bouton.onclick = (event) => {
                     event.preventDefault();
                     // event.stopPropagation(); // évite les comportements attachés ailleurs
@@ -38,6 +44,24 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 };
                 el.appendChild(bouton);
             });
+        }
+        if (data.toggle_orders_view_copyCommandeNumber) {
+            const commandeID = document.querySelector('h1.d-inline [data-role="order-id"]')?.textContent.trim();
+            const commandeREF = document.querySelector('h1.d-inline [data-role="order-reference"]')?.textContent.trim();
+            const commandeNAME = `Commande ${commandeID} ${commandeREF}`;
+            console.log(commandeNAME);
+            const bouton = document.createElement("button");
+            bouton.innerText = "📋";
+            bouton.title = "Copier le numéro de commande";
+            bouton.className = "CSP_tools-copier-btn";
+            bouton.onclick = (event) => {
+                event.preventDefault();
+                navigator.clipboard.writeText(commandeNAME).then(() => {
+                    bouton.innerText = "✅";
+                    setTimeout(() => (bouton.innerText = "📋"), 1500);
+                });
+            };
+            document.querySelector('h1.d-inline').prepend(bouton);
         }
 
     });
