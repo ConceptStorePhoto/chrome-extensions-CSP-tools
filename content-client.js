@@ -49,10 +49,22 @@ chrome.storage.local.get("token_admin", (data) => {
 
             const buttonAdmin = document.createElement("a");
             buttonAdmin.href = `https://${window.location.hostname}/logcncin/index.php?_token=${token}`;
-            buttonAdmin.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
+            // buttonAdmin.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
             buttonAdmin.innerText = "🔧 Accueil ADMIN";
             buttonAdmin.style.color = '#FFF';
             bandeau.appendChild(buttonAdmin);
+
+            if (document.body.id == "product") {
+                const productId = window.location.pathname.split("/")[1].split("-")[0];
+                console.log("➡️ ID produit :", productId);
+                if (!productId) return;
+                const buttonEdit = document.createElement("a");
+                buttonEdit.href = `https://${window.location.hostname}/logcncin/index.php/sell/catalog/products-v2/${productId}/edit?_token=${token}`;
+                // buttonEdit.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
+                buttonEdit.innerText = "🖊️ Modifier produit";
+                buttonEdit.style.color = '#FFF';
+                bandeau.appendChild(buttonEdit);
+            }
         }
 
     });
