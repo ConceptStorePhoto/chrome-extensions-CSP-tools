@@ -1,14 +1,43 @@
 import { checkForUpdate } from './functions/update-check.js';
-// Vérification des mises à jour à l'initialisation de l'extension
-console.log("🔄 Vérification des mises à jour au démarrage de l'extension...");
-checkForUpdate().then(result => {
-    if (result.updateAvailable) {
-        console.log("🔔 Mise à jour détectée :", result.remoteVersion);
-        showUpdateNotification(result.remoteVersion, result.repoURL);
+
+// --- Au démarrage de Chrome
+chrome.runtime.onStartup.addListener(() => {
+    console.log("🔄 Vérification des mises à jour au démarrage de Chrome...");
+    verifierMAJ();
+});
+
+// --- À l'installation / rechargement de l'extension
+chrome.runtime.onInstalled.addListener(() => {
+    console.log("🔄 Vérification des mises à jour à l’installation/rechargement...");
+    verifierMAJ();
+
+    // On planifie une vérification toutes les 4 heures
+    chrome.alarms.create("checkUpdates", { periodInMinutes: 240 });
+});
+
+// --- Quand l'alarme se déclenche
+chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === "checkUpdates") {
+        console.log("⏰ Vérification programmée des mises à jour...");
+        verifierMAJ();
     }
 });
 
-// Affiche une notification native Chrome
+// --- Fonction centrale
+function verifierMAJ() {
+    checkForUpdate().then(result => {
+        if (result.updateAvailable) {
+            console.log("🔔 Mise à jour détectée :", result.remoteVersion);
+            showUpdateNotification(result.remoteVersion, result.repoURL);
+        } else {
+            console.log("✅ Aucune mise à jour trouvée");
+        }
+    }).catch(err => {
+        console.error(`[${new Date().toLocaleString()}] ⚠️ Erreur lors de la vérification des mises à jour :`, err);
+    });
+}
+
+// --- Affiche une notification Chrome
 function showUpdateNotification(version, url) {
     chrome.notifications.create({
         type: "basic",
