@@ -535,7 +535,8 @@ function productActions() {
                         { spec: "Viseur", value: "" },
                         { spec: "Vidéo", value: "" },
                         { spec: "Dimensions (LxHxP)", value: "" },
-                        { spec: "Poids", value: "" }
+                        { spec: "Poids", value: "" },
+                        { spec: "Accessoires fournis", value: "" },
                     ]
                 },
                 {
@@ -552,15 +553,30 @@ function productActions() {
                         // { spec: "Zoom Interne", value: "" },
                         { spec: "Diamètre x longueur", value: "" },
                         { spec: "Poids", value: "" },
+                        { spec: "Accessoires fournis", value: "" },
+                    ]
+                },
+                {
+                    type: "Trépied",
+                    specs: [
+                        { spec: "Nombre de sections", value: "" },
+                        { spec: "Hauteur maximum", value: "" },
+                        { spec: "Hauteur minimum", value: "" },
+                        { spec: "Charge maximum", value: "" },
+                        { spec: "Longueur plié", value: "" },
+                        { spec: "Poids", value: "" },
+                        { spec: "Matériau", value: "" },
+                        // { spec: "Accessoires fournis", value: "" },
                     ]
                 },
                 {
                     type: "Occasion",
                     specs: [
                         { spec: "État (Occasion)", value: "" },
-                        // { spec: "Monture d'objectif", value: "" }
+                        // { spec: "Monture d'objectif", value: "" },
+                        // { spec: "Accessoires fournis", value: "" },
                     ]
-                }
+                },
             ];
 
             const buttonAddSpecs = document.getElementById('product_details_features_add_feature');
