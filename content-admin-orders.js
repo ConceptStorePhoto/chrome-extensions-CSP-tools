@@ -17,7 +17,7 @@ document.head.appendChild(style);
 if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "view") {
     console.log("✅ Page Détail de commande, ajout des actions...");
 
-    chrome.storage.sync.get(["toggle_orders_view_copyAicm", "toggle_orders_view_copyCommandeNumber"], (data) => {
+    chrome.storage.sync.get(["toggle_orders_view_copyAicm", "toggle_orders_view_copyCommandeNumber", "toggle_orders_view_openColissimoTracking"], (data) => {
         if (data.toggle_orders_view_copyAicm) {
             console.log("🔄 Ajout des boutons de copie du code AICM");
             const elements = document.querySelectorAll(".productReference");
@@ -62,6 +62,19 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 });
             };
             document.querySelector('h1.d-inline').prepend(bouton);
+        }
+        if (data.toggle_orders_view_openColissimoTracking) {
+            const listeColissimoNumber = document.querySelectorAll('.colissimo-shipment-number');
+            listeColissimoNumber.forEach((item) => {
+                const boutonSuivi = document.createElement('a');
+                boutonSuivi.innerText = "Ouvrir Suivi";
+                boutonSuivi.title = "Ouvrir le Suivi sur le site de La Poste";
+                boutonSuivi.target = '_blank';
+                boutonSuivi.className = 'CSP_tools-copier-btn';
+                boutonSuivi.style.fontSize = "12px";
+                boutonSuivi.href = `https://www.laposte.fr/outils/suivre-vos-envois?code=${item.innerText}`;
+                item.appendChild(boutonSuivi);
+            });
         }
 
     });
