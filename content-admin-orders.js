@@ -73,7 +73,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 boutonSuivi.className = 'CSP_tools-copier-btn';
                 boutonSuivi.style.fontSize = "12px";
                 boutonSuivi.href = `https://www.laposte.fr/outils/suivre-vos-envois?code=${item.innerText}`;
-                item.appendChild(boutonSuivi);
+                item.parentElement.prepend(boutonSuivi);
             });
         }
 
