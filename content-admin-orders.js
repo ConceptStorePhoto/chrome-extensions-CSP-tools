@@ -92,8 +92,7 @@ else if (window.location.pathname.includes("orders") && window.location.pathname
             document.querySelectorAll('.column-tracking_number').forEach((el) => {
                 el.style.minWidth = "120px";
                 const trackingNumber = el.innerText.trim();
-                el.innerHTML = `<a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${trackingNumber}" target="_blank">${trackingNumber}</a>`;
-                el.title = "Ouvrir le Suivi sur le site de La Poste";
+                el.innerHTML = `<a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${trackingNumber}" target="_blank" title="Ouvrir le Suivi sur le site de La Poste">${trackingNumber}</a>`;
             });
         }
 
