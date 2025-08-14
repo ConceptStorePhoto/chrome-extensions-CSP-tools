@@ -82,10 +82,18 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
 else if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "") {
     console.log("✅ Page Liste des commandes, ajout des actions...");
 
-    chrome.storage.sync.get(["toggle_orders_idWidth"], (data) => {
+    chrome.storage.sync.get(["toggle_orders_idWidth", "toggle_orders_trackingPatch"], (data) => {
         if (data.toggle_orders_idWidth) {
             document.querySelectorAll('.column-id_order').forEach((el) => {
                 el.style.minWidth = "80px";
+            });
+        }
+        if (data.toggle_orders_trackingPatch) {
+            document.querySelectorAll('.column-tracking_number').forEach((el) => {
+                el.style.minWidth = "120px";
+                const trackingNumber = el.innerText.trim();
+                el.innerHTML = `<a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${trackingNumber}" target="_blank">${trackingNumber}</a>`;
+                el.title = "Ouvrir le Suivi sur le site de La Poste";
             });
         }
 

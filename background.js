@@ -66,17 +66,18 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_catalog_copy_aicm_buttons: true,
         toggle_catalog_color_remplacement: true,
         toggle_catalog_patch_category_filter: true,
-        toggle_contextMenu_copy_text: true,
+        catalog_color_remplacement_default: '#0052a3',
+        catalog_color_highlight_default: '#fff7c6',
         toggle_product_subtitle_display: true,
         toggle_product_preview_buttons: true,
         toggle_product_heureFin: true,
         toggle_product_heureDebut: true,
         toggle_product_focus_auto: true,
         toggle_product_preset_specs: true,
+        toggle_orders_trackingPatch: true,
         toggle_client_adminEdit_buttons: true,
         toggle_colissimo_confirm_annuler: true,
-        catalog_color_remplacement_default: '#0052a3',
-        catalog_color_highlight_default: '#fff7c6'
+        toggle_contextMenu_copy_text: true,
     };
     chrome.storage.sync.get(Object.keys(defaultSettings), (data) => {
         const settingsToSet = {};
