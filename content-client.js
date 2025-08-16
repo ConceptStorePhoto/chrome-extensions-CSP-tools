@@ -18,8 +18,27 @@ chrome.storage.local.get("token_admin", (data) => {
                 addAdminLinkButtonProduct();
         }
         // else if (document.body.id == "search" || document.body.id == "category" || document.body.id == "index")
-        if (data.toggle_client_adminEditBtn_miniature)
+        if (data.toggle_client_adminEditBtn_miniature) {
             addAdminLinkButtonMiniature();
+
+            const targetNode = document.querySelector("section#main");
+            if (targetNode) {
+                const observer = new MutationObserver((mutationsList) => {
+                    for (const mutation of mutationsList) {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType === 1) {
+                                observer.disconnect();
+                                addAdminLinkButtonMiniature();
+                                setTimeout(() => {
+                                    observer.observe(targetNode, { childList: true, subtree: true });
+                                }, 200);
+                            }
+                        });
+                    }
+                });
+                observer.observe(targetNode, { childList: true, subtree: true });
+            }
+        }
 
         if (data.toggle_client_adminBandeau && token !== "") {
 
@@ -84,6 +103,7 @@ function addAdminLinkButtonMiniature() {
     console.log("🔄 Ajout du bouton pour chaque produit");
     const products = document.querySelectorAll("article.product-miniature");
     products.forEach((product) => {
+        if (product.querySelector('.CSP_tools-custom-btn')) return;
         createAdminButton(product.getAttribute("data-id-product"), { position: "absolute", top: "160px", right: "50%", transform: "translateX(50%)" }, product);
     });
 }
