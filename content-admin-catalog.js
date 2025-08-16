@@ -373,6 +373,7 @@ function productActions() {
         "toggle_product_preset_specs",
         "toggle_product_delete_specs",
         "toggle_product_image_selection",
+        "toggle_product_smart_category",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_product_rename_tabs) {
@@ -726,6 +727,88 @@ function productActions() {
                 }
             });
             observer.observe(container, { childList: true, subtree: true });
+        }
+
+        if (data.toggle_product_smart_category) {
+            console.log("📂 Script catégories chargé");
+            let lastClickedCategory = null;
+
+            // Observer quand la modale catégories est ajoutée au DOM
+            const observer = new MutationObserver(() => {
+                const modal = document.querySelector("#categories-modal");
+                if (modal && modal.style.display === "block" && !modal.dataset.init) {
+                    console.log("✅ Modale catégories détectée");
+                    modal.dataset.init = "true"; // ⚡ empêche la réinit multiple
+                    initCategoryWatcher(modal);
+                    // modal.querySelector('li.category-tree-element ul.children-list').classList.remove('d-none'); //test pour déplier le catégorie  accueil
+                }
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            function initCategoryWatcher(modal) {
+                const checkboxes = modal.querySelectorAll(".tree-checkbox-input");
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener("click", function () {
+                        if (this.checked) {
+                            lastClickedCategory = this; // mémorise la dernière catégorie cochée
+                            console.log("👆 Catégorie cochée par l’utilisateur :", this.value, this.parentElement?.textContent.trim());
+                        }
+                    });
+                    checkbox.addEventListener("change", function () {
+                        if (this.checked) {
+                            checkParents(this);
+                        }
+                    });
+                });
+                // 🎯 Quand on clique sur "Enregistrer"
+                const applyBtn = modal.querySelector("#category_tree_selector_apply_btn");
+                if (applyBtn) {
+                    applyBtn.addEventListener("click", () => {
+                        if (lastClickedCategory) {
+                            setDefaultCategory(lastClickedCategory);
+                        }
+                    });
+                }
+                console.log("👀 Surveillance des catégories activée");
+            }
+
+            function checkParents(checkbox) {
+                // On remonte les <li> parents
+                let li = checkbox.closest("li.category-tree-element");
+                while (li) {
+                    const parentUl = li.closest("ul.children-list");
+                    if (!parentUl) break; // plus de parent
+                    const parentLi = parentUl.closest("li.category-tree-element");
+                    if (!parentLi) break;
+
+                    // ✅ On récupère directement le premier input de ce parent
+                    const parentCheckbox = parentLi.querySelector("input.tree-checkbox-input");
+                    if (parentCheckbox && !parentCheckbox.checked) {
+                        // On ignore la catégorie "Accueil"
+                        const label = parentLi.querySelector("label");
+                        if (!label || !label.textContent.trim().toLowerCase().includes("accueil")) {
+                            parentCheckbox.checked = true;
+                            parentCheckbox.dispatchEvent(new Event("change", { bubbles: true }));
+                            console.log("✔️ Catégorie parente cochée :", label?.textContent.trim());
+                        }
+                    }
+                    li = parentLi;
+                }
+            }
+
+            function setDefaultCategory(checkbox) {
+                const select = document.querySelector("#product_description_categories_default_category_id");
+                if (!select) return;
+
+                const value = checkbox.value;
+                const option = select.querySelector(`option[value="${value}"]`);
+                if (option) {
+                    select.value = value;
+                    select.dispatchEvent(new Event("change", { bubbles: true }));
+                    console.log("🌟 Catégorie par défaut définie :", option.textContent.trim());
+                }
+            }
         }
 
 
