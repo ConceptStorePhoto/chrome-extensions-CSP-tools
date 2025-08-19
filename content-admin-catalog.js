@@ -528,11 +528,12 @@ function productActions() {
                 {
                     type: "Appareil photo",
                     specs: [
+                        { spec: "Format de Capteur", value: "" },
+                        { spec: "Détails Capteur", value: "" },
                         { spec: "Millions pixels", value: "" },
-                        { spec: "Capteur", value: "" },
                         { spec: "Stockage", value: "" },
                         { spec: "Connectivité", value: "Bluetooth, Wi-Fi" },
-                        { spec: "Écran", value: "" },
+                        { spec: "Détails Écran", value: "" },
                         { spec: "Viseur", value: "" },
                         { spec: "Vidéo", value: "" },
                         { spec: "Dimensions (LxHxP)", value: "" },
@@ -543,8 +544,8 @@ function productActions() {
                 {
                     type: "Objectif",
                     specs: [
-                        // { spec: "Ouverture maximale", value: "" },
                         { spec: "Compatibilité Objectif", value: "" },
+                        { spec: "Ouverture maximale f/", value: "" },
                         { spec: "Diamètre du filtre", value: "" },
                         { spec: "Distance minimale de mise au point", value: "" },
                         { spec: "Nombre de lamelles du diaphragme", value: "" },
@@ -555,6 +556,15 @@ function productActions() {
                         { spec: "Diamètre x longueur", value: "" },
                         { spec: "Poids", value: "" },
                         { spec: "Accessoires fournis", value: "" },
+                    ]
+                },
+                {
+                    type: "Objectif +",
+                    name: "Obj+",
+                    specs: [
+                        { spec: "Moteur AF", value: "" },
+                        { spec: "Zoom Motorisé", value: "" },
+                        { spec: "Zoom Interne", value: "" },
                     ]
                 },
                 {
@@ -574,8 +584,17 @@ function productActions() {
                     type: "Occasion",
                     specs: [
                         { spec: "État (Occasion)", value: "" },
+                        { spec: "Magasin (Occasion)", value: "" },
                         // { spec: "Monture d'objectif", value: "" },
                         // { spec: "Accessoires fournis", value: "" },
+                    ]
+                },
+                {
+                    type: "Occasion",
+                    name: "OC+",
+                    specs: [
+                        { spec: "Monture d'objectif", value: "" },
+                        { spec: "Accessoires fournis", value: "" },
                     ]
                 },
             ];
@@ -585,7 +604,7 @@ function productActions() {
             specsTemplate.forEach(template => {
                 const btn = document.createElement('button');
                 btn.type = "button"; // ← Empêche le submit
-                btn.textContent = `Preset ${template.type}`;
+                btn.textContent = template.name || `Preset ${template.type}`;
                 btn.className = 'btn btn-sm btn-outline-primary ml-2';
                 btn.style.marginLeft = "10px";
                 btn.addEventListener('click', () => applyPreset(template.specs));
@@ -604,6 +623,7 @@ function productActions() {
                 specsList.forEach((spec, index) => {
                     if (existingFeatures.includes(spec.spec.toLowerCase())) {
                         console.log(`Caractéristique déjà présente : ${spec.spec}, ignorée.`);
+                        displayNotif(`⚠️ Caractéristique déjà présente : ${spec.spec}, ignorée.`);
                         return;
                     }
 
