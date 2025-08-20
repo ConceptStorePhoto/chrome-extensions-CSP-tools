@@ -372,6 +372,7 @@ function productActions() {
         "toggle_product_auto_occasion",
         "toggle_product_preset_specs",
         "toggle_product_delete_specs",
+        "toggle_product_delete_empty_specs",
         "toggle_product_image_selection",
         "toggle_product_smart_category",
     ];
@@ -601,12 +602,16 @@ function productActions() {
 
             const buttonAddSpecs = document.getElementById('product_details_features_add_feature');
 
+            const br = document.createElement("br")
+            buttonAddSpecs.parentNode.appendChild(br);
+
             specsTemplate.forEach(template => {
                 const btn = document.createElement('button');
                 btn.type = "button"; // ← Empêche le submit
                 btn.textContent = template.name || `Preset ${template.type}`;
                 btn.className = 'btn btn-sm btn-outline-primary ml-2';
                 btn.style.marginLeft = "10px";
+                btn.style.marginTop = "10px";
                 btn.addEventListener('click', () => applyPreset(template.specs));
                 // buttonAddSpecs.parentNode.insertBefore(btn, buttonAddSpecs.nextSibling);
                 buttonAddSpecs.parentNode.appendChild(btn);
@@ -661,6 +666,101 @@ function productActions() {
                 });
             }
         }
+
+        if (data.toggle_product_delete_empty_specs) {
+            // Bouton pour supprimer les caractéristiques vides
+            const deleteEmptyBtn = document.createElement('button');
+            deleteEmptyBtn.type = 'button';
+            deleteEmptyBtn.textContent = '🗑 Suppr caractéristiques vides';
+            deleteEmptyBtn.className = 'btn btn-warning ml-2';
+            deleteEmptyBtn.style.marginLeft = '10px';
+            deleteEmptyBtn.addEventListener('click', () => {
+                const confirmed = window.confirm("⚠️ Cette action va supprimer toutes les caractéristiques vides. Voulez-vous continuer ?");
+                if (confirmed) deleteEmptyFeatures();
+            });
+            const target = document.getElementById('product_details_features_add_feature');
+            target.parentNode.insertBefore(deleteEmptyBtn, target.nextSibling);
+            // function deleteEmptyFeatures() {
+            //     const featureRows = document.querySelectorAll('.product-feature');
+
+            //     featureRows.forEach(row => {
+            //         const selectFeature = row.querySelector('.feature-selector');
+            //         const selectValue = row.querySelector('.feature-value-selector');
+            //         const customInput = row.querySelector('.custom-values input');
+
+            //         const hasFeature = selectFeature && selectFeature.value !== "";
+            //         const hasPredefinedValue = selectValue && selectValue.value !== "";
+            //         const hasCustomValue = customInput && customInput.value.trim() !== "";
+
+            //         // si aucune donnée n'est remplie → suppression
+            //         if (!hasFeature && !hasPredefinedValue && !hasCustomValue) {
+            //             const deleteButton = row.querySelector('.delete-feature-value');
+            //             if (deleteButton) {
+            //                 deleteButton.click();
+            //             }
+            //         }
+            //     });
+            // }
+            function deleteEmptyFeatures() {
+                const rowsToDelete = [];
+                const featureRows = document.querySelectorAll('.product-feature');
+
+                featureRows.forEach(row => {
+                    // Sélecteur valeur prédéfinie (Select2 ou natif)
+                    const selectValue = row.querySelector('.feature-value-selector');
+
+                    // Récupère la valeur "réelle" sélectionnée (prend l'option si possible)
+                    let rawVal = '';
+                    if (selectValue) {
+                        const opt = selectValue.options[selectValue.selectedIndex];
+                        rawVal = (opt ? opt.value : selectValue.value) ?? '';
+                    }
+                    const normalized = String(rawVal).trim().toLowerCase();
+                    const hasPredefinedValue = normalized !== '' && normalized !== '0' && normalized !== 'null' && normalized !== 'false';
+
+                    // Valeur(s) personnalisée(s) (toutes langues)
+                    const customInputs = Array.from(row.querySelectorAll('.custom-values input[type="text"]'));
+                    const hasCustomValue = customInputs.some(inp => (inp.value || '').trim() !== '');
+
+                    // On supprime si AUCUNE valeur (ni prédéfinie ni perso)
+                    if (!hasPredefinedValue && !hasCustomValue) {
+                        const deleteButton = row.querySelector('.delete-feature-value');
+                        if (deleteButton) rowsToDelete.push(deleteButton);
+                    }
+                });
+
+                if (rowsToDelete.length === 0) {
+                    displayNotif("Aucune caractéristique à supprimer");
+                    // alert("✅ Aucune caractéristique à supprimer (sans valeur prédéfinie et sans valeur perso).");
+                    // return;
+                }
+
+                // Chaînage des confirmations comme dans deleteAllFeatures
+                let i = 0;
+                function nextDelete() {
+                    if (i >= rowsToDelete.length) return;
+                    rowsToDelete[i].click(); // ouvre le popup
+                    i++;
+                    setTimeout(() => {
+                        // Essaie sélecteur strict puis fallback sur un bouton dont le texte contient "Supprimer"
+                        let confirmBtn = document.querySelector('.modal .btn-confirm-submit');
+                        if (!confirmBtn) {
+                            confirmBtn = Array.from(document.querySelectorAll('.modal button, .modal a'))
+                                .find(el => /supprimer/i.test(el.textContent || ''));
+                        }
+                        if (confirmBtn) {
+                            confirmBtn.click();
+                            setTimeout(nextDelete, 350); // laisse le temps au DOM de se mettre à jour
+                        } else {
+                            console.warn('⚠️ Bouton de confirmation non trouvé');
+                        }
+                    }, 150); // délai pour l’apparition du modal
+                }
+                nextDelete();
+            }
+
+        }
+
         if (data.toggle_product_delete_specs) {
             // Bouton pour supprimer toutes les caractéristiques
             const deleteAllBtn = document.createElement('button');
