@@ -680,27 +680,7 @@ function productActions() {
             });
             const target = document.getElementById('product_details_features_add_feature');
             target.parentNode.insertBefore(deleteEmptyBtn, target.nextSibling);
-            // function deleteEmptyFeatures() {
-            //     const featureRows = document.querySelectorAll('.product-feature');
 
-            //     featureRows.forEach(row => {
-            //         const selectFeature = row.querySelector('.feature-selector');
-            //         const selectValue = row.querySelector('.feature-value-selector');
-            //         const customInput = row.querySelector('.custom-values input');
-
-            //         const hasFeature = selectFeature && selectFeature.value !== "";
-            //         const hasPredefinedValue = selectValue && selectValue.value !== "";
-            //         const hasCustomValue = customInput && customInput.value.trim() !== "";
-
-            //         // si aucune donnée n'est remplie → suppression
-            //         if (!hasFeature && !hasPredefinedValue && !hasCustomValue) {
-            //             const deleteButton = row.querySelector('.delete-feature-value');
-            //             if (deleteButton) {
-            //                 deleteButton.click();
-            //             }
-            //         }
-            //     });
-            // }
             function deleteEmptyFeatures() {
                 const rowsToDelete = [];
                 const featureRows = document.querySelectorAll('.product-feature');
@@ -731,8 +711,6 @@ function productActions() {
 
                 if (rowsToDelete.length === 0) {
                     displayNotif("Aucune caractéristique à supprimer");
-                    // alert("✅ Aucune caractéristique à supprimer (sans valeur prédéfinie et sans valeur perso).");
-                    // return;
                 }
 
                 // Chaînage des confirmations comme dans deleteAllFeatures
@@ -758,7 +736,6 @@ function productActions() {
                 }
                 nextDelete();
             }
-
         }
 
         if (data.toggle_product_delete_specs) {
