@@ -682,59 +682,26 @@ function productActions() {
             target.parentNode.insertBefore(deleteEmptyBtn, target.nextSibling);
 
             function deleteEmptyFeatures() {
-                const rowsToDelete = [];
-                const featureRows = document.querySelectorAll('.product-feature');
-
-                featureRows.forEach(row => {
-                    // Sélecteur valeur prédéfinie (Select2 ou natif)
-                    const selectValue = row.querySelector('.feature-value-selector');
-
-                    // Récupère la valeur "réelle" sélectionnée (prend l'option si possible)
-                    let rawVal = '';
-                    if (selectValue) {
-                        const opt = selectValue.options[selectValue.selectedIndex];
-                        rawVal = (opt ? opt.value : selectValue.value) ?? '';
-                    }
-                    const normalized = String(rawVal).trim().toLowerCase();
-                    const hasPredefinedValue = normalized !== '' && normalized !== '0' && normalized !== 'null' && normalized !== 'false';
-
-                    // Valeur(s) personnalisée(s) (toutes langues)
-                    const customInputs = Array.from(row.querySelectorAll('.custom-values input[type="text"]'));
-                    const hasCustomValue = customInputs.some(inp => (inp.value || '').trim() !== '');
-
-                    // On supprime si AUCUNE valeur (ni prédéfinie ni perso)
-                    if (!hasPredefinedValue && !hasCustomValue) {
-                        const deleteButton = row.querySelector('.delete-feature-value');
-                        if (deleteButton) rowsToDelete.push(deleteButton);
-                    }
+                const featureRows = Array.from(document.querySelectorAll('.product-feature'));
+                const rowsToDelete = featureRows.filter(row => {
+                    const select = row.querySelector('.feature-value-selector');
+                    const selectVal = select?.options?.[select.selectedIndex]?.value || select?.value || '';
+                    const hasPredefined = selectVal.trim() && selectVal !== '0';
+                    const hasCustom = Array.from(row.querySelectorAll('.custom-values input[type="text"]'))
+                        .some(inp => inp.value.trim());
+                    return !hasPredefined && !hasCustom;
                 });
-
-                if (rowsToDelete.length === 0) {
-                    displayNotif("Aucune caractéristique à supprimer");
+                if (!rowsToDelete.length) {
+                    displayNotif("✅ Aucune caractéristique à supprimer.");
+                    return;
                 }
+                rowsToDelete.forEach(row => {
+                    Array.from(row.querySelectorAll('select, input')).forEach(el => {
+                        ['change', 'input'].forEach(type => el.dispatchEvent(new Event(type, { bubbles: true })));
 
-                // Chaînage des confirmations comme dans deleteAllFeatures
-                let i = 0;
-                function nextDelete() {
-                    if (i >= rowsToDelete.length) return;
-                    rowsToDelete[i].click(); // ouvre le popup
-                    i++;
-                    setTimeout(() => {
-                        // Essaie sélecteur strict puis fallback sur un bouton dont le texte contient "Supprimer"
-                        let confirmBtn = document.querySelector('.modal .btn-confirm-submit');
-                        if (!confirmBtn) {
-                            confirmBtn = Array.from(document.querySelectorAll('.modal button, .modal a'))
-                                .find(el => /supprimer/i.test(el.textContent || ''));
-                        }
-                        if (confirmBtn) {
-                            confirmBtn.click();
-                            setTimeout(nextDelete, 350); // laisse le temps au DOM de se mettre à jour
-                        } else {
-                            console.warn('⚠️ Bouton de confirmation non trouvé');
-                        }
-                    }, 150); // délai pour l’apparition du modal
-                }
-                nextDelete();
+                    }); row.remove(); // supprime la ligne du DOM
+                });
+                displayNotif(`✅ ${rowsToDelete.length} lignes vides supprimées`);
             }
         }
 
@@ -752,23 +719,30 @@ function productActions() {
             const target = document.getElementById('product_details_features_add_feature');
             target.parentNode.insertBefore(deleteAllBtn, target.nextSibling);
             function deleteAllFeatures() {
-                const deleteButtons = document.querySelectorAll('.delete-feature-value');
-                let i = 0;
-                function nextDelete() {
-                    if (i >= deleteButtons.length) return;
-                    deleteButtons[i].click(); // ouvre le popup
-                    i++;
-                    setTimeout(() => {
-                        const confirmBtn = document.querySelector('.modal .btn-confirm-submit');
-                        if (confirmBtn) {
-                            confirmBtn.click(); // clique sur "Supprimer" du modal
-                            setTimeout(nextDelete, 200); // attente pour enchaîner
-                        } else {
-                            console.warn('Bouton de confirmation non trouvé');
-                        }
-                    }, 150); // temps pour le popup à apparaître
-                }
-                nextDelete(); // lancer la boucle
+                // const deleteButtons = document.querySelectorAll('.delete-feature-value');
+                // let i = 0;
+                // function nextDelete() {
+                //     if (i >= deleteButtons.length) return;
+                //     deleteButtons[i].click(); // ouvre le popup
+                //     i++;
+                //     setTimeout(() => {
+                //         const confirmBtn = document.querySelector('.modal .btn-confirm-submit');
+                //         if (confirmBtn) {
+                //             confirmBtn.click(); // clique sur "Supprimer" du modal
+                //             setTimeout(nextDelete, 200); // attente pour enchaîner
+                //         } else {
+                //             console.warn('Bouton de confirmation non trouvé');
+                //         }
+                //     }, 150); // temps pour le popup à apparaître
+                // }
+                // nextDelete(); // lancer la boucle
+
+                document.querySelectorAll('.product-feature').forEach(row => {
+                    Array.from(row.querySelectorAll('select, input')).forEach(el => {
+                        ['change', 'input'].forEach(type => el.dispatchEvent(new Event(type, { bubbles: true })));
+
+                    }); row.remove(); // supprime la ligne du DOM
+                });
             }
         }
 
