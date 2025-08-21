@@ -375,6 +375,7 @@ function productActions() {
         "toggle_product_delete_empty_specs",
         "toggle_product_image_selection",
         "toggle_product_smart_category",
+        "toggle_product_specificPrices_color",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_product_rename_tabs) {
@@ -880,6 +881,74 @@ function productActions() {
                     console.log("🌟 Catégorie par défaut définie :", option.textContent.trim());
                 }
             }
+        }
+
+        if (data.toggle_product_specificPrices_color) {
+            console.log("🎨 Script coloration promos injecté");
+
+            // 🔹 Fonction qui colore les périodes
+            function colorizePeriods() {
+                const now = new Date();
+                document.querySelectorAll("#specific-prices-list-table td.period").forEach(td => {
+                    const fromText = td.querySelector(".from")?.textContent.trim() || "";
+                    const toText = td.querySelector(".to")?.textContent.trim() || "";
+
+                    let fromDate = null;
+                    let toDate = null;
+
+                    if (fromText && fromText.toLowerCase() !== "toujours") {
+                        fromDate = new Date(fromText.replace(" ", "T"));
+                    }
+                    if (toText && toText.toLowerCase() !== "illimité") {
+                        toDate = new Date(toText.replace(" ", "T"));
+                    }
+
+                    let status = "";
+
+                    if (toDate && now > toDate) {
+                        status = "past"; // déjà terminé
+                    } else if (fromDate && now < fromDate) {
+                        status = "future"; // pas encore commencé
+                    } else {
+                        status = "current"; // en cours
+                    }
+
+                    // Reset style
+                    td.style.backgroundColor = "";
+                    td.style.color = "#000";
+
+                    if (status === "past") {
+                        td.style.backgroundColor = "rgba(255, 0, 0, 0.3)";   // rouge
+                    } else if (status === "current") {
+                        td.style.backgroundColor = "rgba(255, 255, 0, 0.5)"; // jaune
+                    } else if (status === "future") {
+                        td.style.backgroundColor = "rgba(0, 255, 0, 0.3)";   // vert
+                    }
+                });
+            }
+
+            // 🔹 Ajout de la légende avant le tableau
+            const table = document.querySelector("#specific-prices-list-table");
+            if (table && !document.querySelector("#promo-legend")) {
+                const legend = document.createElement("div");
+                legend.id = "promo-legend";
+                legend.style.margin = "10px 0";
+                legend.style.fontWeight = "bold";
+                legend.textContent = "🔴 Rouge si terminé | 🟡 Jaune si en cours | 🟢 Vert si à venir";
+                table.parentNode.insertBefore(legend, table);
+            }
+
+            // 🔹 MutationObserver pour recolorer quand le tableau change
+            const targetNode = document.querySelector("#specific-price-list-container");
+            if (targetNode) {
+                const observer = new MutationObserver(() => {
+                    colorizePeriods();
+                });
+                observer.observe(targetNode, { childList: true, subtree: true });
+            }
+
+            // Premier passage
+            colorizePeriods();
         }
 
 
