@@ -895,7 +895,6 @@ function productActions() {
 
                     let fromDate = null;
                     let toDate = null;
-
                     if (fromText && fromText.toLowerCase() !== "toujours") {
                         fromDate = new Date(fromText.replace(" ", "T"));
                     }
@@ -903,26 +902,15 @@ function productActions() {
                         toDate = new Date(toText.replace(" ", "T"));
                     }
 
-                    let status = "";
-
                     if (toDate && now > toDate) {
-                        status = "past"; // déjà terminé
-                    } else if (fromDate && now < fromDate) {
-                        status = "future"; // pas encore commencé
-                    } else {
-                        status = "current"; // en cours
-                    }
-
-                    // Reset style
-                    td.style.backgroundColor = "";
-                    td.style.color = "#000";
-
-                    if (status === "past") {
+                        // déjà terminé
                         td.style.backgroundColor = "rgba(255, 0, 0, 0.3)";   // rouge
-                    } else if (status === "current") {
-                        td.style.backgroundColor = "rgba(255, 255, 0, 0.5)"; // jaune
-                    } else if (status === "future") {
+                    } else if (fromDate && now < fromDate) {
+                        // pas encore commencé
                         td.style.backgroundColor = "rgba(0, 255, 0, 0.3)";   // vert
+                    } else {
+                        // en cours
+                        td.style.backgroundColor = "rgba(255, 255, 0, 0.5)"; // jaune
                     }
                 });
             }
@@ -934,7 +922,7 @@ function productActions() {
                 legend.id = "promo-legend";
                 legend.style.margin = "10px 0";
                 legend.style.fontWeight = "bold";
-                legend.textContent = "🔴 Rouge si terminé | 🟡 Jaune si en cours | 🟢 Vert si à venir";
+                legend.textContent = "🔴 Terminé | 🟡 En cours | 🟢 A venir";
                 table.parentNode.insertBefore(legend, table);
             }
 
