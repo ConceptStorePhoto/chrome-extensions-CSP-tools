@@ -82,7 +82,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
 else if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "") {
     console.log("✅ Page Liste des commandes, ajout des actions...");
 
-    chrome.storage.sync.get(["toggle_orders_idWidth", "toggle_orders_trackingPatch"], (data) => {
+    chrome.storage.sync.get(["toggle_orders_idWidth", "toggle_orders_trackingPatch", "toggle_orders_retraitMagasin"], (data) => {
         if (data.toggle_orders_idWidth) {
             document.querySelectorAll('.column-id_order').forEach((el) => {
                 el.style.minWidth = "80px";
@@ -95,6 +95,12 @@ else if (window.location.pathname.includes("orders") && window.location.pathname
                 el.innerHTML = `<a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${trackingNumber}" target="_blank" title="Ouvrir le Suivi sur le site de La Poste">${trackingNumber}</a>`;
             });
         }
-
+        if (data.toggle_orders_retraitMagasin) {
+            document.querySelectorAll('.column-store').forEach((el) => {
+                const ville = el.innerText.split('Concept Store Photo')[1].trim();
+                // el.innerHTML = `<b>${ville}</b>`;
+                el.innerText = ville;
+            });
+        }
     });
 }
