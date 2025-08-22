@@ -530,7 +530,7 @@ function productActions() {
                 {
                     type: "Appareil photo",
                     specs: [
-                        { spec: "Format de Capteur", value: "" },
+                        { spec: "Format de Capteur", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Détails Capteur", value: "" },
                         { spec: "Millions pixels", value: "" },
                         { spec: "Stockage", value: "" },
@@ -546,15 +546,11 @@ function productActions() {
                 {
                     type: "Objectif",
                     specs: [
-                        { spec: "Compatibilité Objectif", value: "" },
+                        { spec: "Compatibilité Objectif", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Ouverture maximale f/", value: "" },
                         { spec: "Diamètre du filtre", value: "" },
                         { spec: "Distance minimale de mise au point", value: "" },
                         { spec: "Nombre de lamelles du diaphragme", value: "" },
-                        { spec: "Stabilisation de l'objectif", value: "" },
-                        // { spec: "Moteur AF", value: "" },
-                        // { spec: "Zoom Motorisé", value: "" },
-                        // { spec: "Zoom Interne", value: "" },
                         { spec: "Diamètre x longueur", value: "" },
                         { spec: "Poids", value: "" },
                         { spec: "Accessoires fournis", value: "" },
@@ -564,6 +560,7 @@ function productActions() {
                     type: "Objectif +",
                     name: "Obj+",
                     specs: [
+                        { spec: "Stabilisation de l'objectif", value: "" },
                         { spec: "Moteur AF", value: "" },
                         { spec: "Zoom Motorisé", value: "" },
                         { spec: "Zoom Interne", value: "" },
@@ -585,17 +582,15 @@ function productActions() {
                 {
                     type: "Occasion",
                     specs: [
-                        { spec: "État (Occasion)", value: "" },
-                        { spec: "Magasin (Occasion)", value: "" },
-                        // { spec: "Monture d'objectif", value: "" },
-                        // { spec: "Accessoires fournis", value: "" },
+                        { spec: "État (Occasion)", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
+                        { spec: "Magasin (Occasion)", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                     ]
                 },
                 {
                     type: "Occasion",
                     name: "OC+",
                     specs: [
-                        { spec: "Monture d'objectif", value: "" },
+                        { spec: "Monture d'objectif", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Accessoires fournis", value: "" },
                     ]
                 },
@@ -619,7 +614,7 @@ function productActions() {
             });
 
             function applyPreset(specsList) {
-                const delay = 200;
+                const delay = 100;
 
                 // Obtenir les caractéristiques déjà utilisées
                 const existingFeatures = Array.from(document.querySelectorAll('.product-feature select.feature-selector'))
@@ -650,7 +645,7 @@ function productActions() {
                                     selectFeature.value = matchingOption.value;
                                     selectFeature.dispatchEvent(new Event('change', { bubbles: true }));
                                 } else {
-                                    console.warn(`Caractéristique introuvable : ${spec.spec}`);
+                                    console.warn(`[${new Date().toLocaleString()}] Caractéristique introuvable : ${spec.spec}`);
                                     displayNotif(`⚠️ Caractéristique introuvable : ${spec.spec}`);
                                 }
                             }
@@ -659,10 +654,10 @@ function productActions() {
                             const input = lastBlock.querySelector('input[type="text"]');
                             if (input) {
                                 input.value = spec.value;
+                                input.placeholder = spec.placeholder || "";
                                 input.dispatchEvent(new Event('input', { bubbles: true }));
                             }
-
-                        }, 100);
+                        }, 50);
                     }, delay * index);
                 });
             }
@@ -720,24 +715,6 @@ function productActions() {
             const target = document.getElementById('product_details_features_add_feature');
             target.parentNode.insertBefore(deleteAllBtn, target.nextSibling);
             function deleteAllFeatures() {
-                // const deleteButtons = document.querySelectorAll('.delete-feature-value');
-                // let i = 0;
-                // function nextDelete() {
-                //     if (i >= deleteButtons.length) return;
-                //     deleteButtons[i].click(); // ouvre le popup
-                //     i++;
-                //     setTimeout(() => {
-                //         const confirmBtn = document.querySelector('.modal .btn-confirm-submit');
-                //         if (confirmBtn) {
-                //             confirmBtn.click(); // clique sur "Supprimer" du modal
-                //             setTimeout(nextDelete, 200); // attente pour enchaîner
-                //         } else {
-                //             console.warn('Bouton de confirmation non trouvé');
-                //         }
-                //     }, 150); // temps pour le popup à apparaître
-                // }
-                // nextDelete(); // lancer la boucle
-
                 document.querySelectorAll('.product-feature').forEach(row => {
                     Array.from(row.querySelectorAll('select, input')).forEach(el => {
                         ['change', 'input'].forEach(type => el.dispatchEvent(new Event(type, { bubbles: true })));
@@ -1190,7 +1167,7 @@ function productActions() {
 
 function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
     if (!productId || !token) {
-        console.warn("❌ Impossible de détecter l'ID produit ou le token.");
+        console.warn(`[${new Date().toLocaleString()}] ❌ Impossible de détecter l'ID produit ou le token.`);
         return;
     }
 
@@ -1201,7 +1178,7 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
         .then(response => response.json())
         .then(data => {
             if (!data.combinations || !Array.isArray(data.combinations)) {
-                console.warn("❌ Format de données inattendu :", data);
+                console.warn(`[${new Date().toLocaleString()}] ❌ Format de données inattendu :`, data);
                 return;
             }
             // console.log("📦 DATA Déclinaisons récupérées via API :", data);
