@@ -1,6 +1,8 @@
 console.log("✅ Script injecté !  content-client.js");
 
 let token = "";
+let color_adminEditBtn_miniature = "";
+let select_client_adminEditBtn_miniature = "";
 
 chrome.storage.local.get("token_admin", (data) => {
     if (data.token_admin == "" || !data.token_admin) return; // Ne rien faire si vide ou non défini
@@ -9,7 +11,19 @@ chrome.storage.local.get("token_admin", (data) => {
 
     if (window.location.pathname.startsWith("/logcncin/index.php/sell/catalog/products-v2/")) return; // Ne pas exécuter le script si on est dans l'admin
 
-    chrome.storage.sync.get(["toggle_client_adminEdit_buttons", "toggle_client_adminEditBtn_miniature", "toggle_client_adminBandeau"], (data) => {
+    const keys = [
+        "toggle_client_adminEdit_buttons",
+        "toggle_client_adminEditBtn_miniature",
+        "toggle_client_adminBandeau",
+        "color_adminEditBtn_miniature",
+        "color_adminEditBtn_miniature_default",
+        "select_client_adminEditBtn_miniature",
+        "select_client_adminEditBtn_miniature_default",
+    ];
+    chrome.storage.sync.get(keys, (data) => {
+        color_adminEditBtn_miniature = data.color_adminEditBtn_miniature || data.color_adminEditBtn_miniature_default;
+        select_client_adminEditBtn_miniature = data.select_client_adminEditBtn_miniature || data.select_client_adminEditBtn_miniature_default;
+
         // Vérifie si on est sur une page PRODUIT côté client
         const match = window.location.pathname.match(/^\/(\d{2,5})-/);
         console.log("🔄 Vérification du type de page :", match);
@@ -104,7 +118,13 @@ function addAdminLinkButtonMiniature() {
     const products = document.querySelectorAll("article.product-miniature");
     products.forEach((product) => {
         if (product.querySelector('.CSP_tools-custom-btn')) return;
-        createAdminButton(product.getAttribute("data-id-product"), { position: "absolute", top: "160px", right: "50%", transform: "translateX(50%)" }, product);
+        if (select_client_adminEditBtn_miniature == "bottom")
+            createAdminButton(product.getAttribute("data-id-product"), { margin: "10px 0 0 0", width: "100%", bgColor: color_adminEditBtn_miniature }, product);
+        else if (select_client_adminEditBtn_miniature == "top")
+            createAdminButton(product.getAttribute("data-id-product"), { margin: "0 0 10px 0", width: "100%", bgColor: color_adminEditBtn_miniature }, product);
+        else
+            createAdminButton(product.getAttribute("data-id-product"), { position: "absolute", top: "50%", right: "50%", transform: "translate(50%, -50%)", bgColor: color_adminEditBtn_miniature }, product.querySelector('.thumbnail'));
+        console.log('color_adminEditBtn_miniature', color_adminEditBtn_miniature)
     });
 }
 
@@ -123,7 +143,10 @@ function createAdminButton(productId, style, container) {
         top: style.top,
         right: style.right,
         zIndex: style.zIndex || "",
-        transform: style.transform || ""
+        transform: style.transform || "",
+        backgroundColor: style.bgColor || "",
+        margin: style.margin || "",
+        width: style.width || "",
     });
 
     // Ouvre dans un nouvel onglet si clic droit
@@ -132,7 +155,10 @@ function createAdminButton(productId, style, container) {
         window.open(adminLink, "_blank");
     });
 
-    container.appendChild(button);
+    if (select_client_adminEditBtn_miniature == "top")
+        container.prepend(button);
+    else
+        container.appendChild(button);
 }
 
 function insertBtnStyle() {
@@ -145,6 +171,11 @@ function insertBtnStyle() {
             color: #fff;
             border-radius: 5px;
             text-decoration: none;
+            text-align: center;
+             white-space: nowrap;
+        }
+        .CSP_tools-custom-btn:hover{
+            color: #000;
         }
     `;
     document.head.appendChild(style);

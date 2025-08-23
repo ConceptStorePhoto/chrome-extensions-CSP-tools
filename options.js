@@ -1,5 +1,6 @@
 import { gestionToggle } from './functions/gestion-toggle.js';
 import { gestionColorInput } from './functions/gestion-color-input.js';
+import { gestionSelectInput } from './functions/gestion-select-input.js';
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -22,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 gestionToggle();
                 gestionColorInput();
+                gestionSelectInput();
 
             } else {
                 document.querySelector('.mainContainer').textContent = 'Contenu introuvable';

@@ -76,6 +76,8 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_product_preset_specs: true,
         toggle_orders_trackingPatch: true,
         toggle_client_adminEdit_buttons: true,
+        color_adminEditBtn_miniature_default: '#007bff',
+        select_client_adminEditBtn_miniature_default: "center",
         toggle_colissimo_confirm_annuler: true,
         toggle_contextMenu_copy_text: true,
     };

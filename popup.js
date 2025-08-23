@@ -2,6 +2,7 @@ console.log('This is a popup!');
 
 import { gestionToggle } from './functions/gestion-toggle.js';
 import { gestionColorInput } from './functions/gestion-color-input.js';
+import { gestionSelectInput } from './functions/gestion-select-input.js';
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     gestionToggle();
     gestionColorInput();
+    gestionSelectInput();
 
     // Bouton "Recharger la page"
     const refreshBtn = document.getElementById("refresh");

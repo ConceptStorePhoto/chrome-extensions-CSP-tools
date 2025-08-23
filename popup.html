@@ -382,7 +382,18 @@
               <input type="checkbox" class="toggle-button" id="toggle_client_adminEditBtn_miniature">
               <span class="slider round"></span>
             </label>
-            <span>Bouton vers l'édition du produit sur les miniatures</span>
+            <div>
+              <span>Bouton d'édition du produit sur les miniatures</span>
+              <div style="display: flex; margin-top: 5px;">
+                <select id="select_client_adminEditBtn_miniature">
+                  <option value="center">Centrer</option>
+                  <option value="top">Au dessus</option>
+                  <option value="bottom">En dessous</option>
+                </select>
+                <input type="color" id="color_adminEditBtn_miniature">
+                <button title="Valeurs par défaut" class="reset-btn">↺</button>
+              </div>
+            </div>
           </div>
 
         </div>
