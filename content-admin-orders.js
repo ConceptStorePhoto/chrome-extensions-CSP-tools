@@ -97,9 +97,11 @@ else if (window.location.pathname.includes("orders") && window.location.pathname
         }
         if (data.toggle_orders_retraitMagasin) {
             document.querySelectorAll('.column-store').forEach((el) => {
-                const ville = el.innerText.split('Concept Store Photo')[1].trim();
-                // el.innerHTML = `<b>${ville}</b>`;
-                el.innerText = ville;
+                if (el.innerText && el.innerText != "") {
+                    const ville = el.innerText?.split('Concept Store Photo')[1]?.trim();
+                    // el.innerHTML = `<b>${ville}</b>`;
+                    el.innerText = ville;
+                }
             });
         }
     });
