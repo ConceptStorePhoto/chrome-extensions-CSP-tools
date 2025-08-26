@@ -946,13 +946,16 @@ function productActions() {
             btn.type = "button";
             btn.id = "CSP_tools-generate-seo-title-btn";
             btn.className = "btn btn-outline-secondary mt-1";
-            btn.textContent = "Générer le Title";
+            btn.innerHTML = "Générer le Title : <i>[brand] [name] [subtitle] - [category] - Concept Store Photo</i>";
 
             // Insertion à la fin du bloc
             container.parentElement.appendChild(btn);
 
             // Action au clic
-            btn.addEventListener("click", () => {
+            btn.addEventListener("click", insertSeoTitle);
+
+            const seoInput = document.querySelector("#product_seo_meta_title_1");
+            function insertSeoTitle() {
                 // Nom produit et sous-titre
                 const name = document.querySelector("#product_header_name_1")?.value.trim() || "";
                 const subtitle = document.querySelector("#product_description_subtitle")?.value.trim() || "";
@@ -973,7 +976,6 @@ function productActions() {
                 const seoTitle = [leftPart, rightPart].filter(Boolean).join(" - ");
 
                 // Insertion dans le champ SEO Title
-                const seoInput = document.querySelector("#product_seo_meta_title_1");
                 if (seoInput) {
                     seoInput.value = seoTitle;
 
@@ -981,7 +983,11 @@ function productActions() {
                     seoInput.dispatchEvent(new Event("input", { bubbles: true }));
                     seoInput.dispatchEvent(new Event("change", { bubbles: true }));
                 }
-            });
+            }
+            if (seoInput && seoInput.value == "") {
+                insertSeoTitle();
+                displayNotif("✅ Title SEO généré automatiquement (car vide)");
+            }
         }
 
 
