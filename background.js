@@ -74,6 +74,7 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_product_heureDebut: true,
         toggle_product_focus_auto: true,
         toggle_product_preset_specs: true,
+        toggle_product_insertSeoTitleButton: true,
         toggle_orders_trackingPatch: true,
         toggle_client_adminEdit_buttons: true,
         color_adminEditBtn_miniature_default: '#007bff',

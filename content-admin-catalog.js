@@ -376,6 +376,7 @@ function productActions() {
         "toggle_product_image_selection",
         "toggle_product_smart_category",
         "toggle_product_specificPrices_color",
+        "toggle_product_insertSeoTitleButton",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_product_rename_tabs) {
@@ -520,6 +521,7 @@ function productActions() {
                 document.querySelector('#product_details_condition').value = 'used';
                 document.querySelector('#product_details_condition').dispatchEvent(new Event('input', { bubbles: true }));
                 displayNotif("✅ État 'Occasion' activé automatiquement");
+                console.log("✅ État 'Occasion' activé automatiquement");
             } else {
                 console.log("➡️ La catégorie ne contient pas 'Occasion' ou l'état est déjà activé");
             }
@@ -855,6 +857,12 @@ function productActions() {
                             console.log("✔️ Catégorie parente cochée :", label?.textContent.trim());
                         }
                     }
+                    // Décocher automatiquement la catégorie "Accueil"
+                    if (parentCheckbox && parentLi.querySelector("label").textContent.trim().toLowerCase().includes("accueil") && parentCheckbox.checked) {
+                        parentCheckbox.checked = false;
+                        parentCheckbox.dispatchEvent(new Event("change", { bubbles: true }));
+                        console.log("❌ Catégorie 'Accueil' décochée automatiquement");
+                    }
                     li = parentLi;
                 }
             }
@@ -927,6 +935,53 @@ function productActions() {
 
             // Premier passage
             colorizePeriods();
+        }
+
+        if (data.toggle_product_insertSeoTitleButton) {
+            const container = document.querySelector("#product_seo_meta_title");
+            if (!container || document.querySelector(".generate-seo-title-btn")) return;
+
+            // Création du bouton
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.id = "CSP_tools-generate-seo-title-btn";
+            btn.className = "btn btn-outline-secondary mt-1";
+            btn.textContent = "Générer le Title";
+
+            // Insertion à la fin du bloc
+            container.parentElement.appendChild(btn);
+
+            // Action au clic
+            btn.addEventListener("click", () => {
+                // Nom produit et sous-titre
+                const name = document.querySelector("#product_header_name_1")?.value.trim() || "";
+                const subtitle = document.querySelector("#product_description_subtitle")?.value.trim() || "";
+
+                // Marque (span Select2 en priorité, sinon <select>)
+                const brandSpan = document.querySelector("#select2-product_description_manufacturer-container");
+                const brandSelect = document.querySelector("#product_description_manufacturer option:checked");
+                const brand = brandSpan?.textContent.trim() || brandSelect?.textContent.trim() || "";
+
+                // Catégorie (span Select2 en priorité, sinon <select>)
+                const categorySpan = document.querySelector("#select2-product_description_categories_default_category_id-container");
+                const categorySelect = document.querySelector("#product_description_categories_default_category_id option:checked");
+                const category = categorySpan?.textContent.trim() || categorySelect?.textContent.trim() || "";
+
+                // Construction du Title SEO
+                const leftPart = [brand, name, subtitle].filter(Boolean).join(" ");
+                const rightPart = [category, "Concept Store Photo"].filter(Boolean).join(" - ");
+                const seoTitle = [leftPart, rightPart].filter(Boolean).join(" - ");
+
+                // Insertion dans le champ SEO Title
+                const seoInput = document.querySelector("#product_seo_meta_title_1");
+                if (seoInput) {
+                    seoInput.value = seoTitle;
+
+                    // Déclenchement des events pour compatibilité Presta
+                    seoInput.dispatchEvent(new Event("input", { bubbles: true }));
+                    seoInput.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+            });
         }
 
 
