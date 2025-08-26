@@ -582,7 +582,7 @@ function productActions() {
                 {
                     type: "Occasion",
                     specs: [
-                        { spec: "État (Occasion)", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
+                        { spec: "État (Occasion)", value: "", placeholder: "NE RIEN ÉCRIRE ICI", valuePreset: "Bon état" },
                         { spec: "Magasin (Occasion)", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                     ]
                 },
@@ -649,6 +649,19 @@ function productActions() {
                                     displayNotif(`⚠️ Caractéristique introuvable : ${spec.spec}`);
                                 }
                             }
+                            setTimeout(() => {
+                                const selectValue = lastBlock.querySelector('.feature-value-selector');
+                                if (selectValue && spec.valuePreset) {
+                                    const matchingOption = [...selectValue.options].find(opt => normalize(opt.textContent) === normalize(spec.valuePreset));
+                                    if (matchingOption) {
+                                        selectValue.value = matchingOption.value;
+                                        selectValue.dispatchEvent(new Event('change', { bubbles: true }));
+                                    } else {
+                                        console.warn(`[${new Date().toLocaleString()}] Valeur introuvable : ${spec.valuePreset}`);
+                                        displayNotif(`⚠️ Valeur introuvable pour "${spec.spec}" : ${spec.valuePreset}`);
+                                    }
+                                }
+                            }, 470);
 
                             // 4. Remplissage de la valeur personnalisée
                             const input = lastBlock.querySelector('input[type="text"]');
@@ -1269,4 +1282,12 @@ function displayNotif(message) {
         notif.classList.remove('show');
         setTimeout(() => notif.remove(), 300);
     }, 2500);
+}
+
+function normalize(str) {
+    return str
+        .toLowerCase()
+        .normalize("NFD")              // sépare les accents
+        .replace(/[\u0300-\u036f]/g, "") // supprime les accents
+        .trim();
 }
