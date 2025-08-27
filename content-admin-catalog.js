@@ -938,6 +938,7 @@ function productActions() {
         }
 
         if (data.toggle_product_insertSeoTitleButton) {
+            console.log("🔄️ Script SEO title injecté");
             const container = document.querySelector("#product_seo_meta_title");
             if (!container || document.querySelector(".generate-seo-title-btn")) return;
 
@@ -957,7 +958,7 @@ function productActions() {
             const seoInput = document.querySelector("#product_seo_meta_title_1");
             function insertSeoTitle() {
                 // Nom produit et sous-titre
-                const name = document.querySelector("#product_header_name_1")?.value.trim() || "";
+                let name = document.querySelector("#product_header_name_1")?.value.trim() || "";
                 const subtitle = document.querySelector("#product_description_subtitle")?.value.trim() || "";
 
                 // Marque (span Select2 en priorité, sinon <select>)
@@ -971,6 +972,15 @@ function productActions() {
                 const category = categorySpan?.textContent.trim() || categorySelect?.textContent.trim() || "";
 
                 // Construction du Title SEO
+                if (brand && name) {
+                    const words = name.split(" ");
+                    const firstWord = (words[0] || "").toLowerCase();
+                    if (brand.toLowerCase() === firstWord || brand.toLowerCase().slice(0, 4) === firstWord.slice(0, 4)) {
+                        // Supprimer le premier mot du name
+                        words.shift();
+                        name = words.join(" ").trim();
+                    }
+                }
                 const leftPart = [brand, name, subtitle].filter(Boolean).join(" ");
                 const rightPart = [category, "Concept Store Photo"].filter(Boolean).join(" - ");
                 const seoTitle = [leftPart, rightPart].filter(Boolean).join(" - ");
@@ -978,6 +988,7 @@ function productActions() {
                 // Insertion dans le champ SEO Title
                 if (seoInput) {
                     seoInput.value = seoTitle;
+                    displayNotif(`ℹ️ SEO title : Nombre de caractères : ${seoTitle.length} (doit faire 60, max 100)`, 4000)
 
                     // Déclenchement des events pour compatibilité Presta
                     seoInput.dispatchEvent(new Event("input", { bubbles: true }));
@@ -1280,7 +1291,8 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
         });
 }
 
-function displayNotif(message) {
+function displayNotif(message, duree) {
+    duree = duree || 2500;
     // Vérifie si le conteneur existe déjà
     let container = document.getElementById('CSP_tools-notif-container');
     if (!container) {
@@ -1342,7 +1354,7 @@ function displayNotif(message) {
     setTimeout(() => {
         notif.classList.remove('show');
         setTimeout(() => notif.remove(), 300);
-    }, 2500);
+    }, duree);
 }
 
 function normalize(str) {
