@@ -964,7 +964,8 @@ function productActions() {
                 // Marque (span Select2 en priorité, sinon <select>)
                 const brandSpan = document.querySelector("#select2-product_description_manufacturer-container");
                 const brandSelect = document.querySelector("#product_description_manufacturer option:checked");
-                const brand = brandSpan?.textContent.trim() || brandSelect?.textContent.trim() || "";
+                let brand = brandSpan?.textContent.trim() || brandSelect?.textContent.trim() || "";
+                if (brand == "Aucune marque") brand = "";
 
                 // Catégorie (span Select2 en priorité, sinon <select>)
                 const categorySpan = document.querySelector("#select2-product_description_categories_default_category_id-container");
@@ -988,16 +989,16 @@ function productActions() {
                 // Insertion dans le champ SEO Title
                 if (seoInput) {
                     seoInput.value = seoTitle;
-                    displayNotif(`ℹ️ SEO title : Nombre de caractères : ${seoTitle.length} (doit faire 60, max 100)`, 4000)
+                    displayNotif(`ℹ️ SEO Title : Nombre de caractères : ${seoTitle.length} (doit faire 60, max 100)`, 4000)
 
                     // Déclenchement des events pour compatibilité Presta
                     seoInput.dispatchEvent(new Event("input", { bubbles: true }));
                     seoInput.dispatchEvent(new Event("change", { bubbles: true }));
                 }
             }
-            if (seoInput && seoInput.value == "") {
+            if (seoInput && seoInput.value == "" && document.querySelector("#product_header_name_1")?.value) {
                 insertSeoTitle();
-                displayNotif("✅ Title SEO généré automatiquement (car vide)");
+                displayNotif("✅ SEO Title généré automatiquement (car vide)");
             }
         }
 
