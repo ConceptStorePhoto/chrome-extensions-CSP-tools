@@ -534,6 +534,7 @@ function productActions() {
                     specs: [
                         { spec: "Format de Capteur", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Détails Capteur", value: "" },
+                        { spec: "Stabilisation du Capteur", value: "" },
                         { spec: "Millions pixels", value: "" },
                         { spec: "Stockage", value: "" },
                         { spec: "Connectivité", value: "Bluetooth, Wi-Fi" },
@@ -970,7 +971,8 @@ function productActions() {
                 // Catégorie (span Select2 en priorité, sinon <select>)
                 const categorySpan = document.querySelector("#select2-product_description_categories_default_category_id-container");
                 const categorySelect = document.querySelector("#product_description_categories_default_category_id option:checked");
-                const category = categorySpan?.textContent.trim() || categorySelect?.textContent.trim() || "";
+                let category = categorySpan?.textContent.trim() || categorySelect?.textContent.trim() || "";
+                if (category.includes(">")) category = category.split(">").pop().trim();
 
                 // Construction du Title SEO
                 if (brand && name) {
