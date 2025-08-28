@@ -1057,13 +1057,16 @@ function productActions() {
 
                 html = html
                     // <a><sup>[12]</sup></a> ou <a>[12]</a>
-                    .replace(/<a[^>]*>(?:\s*<sup[^>]*>)?\s*\[\d+\]\s*(?:<\/sup>)?\s*<\/a>/gi, " ")
+                    .replace(/<a[^>]*>(?:\s*<sup[^>]*>)?\s*\[\d+\]\s*(?:<\/sup>)?\s*<\/a>/gi, "")
                     // <sup>[12]</sup>
-                    .replace(/<sup[^>]*>\s*\[\d+\]\s*<\/sup>/gi, " ")
-                    // [12] isolés
-                    .replace(/(?:\s|&nbsp;|\u00A0)*\[\d+\](?:\s|&nbsp;|\u00A0)*/g, " ")
+                    .replace(/<sup[^>]*>\s*\[\d+\]\s*<\/sup>/gi, "")
+                    // [12] isolés avant ponctuation -> supprime sans espace
+                    .replace(/\[\d+\](?=\s*[\.\,\;\:\!\?\)])+/g, "")
+                    // [12] isolés ailleurs -> remplace par un espace
+                    .replace(/\[\d+\]/g, " ")
                     // espaces multiples
                     .replace(/(?:\s|&nbsp;|\u00A0){2,}/g, " ");
+
 
                 doc.body.innerHTML = html;
                 if (textarea) {
