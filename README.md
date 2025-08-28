@@ -23,7 +23,7 @@ Extension Chrome qui permet de corriger certains problèmes d'interface sur le s
 
 - Télécharger le github au format ZIP 
     - [Télécharger le ZIP](https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/archive/refs/heads/main.zip)
-- Décompresser le fichier ZIP
+- Décompresser le fichier ZIP (dans un dossier que vous ne risquez pas de supprimer ⚠️)
 - Ouvrir Google Chrome
 - Accéder à la page des extensions de Chrome : [chrome://extensions/](chrome://extensions/)
 - Activer le mode développeur en haut à droite
