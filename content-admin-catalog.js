@@ -377,6 +377,7 @@ function productActions() {
         "toggle_product_smart_category",
         "toggle_product_specificPrices_color",
         "toggle_product_insertSeoTitleButton",
+        "toggle_product_cleanEditorNote",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_product_rename_tabs) {
@@ -1002,6 +1003,105 @@ function productActions() {
                 insertSeoTitle();
                 displayNotif("✅ SEO Title généré automatiquement (car vide)");
             }
+        }
+
+        if (data.toggle_product_cleanEditorNote) {
+            const BTN_ID = "cs-clean-notes-btn";
+
+            // Injection du bouton dans la toolbar
+            function addButton(wrapper, iframe, textarea) {
+                if (!wrapper || wrapper.dataset.cleanBtnInjected === "1") return;
+                console.log("🖌️ cleanEditorNote : Injection bouton…");
+
+                const container = wrapper.closest(".mce-tinymce");
+                if (!container) return;
+
+                // Cherche zone de toolbar
+                let toolbar =
+                    container.querySelector(".mce-container-body .mce-flow-layout") ||
+                    container.querySelector(".mce-toolbar .mce-flow-layout") ||
+                    container.querySelector(".mce-flow-layout") ||
+                    container.querySelector(".mce-toolbar-grp");
+
+                if (!toolbar) return;
+
+                // Création du bouton (structure simplifiée mais conforme)
+                const btnGroup = document.createElement("div");
+                btnGroup.className = "mce-container mce-flow-layout-item mce-btn-group";
+                btnGroup.innerHTML = `
+            <div class="mce-container-body">
+                <div class="mce-widget mce-btn" role="button" tabindex="-1">
+                    <button type="button" class="mce-widget mce-btn" title="Supprimer les références [x]">
+                        <span class="mce-txt">🧹 Nettoyer [x]</span>
+                    </button>
+                </div>
+            </div>
+        `;
+
+                // Action
+                btnGroup.querySelector("button").addEventListener("click", () => cleanNotes(iframe, textarea));
+
+                // Ajout en fin de toolbar
+                toolbar.appendChild(btnGroup);
+                wrapper.dataset.cleanBtnInjected = "1";
+                console.log("✅ cleanEditorNote : Bouton injecté.");
+            }
+
+            // Nettoyage du contenu
+            function cleanNotes(iframe, textarea) {
+                const doc = iframe?.contentDocument || iframe?.contentWindow?.document;
+                if (!doc?.body) return;
+
+                let html = doc.body.innerHTML;
+                // console.log("📄 cleanEditorNote : Avant nettoyage :", html.substring(0, 200) + "...");
+
+                html = html
+                    // <a><sup>[12]</sup></a> ou <a>[12]</a>
+                    .replace(/<a[^>]*>(?:\s*<sup[^>]*>)?\s*\[\d+\]\s*(?:<\/sup>)?\s*<\/a>/gi, " ")
+                    // <sup>[12]</sup>
+                    .replace(/<sup[^>]*>\s*\[\d+\]\s*<\/sup>/gi, " ")
+                    // [12] isolés
+                    .replace(/(?:\s|&nbsp;|\u00A0)*\[\d+\](?:\s|&nbsp;|\u00A0)*/g, " ")
+                    // espaces multiples
+                    .replace(/(?:\s|&nbsp;|\u00A0){2,}/g, " ");
+
+                doc.body.innerHTML = html;
+                if (textarea) {
+                    textarea.value = html;
+                    textarea.dispatchEvent(new Event("input", { bubbles: true }));
+                    textarea.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+
+                // console.log("📄 cleanEditorNote : Après nettoyage :", html.substring(0, 200) + "...");
+                console.log("🧹 cleanEditorNote : Nettoyage terminé !");
+            }
+
+            // Scan des éditeurs TinyMCE
+            function scanEditors() {
+                document.querySelectorAll('iframe[id$="_ifr"]').forEach((iframe) => {
+                    const wrapper = iframe.closest(".mce-tinymce, .mce-container");
+                    const baseId = iframe.id.replace(/_ifr$/, "");
+                    const textarea = document.getElementById(baseId);
+
+                    if (wrapper) addButton(wrapper, iframe, textarea);
+
+                    if (!iframe.dataset._csLoadBound) {
+                        iframe.addEventListener("load", () => {
+                            console.log("📥 cleanEditorNote : Iframe rechargée :", iframe.id);
+                        });
+                        iframe.dataset._csLoadBound = "1";
+                    }
+                });
+            }
+
+            console.log("🚀 Script de nettoyage TinyMCE lancé (cleanEditorNote)");
+            scanEditors();
+
+            // Observe le DOM (PrestaShop recharge dynamiquement)
+            new MutationObserver(scanEditors).observe(document.documentElement, {
+                childList: true,
+                subtree: true,
+            });
         }
 
 
