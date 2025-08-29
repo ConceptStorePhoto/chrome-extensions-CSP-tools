@@ -1302,6 +1302,7 @@ function productActions() {
             const inputDateDebut = doc.querySelector('#specific_price_date_range_from');
             const inputDateFin = doc.querySelector('#specific_price_date_range_to');
             const h4Duree = doc.querySelector('div.date-range')?.parentElement?.querySelector('h4');
+            const nbValeurMax = 3; // Nombre de presets max à garder
 
             if (!inputDateDebut || !inputDateFin || !h4Duree) {
                 console.log("❌ Champs date ou <h4> Durée introuvables dans l'iframe");
@@ -1352,15 +1353,27 @@ function productActions() {
             h4Duree.insertAdjacentElement("afterend", container);
 
             let info = doc.createElement("p");
-            info.textContent = "Sauvegarde jusqu'à 3 valeurs, la plus récente écrase la plus ancienne | Clique droit pour renommer";
+            // info.textContent = `Sauvegarde jusqu'à ${nbValeurMax} valeurs, la plus récente écrase la plus ancienne | Clique droit pour renommer/supprimer`;
+            info.textContent = `Sauvegarde jusqu'à ${nbValeurMax} valeurs| Clique droit pour renommer/supprimer`;
             info.style.margin = "0";
             h4Duree.insertAdjacentElement("afterend", info);
 
             function saveHistory(debut, fin, name) {
                 if (!debut || !fin) return;
-                history = history.filter(h => !(h.debut === debut && h.fin === fin));
+                // history = history.filter(h => !(h.debut === debut && h.fin === fin));
+                const exists = history.find(h => h.debut === debut && h.fin === fin);
+                if (exists) {
+                    console.log("⚠️ Preset déjà existant, pas d'écrasement :", exists);
+                    alert("❌ Ce preset existe déjà.");
+                    return; // on ne recrée pas pour garder le name
+                }
+                if (history.length >= nbValeurMax) {
+                    console.log("⛔ Limite atteinte : impossible d'ajouter plus de " + nbValeurMax + " presets");
+                    alert("❌ Vous ne pouvez pas enregistrer plus de " + nbValeurMax + " durées.\nSupprimez-en une avant d’ajouter une nouvelle.\nClique droit > Supprimer");
+                    return;
+                }
                 history.unshift({ debut, fin, name: name || null });
-                history = history.slice(0, 3);
+                // history = history.slice(0, nbValeurMax); // Limite le nombre d'éléments
                 localStorage.setItem("promo_dates_history", JSON.stringify(history));
                 console.log("✅ Historique mis à jour :", history);
                 renderButtons();
@@ -1417,7 +1430,7 @@ function productActions() {
                 // Bouton sauvegarde
                 const saveBtn = doc.createElement("button");
                 saveBtn.type = "button";
-                saveBtn.title = "Sauvegarde jusqu'à 3 valeurs, la plus récente écrase la plus ancienne";
+                saveBtn.title = "Sauvegarder les dates de début et de fin actuelles";
                 saveBtn.textContent = "💾 Sauvegarder cette durée";
                 saveBtn.className = "btn btn-sm btn-success";
                 saveBtn.style.marginRight = "10px";
