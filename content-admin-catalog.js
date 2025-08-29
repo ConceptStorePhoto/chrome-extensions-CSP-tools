@@ -552,7 +552,7 @@ function productActions() {
                     specs: [
                         { spec: "Compatibilité Objectif", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Ouverture maximale f/", value: "" },
-                        { spec: "Diamètre du filtre", value: "" },
+                        { spec: "Diamètre du filtre", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Distance minimale de mise au point", value: "" },
                         { spec: "Nombre de lamelles du diaphragme", value: "" },
                         { spec: "Diamètre x longueur", value: "" },
@@ -1200,6 +1200,15 @@ function productActions() {
                 if (!isNaN(prixApresRemise)) {
                     remise.value = (prixDeReference - prixApresRemise).toFixed(2);
                 }
+                if (doc.querySelector('#specific_price_impact_disabling_switch_reduction_1')?.checked === false) {
+                    console.log("➡️ Toggle remise détecté comme désactivé");
+                    doc.querySelector('#specific_price_impact_disabling_switch_reduction_1')?.click();
+                    doc.querySelector('#specific_price_impact_disabling_switch_reduction').dispatchEvent(new Event('input', { bubbles: true }));
+                    displayNotif("✅ Toggle remise activé automatiquement");
+                    console.log("✅ Toggle remise activé automatiquement");
+                } else {
+                    console.log("➡️ Toggle remise déjà activé OU non détecté");
+                }
             });
             divPrix.prepend(inputPrixApresRemise);
         }
@@ -1306,6 +1315,7 @@ function productActions() {
                 style.textContent = `
                 #promo_history_buttons {
                     margin: 10px 0;
+                    border-radius: 5px;
                 }
                 #promo_history_buttons button {
                     margin-right: 5px;
@@ -1383,6 +1393,21 @@ function productActions() {
                 inputDateFin.value = fin;
                 inputDateFin.dispatchEvent(new Event('input', { bubbles: true }));
                 inputDateFin.dispatchEvent(new Event('change', { bubbles: true }));
+
+                if (doc.querySelector('#specific_price_impact_disabling_switch_reduction_1')?.checked === false) {
+                    console.log("➡️ Toggle remise détecté comme désactivé");
+                    doc.querySelector('#specific_price_impact_disabling_switch_reduction_1')?.click();
+                    doc.querySelector('#specific_price_impact_disabling_switch_reduction').dispatchEvent(new Event('input', { bubbles: true }));
+                    displayNotif("✅ Toggle remise activé automatiquement");
+                    console.log("✅ Toggle remise activé automatiquement");
+                    if (doc.querySelector('#specific_price_impact_reduction_value').value == "0,000000") {
+                        doc.querySelector('#specific_price_impact_reduction_value').value = "";
+                        doc.querySelector('#specific_price_impact_reduction_value').dispatchEvent(new Event('change', { bubbles: true }));
+                        console.log("✅ Input remise vidé automatiquement");
+                    }
+                } else {
+                    console.log("➡️ Toggle remise déjà activé OU non détecté");
+                }
             }
 
             function renderButtons() {
