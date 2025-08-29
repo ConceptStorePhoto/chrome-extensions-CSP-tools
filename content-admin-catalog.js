@@ -551,7 +551,7 @@ function productActions() {
                     type: "Objectif",
                     specs: [
                         { spec: "Compatibilité Objectif", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
-                        { spec: "Ouverture maximale f/", value: "" },
+                        { spec: "Ouverture maximale f/", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Diamètre du filtre", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Distance minimale de mise au point", value: "" },
                         { spec: "Nombre de lamelles du diaphragme", value: "" },
@@ -1301,7 +1301,7 @@ function productActions() {
         function datePromoHistorique(doc) {
             const inputDateDebut = doc.querySelector('#specific_price_date_range_from');
             const inputDateFin = doc.querySelector('#specific_price_date_range_to');
-            const h4Duree = doc.querySelector('div.date-range').parentElement.querySelector('h4');
+            const h4Duree = doc.querySelector('div.date-range')?.parentElement?.querySelector('h4');
 
             if (!inputDateDebut || !inputDateFin || !h4Duree) {
                 console.log("❌ Champs date ou <h4> Durée introuvables dans l'iframe");
@@ -1404,6 +1404,7 @@ function productActions() {
                         doc.querySelector('#specific_price_impact_reduction_value').value = "";
                         doc.querySelector('#specific_price_impact_reduction_value').dispatchEvent(new Event('change', { bubbles: true }));
                         console.log("✅ Input remise vidé automatiquement");
+                        doc.querySelector('#specific_price_impact_reduction_value').focus();
                     }
                 } else {
                     console.log("➡️ Toggle remise déjà activé OU non détecté");
