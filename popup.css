@@ -35,7 +35,7 @@
      color: var(--text-color-1);
      margin: 0;
      padding: 20px;
-     min-width: 410px;
+     min-width: 420px;
      display: flex;
      flex-direction: column;
      border-radius: 8;
@@ -49,6 +49,17 @@
  h3 {
      margin-top: 0;
      font-size: 16px;
+ }
+
+ /* h3 .filAriane{
+    font-size: 14px;
+    font-weight: normal;
+    color: #888;
+ } */
+
+ h4 {
+     margin: 10px 0;
+     font-size: 14px;
  }
 
  p {
