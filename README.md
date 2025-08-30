@@ -6,7 +6,7 @@ Extension Chrome qui permet de corriger certains problèmes d'interface sur le s
 - **Notifications** : Affiche des notifications pour informer l'utilisateur des mises à jour de l'extension.
 - **Commandes personnalisées** : La popup de l'extention permet de personnaliser les fonctions pour les adapter à vos besoins.
 - **Menu contextuel** : Fonctionnalités de l'extension dans le menu contextuel du navigateur. (clique droit)
-- **Site web du magasin** :
+- **Site web du magasin** PrestaShop 8.2.0 :
     - **Correction d'interface** : Permet de corriger des problèmes d'interface sur le site web.
     - **Amélioration de l'expérience utilisateur** : Ajout de fonctionnalités pour améliorer l'expérience utilisateur ADMIN sur le site web.
     - **Noms des onglets** : Permet de renommer les onglets du site web pour une meilleure compréhension.

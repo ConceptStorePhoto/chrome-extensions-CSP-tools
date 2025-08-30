@@ -119,6 +119,12 @@ function catalogActions() {
                             } else if (liste.length != 0)
                                 el.querySelector("a").innerText = `${liste.length} Déclinaisons :\nAucun code AICM`;
 
+                            if (liste.length != 0) {
+                                const link = el.querySelector("a");
+                                const [baseUrl] = link.href.split("#"); // récupère tout avant le #
+                                link.href = `${baseUrl}#tab-product_combinations-tab`;
+                            }
+
                             const prixListe = liste.map(c => parseFloat(c.calcul_prix_ttc_final)).filter(p => !isNaN(p));
                             if (prixListe.length > 0) {
                                 const min = Math.min(...prixListe);
