@@ -110,7 +110,8 @@ function updateContextMenu() {
     const whitelistContextMenu = [
         "*://concept-store-photo.dmu.sarl/*",
         "*://conceptstorephoto.fr/*",
-        "*://www.conceptstorephoto.fr/*"
+        "*://www.conceptstorephoto.fr/*",
+        "*://docs.google.com/*",
     ];
     chrome.contextMenus.removeAll(() => {
 
@@ -180,6 +181,17 @@ function updateContextMenu() {
             });
         });
 
+        chrome.storage.sync.get("toggle_contextMenu_search_csp", (data) => {
+            if (!data.toggle_contextMenu_search_csp) return; // Ne rien faire si désactivé
+
+            chrome.contextMenus.create({
+                id: "recherche-csp", // identifiant unique
+                title: "🔎 Rechercher sur Concept Store Photo",
+                contexts: ["selection", "link"],
+                documentUrlPatterns: whitelistContextMenu
+            });
+        });
+
     });
 }
 
@@ -213,6 +225,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             break;
         case "recherche-fnac":
             injecterRecherche(tab.id, "https://www.fnac.com/SearchResult/ResultList.aspx?Search=");
+            break;
+        case "recherche-csp":
+            injecterRecherche(tab.id, "https://www.conceptstorephoto.fr/recherche?controller=search&s=");
             break;
     }
 });
