@@ -122,7 +122,7 @@ function updateContextMenu() {
                 id: "copier-ref", // identifiant unique
                 title: "📋 Copier le texte",
                 contexts: ["selection", "link"], // selon ce que tu veux viser
-                documentUrlPatterns: whitelistContextMenu // uniquement sur ton site
+                // documentUrlPatterns: whitelistContextMenu // uniquement sur ton site
             });
         });
 
