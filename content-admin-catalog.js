@@ -546,6 +546,7 @@ function productActions() {
                         { spec: "Stockage", value: "" },
                         { spec: "Connectivité", value: "Bluetooth, Wi-Fi" },
                         { spec: "Détails Écran", value: "" },
+                        { spec: "Ecran orientable", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Viseur", value: "" },
                         { spec: "Vidéo", value: "" },
                         { spec: "Dimensions (LxHxP)", value: "" },
@@ -590,6 +591,13 @@ function productActions() {
                     ]
                 },
                 {
+                    type: "Carte mémoire",
+                    specs: [
+                        { spec: "Type de carte", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
+                        { spec: "Poids", value: "" },
+                    ]
+                },
+                {
                     type: "Occasion",
                     specs: [
                         { spec: "État (Occasion)", value: "", placeholder: "NE RIEN ÉCRIRE ICI", valuePreset: "Bon état" },
@@ -602,6 +610,20 @@ function productActions() {
                     specs: [
                         { spec: "Monture d'objectif", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Accessoires fournis", value: "" },
+                    ]
+                },
+                {
+                    type: "Appareil APS-C",
+                    name: "Capteur APS-C",
+                    specs: [
+                        { spec: "Format de Capteur", value: "", placeholder: "NE RIEN ÉCRIRE ICI", valuePreset: "APS-C" },
+                    ]
+                },
+                {
+                    type: "Appareil Plein Format",
+                    name: "Capteur Plein Format",
+                    specs: [
+                        { spec: "Format de Capteur", value: "", placeholder: "NE RIEN ÉCRIRE ICI", valuePreset: "Plein format" },
                     ]
                 },
             ];
@@ -671,7 +693,7 @@ function productActions() {
                                         displayNotif(`⚠️ Valeur introuvable pour "${spec.spec}" : ${spec.valuePreset}`);
                                     }
                                 }
-                            }, 470);
+                            }, 500);
 
                             // 4. Remplissage de la valeur personnalisée
                             const input = lastBlock.querySelector('input[type="text"]');
@@ -1035,14 +1057,14 @@ function productActions() {
                 const btnGroup = document.createElement("div");
                 btnGroup.className = "mce-container mce-flow-layout-item mce-btn-group";
                 btnGroup.innerHTML = `
-            <div class="mce-container-body">
-                <div class="mce-widget mce-btn" role="button" tabindex="-1">
-                    <button type="button" class="mce-widget mce-btn" title="Supprimer les références [x]">
-                        <span class="mce-txt">🧹 Nettoyer [x]</span>
-                    </button>
-                </div>
-            </div>
-        `;
+                    <div class="mce-container-body">
+                        <div class="mce-widget mce-btn" role="button" tabindex="-1">
+                            <button type="button" class="mce-widget mce-btn" title="Supprimer les références [x]">
+                                <span class="mce-txt">🧹 Nettoyer [x]</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
 
                 // Action
                 btnGroup.querySelector("button").addEventListener("click", () => cleanNotes(iframe, textarea));
@@ -1116,6 +1138,7 @@ function productActions() {
 
     });
 
+    ///// Partie POPUP "Prix spécifiques" (promos)
     chrome.storage.sync.get(["toggle_product_remise_calcul", "toggle_product_heureFin", "toggle_product_heureDebut", "toggle_product_datePromoHistorique"], (data) => {
         if (!data.toggle_product_remise_calcul && !data.toggle_product_heureFin && !data.toggle_product_heureDebut && !data.toggle_product_datePromoHistorique) return;
 
@@ -1499,6 +1522,7 @@ function productActions() {
         }
     });
 
+    ///// Affichage des 3 stocks en même temps (iframe)
     chrome.storage.sync.get("toggle_product_stock_display", (data) => {
         if (!data.toggle_product_stock_display) return; // Ne rien faire si désactivé
 
@@ -1564,7 +1588,7 @@ function productActions() {
     });
 }
 
-//////////////////////////
+////////////////////////// FONCTIONS UTILITAIRES //////////////////////////
 
 function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
     if (!productId || !token) {
