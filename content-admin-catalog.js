@@ -822,7 +822,6 @@ function productActions() {
                                     });
                                     isInternalClick = false; // ✅ on réactive après
                                 }
-
                             });
                         });
                     }, 100); // ⏳ petit délai pour laisser les mutations s'accumuler
@@ -834,6 +833,7 @@ function productActions() {
         if (data.toggle_product_smart_category) {
             console.log("📂 Script catégories chargé");
             let lastClickedCategory = null;
+            let isCtrlPressed = false;
 
             // Observer quand la modale catégories est ajoutée au DOM
             const observer = new MutationObserver(() => {
@@ -851,10 +851,13 @@ function productActions() {
             function initCategoryWatcher(modal) {
                 const checkboxes = modal.querySelectorAll(".tree-checkbox-input");
                 checkboxes.forEach(checkbox => {
-                    checkbox.addEventListener("click", function () {
+                    checkbox.addEventListener("click", function (e) {
                         if (this.checked) {
                             lastClickedCategory = this; // mémorise la dernière catégorie cochée
                             console.log("👆 Catégorie cochée par l’utilisateur :", this.value, this.parentElement?.textContent.trim());
+
+                            isCtrlPressed = e.ctrlKey || e.metaKey;
+                            console.log('CTRL :', isCtrlPressed);
                         }
                     });
                     checkbox.addEventListener("change", function () {
@@ -889,7 +892,7 @@ function productActions() {
                     if (parentCheckbox && !parentCheckbox.checked) {
                         // On ignore la catégorie "Accueil"
                         const label = parentLi.querySelector("label");
-                        if (!label || !label.textContent.trim().toLowerCase().includes("accueil")) {
+                        if ((!label || !label.textContent.trim().toLowerCase().includes("accueil")) && !isCtrlPressed) {
                             parentCheckbox.checked = true;
                             parentCheckbox.dispatchEvent(new Event("change", { bubbles: true }));
                             console.log("✔️ Catégorie parente cochée :", label?.textContent.trim());
