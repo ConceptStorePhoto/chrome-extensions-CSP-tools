@@ -425,17 +425,25 @@ function productActions() {
         }
 
         if (data.toggle_product_preview_buttons) {
-            console.log("🔄 Ajout des boutons de prévisualisation");
+            console.log("🔄 Ajout du bouton de prévisu custom");
 
             const elements = document.querySelectorAll("#product_footer_actions_preview");
             elements.forEach((el) => {
                 //copier le bouton sélectioner dans l'élément parent
                 let element = document.createElement("a");
                 element.href = el.href;
-                element.title = "Prévisualiser";
-                element.target = "_blank";
+                element.title = "Prévisualiser ➔ Clic droit pour ouvrir dans un nouvel onglet";
+                // element.target = "_blank";
                 element.innerHTML = `<i class="material-icons">visibility</i>`;
+                element.style.margin = "0 10px";
+                element.style.padding = "3px";
                 el.parentNode.parentNode.appendChild(element);
+
+                // Ouvre dans un nouvel onglet si clic droit
+                element.addEventListener("contextmenu", (e) => {
+                    e.preventDefault();
+                    window.open(element.href, "_blank");
+                });
             });
         }
 
