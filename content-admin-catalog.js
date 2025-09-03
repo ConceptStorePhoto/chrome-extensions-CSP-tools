@@ -432,18 +432,19 @@ function productActions() {
                 //copier le bouton sélectioner dans l'élément parent
                 let element = document.createElement("a");
                 element.href = el.href;
-                element.title = "Prévisualiser ➔ Clic droit pour ouvrir dans un nouvel onglet";
-                // element.target = "_blank";
+                element.target = "_blank";
+                element.title = "Prévisualiser";
+                // element.title = "Prévisualiser ➔ Clic droit pour ouvrir dans un nouvel onglet";
                 element.innerHTML = `<i class="material-icons">visibility</i>`;
                 element.style.margin = "0 10px";
                 element.style.padding = "3px";
                 el.parentNode.parentNode.appendChild(element);
 
-                // Ouvre dans un nouvel onglet si clic droit
-                element.addEventListener("contextmenu", (e) => {
-                    e.preventDefault();
-                    window.open(element.href, "_blank");
-                });
+                // // Ouvre dans un nouvel onglet si clic droit
+                // element.addEventListener("contextmenu", (e) => {
+                //     e.preventDefault();
+                //     window.open(element.href, "_blank");
+                // });
             });
         }
 
