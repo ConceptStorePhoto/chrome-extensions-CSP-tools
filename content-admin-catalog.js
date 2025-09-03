@@ -1191,6 +1191,9 @@ function productActions() {
                         if (!iframeDoc) return;
                         console.log("✅ Iframe chargé !");
 
+                        iframeDoc.querySelector('#select2-specific_price_combination_id-container')?.style.setProperty('min-width', '450px', 'important');
+                        document.querySelector('#modal-specific-price-form .modal-dialog')?.style.setProperty('max-width', '1000px');
+
                         if (data.toggle_product_remise_calcul) {
                             ajouterChampPrixApresRemise(iframeDoc, prixBaseTTC);
                             afficherPrixDeclinaison(iframeDoc, combinations);
