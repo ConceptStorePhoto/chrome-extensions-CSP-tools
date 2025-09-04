@@ -544,6 +544,7 @@ function productActions() {
         }
 
         if (data.toggle_product_preset_specs) {
+            const placeholderText = "NE RIEN ÉCRIRE ICI";
             const specsTemplate = [
                 {
                     type: "Appareil photo",
@@ -552,8 +553,11 @@ function productActions() {
                         { spec: "Détails Capteur", value: "" },
                         { spec: "Stabilisation du Capteur", value: "" },
                         { spec: "Millions pixels", value: "" },
-                        { spec: "Stockage", value: "" },
-                        { spec: "Connectivité", value: "Bluetooth, Wi-Fi" },
+                        { spec: "Processeur d'image", value: "" },
+                        { spec: "Stockage", value: "", placeholder: "type de carte mémoire" },
+                        { spec: "Stockage interne", value: "", placeholder: "Si mémoire interne / en Go" },
+                        { spec: "Connectivité", value: "Bluetooth, Wi-Fi", placeholder: "Bluetooth, Wi-Fi, NFC ..." },
+                        { spec: "Prises", value: "", placeholder: "USB-C, Jack, HDMI ..." },
                         { spec: "Détails Écran", value: "" },
                         { spec: "Ecran orientable", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Viseur", value: "" },
@@ -582,8 +586,8 @@ function productActions() {
                     specs: [
                         { spec: "Stabilisation de l'objectif", value: "" },
                         { spec: "Moteur AF", value: "" },
-                        { spec: "Zoom Motorisé", value: "" },
-                        { spec: "Zoom Interne", value: "" },
+                        { spec: "Zoom Motorisé", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
+                        { spec: "Zoom Interne", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                     ]
                 },
                 {
@@ -596,6 +600,7 @@ function productActions() {
                         { spec: "Longueur plié", value: "" },
                         { spec: "Poids", value: "" },
                         { spec: "Matériau", value: "" },
+                        // { spec: "Niveau à bulle", value: "" },
                         // { spec: "Accessoires fournis", value: "" },
                     ]
                 },
@@ -603,6 +608,16 @@ function productActions() {
                     type: "Carte mémoire",
                     specs: [
                         { spec: "Type de carte", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
+                        { spec: "Vitesse d'écriture", value: "" },
+                        { spec: "Vitesse de lecture", value: "" },
+                        { spec: "Poids", value: "" },
+                    ]
+                },
+                {
+                    type: "Sac",
+                    specs: [
+                        { spec: "Dimensions (LxHxP)", value: "" },
+                        { spec: "Dimensions internes (LxHxP)", value: "" },
                         { spec: "Poids", value: "" },
                     ]
                 },
@@ -630,7 +645,7 @@ function productActions() {
                 },
                 {
                     type: "Appareil Plein Format",
-                    name: "Capteur Plein Format",
+                    name: "Capteur FF",
                     specs: [
                         { spec: "Format de Capteur", value: "", placeholder: "NE RIEN ÉCRIRE ICI", valuePreset: "Plein format" },
                     ]
