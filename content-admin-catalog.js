@@ -1233,7 +1233,17 @@ function productActions() {
             inputPrixApresRemise.type = 'text';
             inputPrixApresRemise.placeholder = 'Prix après remise TTC';
             inputPrixApresRemise.title = `Calcul auto : [Prix TTC de l'article] - [cette zone] = [remise dans la case à coté]  // Attention aux produits variable`;
-            inputPrixApresRemise.style.cssText = 'width: 155px !important; margin-left: 20px;';
+            inputPrixApresRemise.style.cssText = 'min-width: 155px !important; padding: 8px 16px';
+
+            const divPrixApresRemise = doc.createElement('div');
+            divPrixApresRemise.style.cssText = 'display: flex; flex-direction: column; align-items: flex-start; margin-left: 20px;';
+            divPrixApresRemise.appendChild(inputPrixApresRemise);
+
+            const label = doc.createElement('label');
+            label.textContent = 'Prix après remise TTC';
+            label.style.marginBottom = '4px';
+            divPrixApresRemise.prepend(label);
+
             inputPrixApresRemise.addEventListener('input', () => {
                 const prixApresRemise = parseFloat(inputPrixApresRemise.value);
                 let prixDeReference = prixBaseTTC;
@@ -1254,7 +1264,19 @@ function productActions() {
                     console.log("➡️ Toggle remise déjà activé OU non détecté");
                 }
             });
-            divPrix.prepend(inputPrixApresRemise);
+            remise.addEventListener('input', () => {
+                const valeurRemise = parseFloat(remise.value);
+                let prixDeReference = prixBaseTTC;
+                const found = getDeclinaisonSelectionnee(doc, combinations);
+                if (found) prixDeReference = found.calcul_prix_ttc_final;
+                if (!isNaN(valeurRemise)) {
+                    inputPrixApresRemise.value = (prixDeReference - valeurRemise).toFixed(2);
+                } else {
+                    inputPrixApresRemise.value = '';
+                }
+            });
+            divPrix.appendChild(divPrixApresRemise);
+            divPrix.style.alignItems = 'flex-end';
         }
 
         function afficherPrixDeclinaison(doc, combinations) {
@@ -1346,7 +1368,7 @@ function productActions() {
             const inputDateDebut = doc.querySelector('#specific_price_date_range_from');
             const inputDateFin = doc.querySelector('#specific_price_date_range_to');
             const h4Duree = doc.querySelector('div.date-range')?.parentElement?.querySelector('h4');
-            const nbValeurMax = 3; // Nombre de presets max à garder
+            const nbValeurMax = 4; // Nombre de presets max à garder
 
             if (!inputDateDebut || !inputDateFin || !h4Duree) {
                 console.log("❌ Champs date ou <h4> Durée introuvables dans l'iframe");
