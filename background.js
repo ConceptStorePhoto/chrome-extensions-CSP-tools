@@ -82,6 +82,7 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_orders_trackingPatch: true,
         toggle_orders_view_copyCommandeNumber: true,
         toggle_orders_view_copyAicm: true,
+        toggle_orders_carts_copyAicm: true,
         toggle_client_adminEdit_buttons: true,
         color_adminEditBtn_miniature_default: '#007bff',
         select_client_adminEditBtn_miniature_default: "center",

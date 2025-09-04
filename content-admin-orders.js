@@ -14,7 +14,7 @@ style.textContent = `
         }`;
 document.head.appendChild(style);
 
-if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "view") {
+if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "view" && !window.location.pathname.includes("carts")) {
     console.log("✅ Page Détail de commande, ajout des actions...");
 
     chrome.storage.sync.get(["toggle_orders_view_copyAicm", "toggle_orders_view_copyCommandeNumber", "toggle_orders_view_openColissimoTracking"], (data) => {
@@ -102,6 +102,41 @@ else if (window.location.pathname.includes("orders") && window.location.pathname
                     // el.innerHTML = `<b>${ville}</b>`;
                     el.innerText = ville;
                 }
+            });
+        }
+    });
+}
+else if (window.location.pathname.includes("orders/carts/")) {
+    console.log("✅ Page Panier (carts), ajout des actions...");
+
+    chrome.storage.sync.get(["toggle_orders_carts_copyAicm"], (data) => {
+        if (data.toggle_orders_carts_copyAicm) {
+            console.log("🔄 Ajout des boutons de copie du code AICM");
+
+            const elements = document.querySelectorAll('div[data-role="cart-summary"] .table a');
+            console.log(elements);
+            elements.forEach((el) => {
+                // Évite d'ajouter le bouton plusieurs fois
+                if (el.querySelector("button.copier-btn")) return;
+
+                // Vérifie que l'élément a du texte
+                if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM")) return;
+
+                const texte = el?.innerText.match(/(\d+)$/)?.[1];
+                console.log('numéro produit :', texte);
+                const bouton = document.createElement("button");
+                bouton.innerText = "📋";
+                bouton.title = "Copier le code AICM";
+                bouton.className = "CSP_tools-copier-btn";
+                bouton.onclick = (event) => {
+                    event.preventDefault();
+                    // event.stopPropagation(); // évite les comportements attachés ailleurs
+                    navigator.clipboard.writeText(texte).then(() => {
+                        bouton.innerText = "✅";
+                        setTimeout(() => (bouton.innerText = "📋"), 1500);
+                    });
+                };
+                el.appendChild(bouton);
             });
         }
     });
