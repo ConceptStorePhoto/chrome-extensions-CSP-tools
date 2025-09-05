@@ -730,6 +730,96 @@ function productActions() {
                     }, delay * index);
                 });
             }
+
+            //////// PARTIE DYNAMIQUE APRÈS SÉLECTION (ajout des placeholder lors de l'ajout manuel) ////////
+            // Observer l’ajout de nouvelles lignes
+            const container = document.getElementById("product_details_features_feature_values");
+
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType !== 1) return;
+
+                        // Si le node lui-même est une product-feature
+                        if (node.classList.contains("product-feature")) {
+                            initFeatureRow(node);
+                        }
+                        // Sinon, chercher les .product-feature à l’intérieur
+                        node.querySelectorAll?.(".product-feature").forEach(initFeatureRow);
+                    });
+                });
+            });
+
+            observer.observe(container, { childList: true, subtree: true });
+
+            // Initialiser aussi les lignes déjà présentes
+            document.querySelectorAll("#product_details_features_feature_values .product-feature").forEach(initFeatureRow);
+
+            function initFeatureRow(row) {
+                console.log("🔄 Initialisation d'une ligne de caractéristique", row);
+                const select = row.querySelector(".feature-selector");
+                if (!select) {
+                    console.log("⚠️ Aucun select trouvé dans la ligne", row);
+                    return;
+                }
+
+                function applyFromSelect() {
+                    const selectedText = select.options[select.selectedIndex]?.textContent.trim();
+                    // console.log("🔄 Vérification via applyFromSelect :", selectedText);
+
+                    if (!selectedText || selectedText === "Choisissez une caractéristique") {
+                        // console.log("⚠️ Aucun texte valide sélectionné :", selectedText);
+                        return;
+                    }
+
+                    let foundSpec = null;
+                    specsTemplate.some(template =>
+                        template.specs.some(spec => {
+                            if (spec.spec.toLowerCase() === selectedText.toLowerCase()) {
+                                foundSpec = spec;
+                                return true;
+                            }
+                            return false;
+                        })
+                    );
+
+                    if (foundSpec) {
+                        // console.log("✅ Valeur trouvée dans specsTemplate :", foundSpec);
+                        const input = row.querySelector('input[type="text"]');
+                        if (input) {
+                            if (foundSpec.placeholder) {
+                                input.placeholder = foundSpec.placeholder;
+                                // console.log("✍️ Placeholder appliqué :", foundSpec.placeholder);
+                            }
+                            // if (foundSpec.value) {
+                            //     input.value = foundSpec.value;
+                            //     // console.log("✍️ Valeur appliquée :", foundSpec.value);
+                            // }
+                            // input.dispatchEvent(new Event("input", { bubbles: true }));
+                        }
+                    } else {
+                        console.log("❌ Aucune correspondance trouvée dans specsTemplate pour :", selectedText);
+                    }
+                }
+
+                // Appliquer immédiatement
+                applyFromSelect();
+
+                // 🔎 Trouver le conteneur Select2
+                const rendered = row.querySelector(".select2-selection__rendered");
+                if (rendered) {
+                    const mo = new MutationObserver(mutations => {
+                        mutations.forEach(m => {
+                            if (m.type === "childList" || m.type === "characterData") {
+                                // console.log("📡 Texte Select2 modifié :", rendered.textContent.trim());
+                                applyFromSelect();
+                            }
+                        });
+                    });
+                    mo.observe(rendered, { childList: true, characterData: true, subtree: true });
+                    // console.log("🔗 MutationObserver attaché sur .select2-selection__rendered");
+                }
+            }
         }
 
         if (data.toggle_product_delete_empty_specs) {
