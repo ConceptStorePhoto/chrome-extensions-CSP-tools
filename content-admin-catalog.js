@@ -125,6 +125,24 @@ function catalogActions() {
                                 link.href = `${baseUrl}#tab-product_combinations-tab`;
                             }
 
+                            // if (refsConcatenees) {
+                            //     el.style.maxWidth = "200px";
+                            //     if (el.innerText.includes("Aucun code AICM") || el.innerText.includes("Déclinaisons ?"))
+                            //         el.querySelector("a").innerText = "";
+                            //     const lienDeclinaisons = document.createElement('a');
+                            //     lienDeclinaisons.href = `${el.querySelector("a").href.split("#")}#tab-product_combinations-tab`;
+                            //     lienDeclinaisons.innerText = `${!el.innerText ? '' : '\n'}${liste.length} Déclinaisons :\n`;
+                            //     lienDeclinaisons.style.color = "#c90000";
+                            //     el.appendChild(lienDeclinaisons);
+                            //     const elem = document.createElement('span');
+                            //     elem.style.cssText = 'white-space: normal !important;';
+                            //     elem.innerText = refsConcatenees;
+                            //     el.appendChild(elem);
+                            // } else if (liste.length != 0) {
+                            //     el.querySelector("a").innerText = `${liste.length} Déclinaisons :\nAucun code AICM`;
+                            //     el.querySelector("a").setAttribute("style", "color: #c90000 !important");
+                            // }
+
                             const prixListe = liste.map(c => parseFloat(c.calcul_prix_ttc_final)).filter(p => !isNaN(p));
                             if (prixListe.length > 0) {
                                 const min = Math.min(...prixListe);
