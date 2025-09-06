@@ -402,6 +402,7 @@ function productActions() {
         "toggle_product_specificPrices_color",
         "toggle_product_insertSeoTitleButton",
         "toggle_product_cleanEditorNote",
+        "toggle_product_EncartOffrePageProduit_preset",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_product_rename_tabs) {
@@ -1270,6 +1271,35 @@ function productActions() {
             });
         }
 
+        if (data.toggle_product_EncartOffrePageProduit_preset) {
+            console.log("🚀 Script Encart Offre Page Produit lancé");
+            const inputAmount = document.querySelector('#product_pricing_offer_amount');
+            if (inputAmount)
+                inputAmount.placeholder = "Offre en €";
+
+            createPresetSystem({
+                inputs: [
+                    { el: document.querySelector('#product_pricing_offer_amount'), key: 'amount' },
+                    { el: document.querySelector('#product_pricing_offer_text'), key: 'text' },
+                    { el: document.querySelector('#product_pricing_offer_date'), key: 'date' },
+                ],
+                targetElement: document.querySelector('h2[for="product_pricing_offer_amount"]'),
+                storageKey: "EncartOffrePageProduit_preset",
+                nbValeurMax: 6,
+                infoText: `Sauvegarde jusqu'à 6 valeurs • Clique droit pour renommer/supprimer`,
+                formatButtonText: item => item.name || "Preset sans nom",
+                applyPresetFn: (item) => {
+                    ['amount', 'text', 'date'].forEach(k => {
+                        const el = document.querySelector(`#product_pricing_offer_${k}`);
+                        if (el) {
+                            el.value = item[k];
+                            el.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    });
+                    console.log("🎯 Application preset :", item.name);
+                }
+            });
+        }
 
     });
 
@@ -1488,197 +1518,48 @@ function productActions() {
         }
 
         function datePromoHistorique(doc) {
-            const inputDateDebut = doc.querySelector('#specific_price_date_range_from');
-            const inputDateFin = doc.querySelector('#specific_price_date_range_to');
-            const h4Duree = doc.querySelector('div.date-range')?.parentElement?.querySelector('h4');
-            const nbValeurMax = 4; // Nombre de presets max à garder
-
-            if (!inputDateDebut || !inputDateFin || !h4Duree) {
-                console.log("❌ Champs date ou <h4> Durée introuvables dans l'iframe");
-                return;
-            }
-
-            // --- Injecter le CSS ---
-            if (!doc.querySelector("#promo-history-style")) {
-                const style = doc.createElement("style");
-                style.id = "promo-history-style";
-                style.textContent = `
-                #promo_history_buttons {
-                    margin: 10px 0;
-                    border-radius: 5px;
-                }
-                #promo_history_buttons button {
-                    margin-right: 5px;
-                    white-space: pre-line; /* multi-ligne */
-                }
-                #preset-context-menu {
-                    position: absolute;
-                    background: white;
-                    border: 1px solid #ccc;
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-                    z-index: 9999;
-                    padding: 5px 0;
-                    min-width: 120px;
-                    font-size: 14px;
-                }
-                #preset-context-menu div {
-                    padding: 5px 10px;
-                    cursor: pointer;
-                }
-                #preset-context-menu div:hover {
-                    background: #f0f0f0;
-                }
-            `;
-                doc.head.appendChild(style);
-            }
-
-            // --- Charger l'historique ---
-            let history = JSON.parse(localStorage.getItem("promo_dates_history") || "[]");
-            console.log("📥 Historique chargé :", history);
-
-            // Conteneur boutons
-            let container = doc.createElement("div");
-            container.id = "promo_history_buttons";
-            h4Duree.insertAdjacentElement("afterend", container);
-
-            let info = doc.createElement("p");
-            // info.textContent = `Sauvegarde jusqu'à ${nbValeurMax} valeurs, la plus récente écrase la plus ancienne | Clique droit pour renommer/supprimer`;
-            info.textContent = `Sauvegarde jusqu'à ${nbValeurMax} valeurs| Clique droit pour renommer/supprimer`;
-            info.style.margin = "0";
-            h4Duree.insertAdjacentElement("afterend", info);
-
-            function saveHistory(debut, fin, name) {
-                if (!debut || !fin) return;
-                // history = history.filter(h => !(h.debut === debut && h.fin === fin));
-                const exists = history.find(h => h.debut === debut && h.fin === fin);
-                if (exists) {
-                    console.log("⚠️ Preset déjà existant, pas d'écrasement :", exists);
-                    alert("❌ Ce preset existe déjà.");
-                    return; // on ne recrée pas pour garder le name
-                }
-                if (history.length >= nbValeurMax) {
-                    console.log("⛔ Limite atteinte : impossible d'ajouter plus de " + nbValeurMax + " presets");
-                    alert("❌ Vous ne pouvez pas enregistrer plus de " + nbValeurMax + " durées.\nSupprimez-en une avant d’ajouter une nouvelle.\nClique droit > Supprimer");
-                    return;
-                }
-                history.unshift({ debut, fin, name: name || null });
-                // history = history.slice(0, nbValeurMax); // Limite le nombre d'éléments
-                localStorage.setItem("promo_dates_history", JSON.stringify(history));
-                console.log("✅ Historique mis à jour :", history);
-                renderButtons();
-            }
-
-            function deletePreset(index) {
-                console.log("🗑️ Suppression preset :", history[index]);
-                history.splice(index, 1);
-                localStorage.setItem("promo_dates_history", JSON.stringify(history));
-                renderButtons();
-            }
-
-            function renamePreset(index) {
-                const old = history[index];
-                const newName = prompt("Entrez un nom pour ce preset :", old.name || "");
-                if (newName !== null && newName.trim() !== "") {
-                    history[index].name = newName.trim();
-                    localStorage.setItem("promo_dates_history", JSON.stringify(history));
-                    console.log("✏️ Preset renommé :", history[index]);
-                    renderButtons();
-                }
-            }
-
-            function applyDates(debut, fin) {
-                console.log("🎯 Application preset :", debut, fin);
-                inputDateDebut.value = debut;
-                inputDateDebut.dispatchEvent(new Event('input', { bubbles: true }));
-                inputDateDebut.dispatchEvent(new Event('change', { bubbles: true }));
-
-                inputDateFin.value = fin;
-                inputDateFin.dispatchEvent(new Event('input', { bubbles: true }));
-                inputDateFin.dispatchEvent(new Event('change', { bubbles: true }));
-
-                if (doc.querySelector('#specific_price_impact_disabling_switch_reduction_1')?.checked === false) {
-                    console.log("➡️ Toggle remise détecté comme désactivé");
-                    doc.querySelector('#specific_price_impact_disabling_switch_reduction_1')?.click();
-                    doc.querySelector('#specific_price_impact_disabling_switch_reduction').dispatchEvent(new Event('input', { bubbles: true }));
-                    displayNotif("✅ Toggle remise activé automatiquement");
-                    console.log("✅ Toggle remise activé automatiquement");
-                    if (doc.querySelector('#specific_price_impact_reduction_value').value == "0,000000") {
-                        doc.querySelector('#specific_price_impact_reduction_value').value = "";
-                        doc.querySelector('#specific_price_impact_reduction_value').dispatchEvent(new Event('change', { bubbles: true }));
-                        console.log("✅ Input remise vidé automatiquement");
-                        doc.querySelector('#specific_price_impact_reduction_value').focus();
-                    }
-                } else {
-                    console.log("➡️ Toggle remise déjà activé OU non détecté");
-                }
-            }
-
-            function renderButtons() {
-                container.innerHTML = "";
-
-                // Bouton sauvegarde
-                const saveBtn = doc.createElement("button");
-                saveBtn.type = "button";
-                saveBtn.title = "Sauvegarder les dates de début et de fin actuelles";
-                saveBtn.textContent = "💾 Sauvegarder cette durée";
-                saveBtn.className = "btn btn-sm btn-success";
-                saveBtn.style.marginRight = "10px";
-                saveBtn.addEventListener("click", () => {
-                    const debut = inputDateDebut.value?.trim();
-                    const fin = inputDateFin.value?.trim();
-                    saveHistory(debut, fin);
-                });
-                container.appendChild(saveBtn);
-
-                history.forEach((item, idx) => {
-                    const btn = doc.createElement("button");
-                    btn.type = "button";
-                    btn.className = "btn btn-sm btn-outline-primary";
-
-                    if (item.name) {
-                        btn.textContent = `${item.name}\n${item.debut.split(" ")[0]} → ${item.fin.split(" ")[0]}`;
-                    } else {
-                        btn.textContent = `${item.debut.split(" ")[0]} → ${item.fin.split(" ")[0]}`;
-                    }
-
-                    btn.addEventListener("click", () => applyDates(item.debut, item.fin));
-
-                    btn.addEventListener("contextmenu", (e) => {
-                        e.preventDefault();
-
-                        const oldMenu = doc.querySelector("#preset-context-menu");
-                        if (oldMenu) oldMenu.remove();
-
-                        const menu = doc.createElement("div");
-                        menu.id = "preset-context-menu";
-                        menu.style.top = e.pageY + "px";
-                        menu.style.left = e.pageX + "px";
-
-                        const renameOption = doc.createElement("div");
-                        renameOption.textContent = "✏️ Renommer";
-                        renameOption.addEventListener("click", () => {
-                            renamePreset(idx);
-                            menu.remove();
-                        });
-
-                        const deleteOption = doc.createElement("div");
-                        deleteOption.textContent = "🗑️ Supprimer";
-                        deleteOption.addEventListener("click", () => {
-                            deletePreset(idx);
-                            menu.remove();
-                        });
-
-                        menu.appendChild(renameOption);
-                        menu.appendChild(deleteOption);
-                        doc.body.appendChild(menu);
-
-                        doc.addEventListener("click", () => menu.remove(), { once: true });
+            createPresetSystem({
+                doc,
+                inputs: [
+                    { el: doc.querySelector('#specific_price_date_range_from'), key: 'debut' },
+                    { el: doc.querySelector('#specific_price_date_range_to'), key: 'fin' },
+                ],
+                targetElement: doc.querySelector('div.date-range')?.parentElement?.querySelector('h4'),
+                storageKey: "promo_dates_history",
+                nbValeurMax: 4,
+                infoText: `Sauvegarde jusqu'à 4 valeurs • Clique droit pour renommer/supprimer`,
+                formatButtonText: item => item.name ? `${item.name}\n${item.debut.split(" ")[0]} → ${item.fin.split(" ")[0]}` : `${item.debut.split(" ")[0]} → ${item.fin.split(" ")[0]}`,
+                applyPresetFn: (item) => {
+                    const debutEl = doc.querySelector('#specific_price_date_range_from');
+                    const finEl = doc.querySelector('#specific_price_date_range_to');
+                    debutEl.value = item.debut;
+                    finEl.value = item.fin;
+                    [debutEl, finEl].forEach(el => {
+                        el.dispatchEvent(new Event('input', { bubbles: true }));
+                        el.dispatchEvent(new Event('change', { bubbles: true }));
                     });
+                    console.log("🎯 Application preset :", item.debut, item.fin);
 
-                    container.appendChild(btn);
-                });
-            }
-            renderButtons();
+                    // --- Logique spécifique remise ---
+                    const toggle = doc.querySelector('#specific_price_impact_disabling_switch_reduction_1');
+                    const toggleWrapper = doc.querySelector('#specific_price_impact_disabling_switch_reduction');
+                    const remiseInput = doc.querySelector('#specific_price_impact_reduction_value');
+                    if (toggle && toggle.checked === false) {
+                        console.log("➡️ Toggle remise désactivé → activation automatique");
+                        toggle.click();
+                        toggleWrapper?.dispatchEvent(new Event('input', { bubbles: true }));
+                        displayNotif?.("✅ Toggle remise activé automatiquement");
+                        if (remiseInput?.value === "0,000000" || remiseInput?.value === "") {
+                            remiseInput.value = "";
+                            remiseInput.dispatchEvent(new Event('change', { bubbles: true }));
+                            console.log("✅ Input remise vidé automatiquement");
+                            remiseInput.focus();
+                        }
+                    } else {
+                        console.log("➡️ Toggle remise déjà activé OU non détecté");
+                    }
+                }
+            });
         }
     });
 
@@ -1863,4 +1744,168 @@ function normalize(str) {
         .normalize("NFD")              // sépare les accents
         .replace(/[\u0300-\u036f]/g, "") // supprime les accents
         .trim();
+}
+
+function createPresetSystem(config) {
+    const {
+        doc = document,              // Document (utile si iframe)
+        inputs,                      // Tableau des inputs à gérer [{el, key}]
+        targetElement,               // Élément après lequel injecter le conteneur
+        storageKey,                  // Clé localStorage
+        nbValeurMax = 4,             // Nombre max de presets
+        formatButtonText,            // Fonction qui reçoit l’item et renvoie le texte du bouton
+        applyPresetFn,               // Fonction qui applique les valeurs aux inputs
+        saveButtonLabel = "💾 Sauvegarder",
+        saveButtonTitle = "Sauvegarder les valeurs actuelles dans un preset",
+        infoText,                    // optionnel
+    } = config;
+
+    if (!inputs?.length || !targetElement || !storageKey) return;
+
+    // --- Injecter CSS commun une seule fois ---
+    if (!doc.querySelector("#preset-style")) {
+        const style = doc.createElement("style");
+        style.id = "preset-style";
+        style.textContent = `
+            .preset-buttons { margin: 10px 0; border-radius: 5px; }
+            .preset-buttons button { margin-right: 5px; white-space: pre-line; }
+            .preset-info { margin-bottom: 4px; }
+            #preset-context-menu {
+                position: absolute;
+                background: white;
+                border: 1px solid #ccc;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                z-index: 9999;
+                padding: 5px 0;
+                min-width: 120px;
+                font-size: 14px;
+            }
+            #preset-context-menu div {
+                padding: 5px 10px;
+                cursor: pointer;
+            }
+            #preset-context-menu div:hover {
+                background: #f0f0f0;
+            }
+        `;
+        doc.head.appendChild(style);
+    }
+
+    // --- Charger historique ---
+    let history = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    console.log("📥 Historique chargé :", history);
+
+    // --- Conteneur ---
+    let container = doc.createElement("div");
+    container.className = "preset-buttons";
+    targetElement?.insertAdjacentElement("afterend", container);
+
+    // Info (optionnel)
+    let infoEl = null;
+    if (infoText) {
+        const infoId = `preset-info-${storageKey.replace(/\W+/g, "_")}`;
+        infoEl = doc.querySelector(`#${infoId}`);
+        if (!infoEl) {
+            infoEl = doc.createElement("p");
+            infoEl.id = infoId;
+            infoEl.className = "preset-info";
+            infoEl.textContent = infoText;
+            targetElement.insertAdjacentElement("afterend", infoEl);
+        }
+    }
+
+    function saveHistory(values, name) {
+        if (Object.values(values).every(v => !v)) return;
+
+        const exists = history.find(h =>
+            Object.keys(values).every(k => h[k] === values[k])
+        );
+        if (exists) {
+            console.log("⚠️ Preset déjà existant, pas d'écrasement :", exists);
+            alert("❌ Ce preset existe déjà.");
+            return;
+        }
+        if (history.length >= nbValeurMax) {
+            console.log("⛔ Limite atteinte : impossible d'ajouter plus de " + nbValeurMax + " presets");
+            alert("❌ Vous ne pouvez pas enregistrer plus de " + nbValeurMax + " durées.\nSupprimez-en une avant d’ajouter une nouvelle.\nClique droit > Supprimer");
+            return;
+        }
+        history.unshift({ ...values, name: name || null });
+        localStorage.setItem(storageKey, JSON.stringify(history));
+        console.log("✅ Historique mis à jour :", history);
+        renderButtons();
+    }
+
+    function deletePreset(index) {
+        console.log("🗑️ Suppression preset :", history[index]);
+        history.splice(index, 1);
+        localStorage.setItem(storageKey, JSON.stringify(history));
+        renderButtons();
+    }
+
+    function renamePreset(index) {
+        const newName = prompt("Entrez un nom :", history[index].name || "");
+        if (newName) {
+            history[index].name = newName.trim();
+            localStorage.setItem(storageKey, JSON.stringify(history));
+            console.log("✏️ Preset renommé :", history[index]);
+            renderButtons();
+        }
+    }
+
+    function renderButtons() {
+        container.innerHTML = "";
+
+        // Bouton sauvegarde
+        const saveBtn = doc.createElement("button");
+        saveBtn.type = "button";
+        saveBtn.textContent = saveButtonLabel;
+        saveBtn.title = saveButtonTitle;
+        saveBtn.className = "btn btn-sm btn-success";
+        saveBtn.style.marginRight = "10px";
+        saveBtn.addEventListener("click", () => {
+            const values = {};
+            inputs.forEach(({ el, key }) => values[key] = el.value?.trim());
+            const autoName = values.text?.substring(0, 20) || null;
+            saveHistory(values, autoName);
+        });
+        container.appendChild(saveBtn);
+
+        // Presets
+        history.forEach((item, idx) => {
+            const btn = doc.createElement("button");
+            btn.type = "button";
+            btn.className = "btn btn-sm btn-outline-primary";
+            btn.textContent = formatButtonText(item);
+
+            btn.addEventListener("click", () => applyPresetFn(item));
+
+            btn.addEventListener("contextmenu", (e) => {
+                e.preventDefault();
+
+                doc.querySelector("#preset-context-menu")?.remove();
+
+                const menu = doc.createElement("div");
+                menu.id = "preset-context-menu";
+                menu.style.top = e.pageY + "px";
+                menu.style.left = e.pageX + "px";
+
+                const renameOption = doc.createElement("div");
+                renameOption.textContent = "✏️ Renommer";
+                renameOption.onclick = () => { renamePreset(idx); menu.remove(); };
+
+                const deleteOption = doc.createElement("div");
+                deleteOption.textContent = "🗑️ Supprimer";
+                deleteOption.onclick = () => { deletePreset(idx); menu.remove(); };
+
+                menu.appendChild(renameOption);
+                menu.appendChild(deleteOption);
+                doc.body.appendChild(menu);
+                doc.addEventListener("click", () => menu.remove(), { once: true });
+            });
+
+            container.appendChild(btn);
+        });
+    }
+    renderButtons();
 }
