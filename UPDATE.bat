@@ -3,6 +3,14 @@ setlocal
 
 chcp 65001 >nul
 
+:: Vérifier si on est dans le dossier de dev
+set DEV_DIR=C:\Users\PC-Montage\Videos\PARTAGE Montage Quentin\chrome-extensions-CSP-tools
+if /I "%~dp0"=="%DEV_DIR%\" (
+    echo ⚠️ Dossier de dev, mise à jour interdite
+    pause
+    exit /b
+)
+
 :: Se placer dans le dossier du script (qui est aussi celui de l’extension)
 cd /d %~dp0
 
