@@ -77,6 +77,7 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_product_smart_category: true,
         toggle_product_insertSeoTitleButton: true,
         toggle_product_specificPrices_color: true,
+        toggle_product_EncartOffrePageProduit_presets: true,
         toggle_product_heureFin: true,
         toggle_product_heureDebut: true,
         toggle_product_datePromoHistorique: true,

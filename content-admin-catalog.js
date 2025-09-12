@@ -584,6 +584,7 @@ function productActions() {
                         { spec: "Dimensions (LxHxP)", value: "" },
                         { spec: "Poids", value: "" },
                         { spec: "Accessoires fournis", value: "" },
+                        { spec: "Autonomie", value: "" },
                     ]
                 },
                 {
@@ -1349,7 +1350,7 @@ function productActions() {
                         console.log("✅ Iframe chargé !");
 
                         iframeDoc.querySelector('#select2-specific_price_combination_id-container')?.style.setProperty('min-width', '450px', 'important');
-                        document.querySelector('#modal-specific-price-form .modal-dialog')?.style.setProperty('max-width', '1000px');
+                        document.querySelector('#modal-specific-price-form .modal-dialog')?.style.setProperty('max-width', '1030px');
 
                         if (data.toggle_product_remise_calcul) {
                             ajouterChampPrixApresRemise(iframeDoc, prixBaseTTC);
@@ -1417,7 +1418,12 @@ function productActions() {
                     console.log("➡️ Toggle remise déjà activé OU non détecté");
                 }
             });
-            remise.addEventListener('input', () => {
+
+            remise.addEventListener('input', updatePrixApresRemise);
+
+            if (remise.value && parseFloat(remise.value) != 0) updatePrixApresRemise();
+
+            function updatePrixApresRemise() {
                 const valeurRemise = parseFloat(remise.value);
                 let prixDeReference = prixBaseTTC;
                 const found = getDeclinaisonSelectionnee(doc, combinations);
@@ -1427,7 +1433,7 @@ function productActions() {
                 } else {
                     inputPrixApresRemise.value = '';
                 }
-            });
+            }
             divPrix.appendChild(divPrixApresRemise);
             divPrix.style.alignItems = 'flex-end';
         }
@@ -1526,8 +1532,8 @@ function productActions() {
                 ],
                 targetElement: doc.querySelector('div.date-range')?.parentElement?.querySelector('h4'),
                 storageKey: "promo_dates_history",
-                nbValeurMax: 4,
-                infoText: `Sauvegarde jusqu'à 4 valeurs • Clique droit pour renommer/supprimer`,
+                nbValeurMax: 5,
+                infoText: `Sauvegarde jusqu'à 5 valeurs • Clique droit pour renommer/supprimer`,
                 formatButtonText: item => item.name ? `${item.name}\n${item.debut.split(" ")[0]} → ${item.fin.split(" ")[0]}` : `${item.debut.split(" ")[0]} → ${item.fin.split(" ")[0]}`,
                 applyPresetFn: (item) => {
                     const debutEl = doc.querySelector('#specific_price_date_range_from');
@@ -1768,7 +1774,7 @@ function createPresetSystem(config) {
         style.id = "preset-style";
         style.textContent = `
             .preset-buttons { margin: 10px 0; border-radius: 5px; }
-            .preset-buttons button { margin-right: 5px; white-space: pre-line; }
+            .preset-buttons button { margin-right: 5px; white-space: pre-line; margin-bottom: 5px;}
             .preset-info { margin-bottom: 4px; }
             #preset-context-menu {
                 position: absolute;
@@ -1875,8 +1881,18 @@ function createPresetSystem(config) {
         history.forEach((item, idx) => {
             const btn = doc.createElement("button");
             btn.type = "button";
-            btn.className = "btn btn-sm btn-outline-primary";
+            // btn.className = "btn btn-sm btn-outline-primary";
             btn.textContent = formatButtonText(item);
+
+            // --- Vérifier si date de fin passée ---
+            let isExpired = false;
+            if (item.fin) {
+                const finDate = new Date(item.fin.replace(" ", "T")); // compatibilité YYYY-MM-DD HH:MM
+                if (!isNaN(finDate) && finDate < new Date()) {
+                    isExpired = true;
+                }
+            }
+            btn.className = "btn btn-sm " + (isExpired ? "btn-danger" : "btn-outline-primary");// Classe selon statut
 
             btn.addEventListener("click", () => applyPresetFn(item));
 
