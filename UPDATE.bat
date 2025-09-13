@@ -21,8 +21,18 @@ set ZIP_FILE=%TEMP%\extension.zip
 echo [INFO] Telechargement de la derniere version...
 curl -L %ZIP_URL% -o %ZIP_FILE%
 
+echo [INFO] Nettoyage du dossier tmp avant extraction...
+if exist "%~dp0tmp" rd /s /q "%~dp0tmp"
+
 echo [INFO] Extraction...
 powershell -Command "Expand-Archive -Force '%ZIP_FILE%' '%~dp0tmp'"
+
+:: Pause pour laisser le temps à Windows de "stabiliser" les fichiers
+timeout /t 1 /nobreak >nul
+
+:: S'assurer que le dossier de destination existe
+if not exist "%~dp0" mkdir "%~dp0"
+
 
 echo [INFO] Mise a jour des fichiers...
 xcopy "%~dp0tmp\chrome-extensions-CSP-tools-main\*" "%~dp0" /E /H /C /I /Y
@@ -31,12 +41,14 @@ echo [INFO] Nettoyage...
 rd /s /q "%~dp0tmp"
 del %ZIP_FILE%
 
+echo.
 echo [OK] Mise a jour terminee !
-echo ---
+echo.
 echo [INFO] Pour appliquer les changements immediatement :
 echo       - Ouvrez chrome://extensions
 echo       - Cliquez sur "Recharger" pour cette extension
 echo   ou
 echo       - Redemarrez Chrome pour que la mise a jour soit active automatiquement
-echo ---
+echo.
+echo En cas d'erreur, relancer le fichier UPDATE.bat
 pause
