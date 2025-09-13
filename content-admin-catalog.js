@@ -403,6 +403,7 @@ function productActions() {
         "toggle_product_insertSeoTitleButton",
         "toggle_product_cleanEditorNote",
         "toggle_product_EncartOffrePageProduit_preset",
+        "toggle_product_download_all_images",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_product_rename_tabs) {
@@ -1300,6 +1301,55 @@ function productActions() {
                     console.log("🎯 Application preset :", item.name);
                 }
             });
+        }
+
+        if (data.toggle_product_download_all_images) {
+            // 1️⃣ Créer le bouton
+            const downloadBtn = document.createElement('button');
+            downloadBtn.type = "button";
+            downloadBtn.textContent = "Télécharger toutes les images";
+            downloadBtn.style.padding = "10px";
+            downloadBtn.style.marginTop = "10px";
+            downloadBtn.style.backgroundColor = "#007bff";
+            downloadBtn.style.color = "#fff";
+            downloadBtn.style.border = "none";
+            downloadBtn.style.borderRadius = "5px";
+            downloadBtn.style.cursor = "pointer";
+
+            document.querySelector('#product_description_images').parentElement.appendChild(downloadBtn);
+
+            // 2️⃣ Fonction pour télécharger une image
+            function downloadImage(url, filename) {
+                fetch(url)
+                    .then(resp => resp.blob())
+                    .then(blob => {
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = filename;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    })
+                    .catch(err => console.error("Erreur téléchargement :", err));
+            }
+
+            // 3️⃣ Clique sur le bouton
+            downloadBtn.addEventListener('click', () => {
+                const jsonUrl = "https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/22079/images-for-shop/1?_token=xr0Gt-lTDWUrHDGPLf9DqjFSz7bcDJ51cNaUV6RNV_o";
+
+                fetch(jsonUrl)
+                    .then(resp => resp.json())
+                    .then(data => {
+                        data.forEach((item, index) => {
+                            const imageUrl = item.image_url;
+                            // Nom du fichier basé sur image_id
+                            const filename = `image_${item.image_id}.jpg`;
+                            downloadImage(imageUrl, filename);
+                        });
+                    })
+                    .catch(err => console.error("Erreur récupération JSON :", err));
+            });
+
         }
 
     });
