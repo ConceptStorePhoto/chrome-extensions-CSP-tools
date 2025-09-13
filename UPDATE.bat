@@ -44,4 +44,5 @@ echo   ou
 echo       - Redemarrez Chrome pour que la mise a jour soit active automatiquement
 echo.
 echo En cas d'erreur, relancer le fichier UPDATE.bat
+echo.
 pause
