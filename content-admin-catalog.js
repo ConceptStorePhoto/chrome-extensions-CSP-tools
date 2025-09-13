@@ -509,26 +509,10 @@ function productActions() {
             if (select.value != "2") {
                 const button = document.createElement("span");
                 button.innerText = "Swap taxe standard";
-                button.className = "btn-swap";
-                const style = document.createElement('style');
-                style.textContent = `
-                .btn-swap {
-                    font-size: 16px;
-                    padding: 8px 15px;
-                    background-color: #007bff;
-                    color: #fff;
-                    border-radius: 5px;
-                    text-decoration: none;
-                    margin-left: 20px;
-                    margin-top: 25px;
-                    height: fit-content;
-                    cursor: pointer;
-                }
-                .btn-swap:hover {
-                    background-color: #0056b3;
-                }
-                `;
-                document.head.appendChild(style);
+                button.classList.add("btn", "btn-primary");
+                button.style.marginLeft = "20px";
+                button.style.marginTop = "29px";
+                button.style.height = "fit-content";
 
                 button.addEventListener('click', clique);
                 function clique() {
@@ -538,6 +522,30 @@ function productActions() {
                     select.dispatchEvent(new Event('change', { bubbles: true }));
 
                     elemPrixTTC.value = parseFloat(elemPrixHT.value);
+                    elemPrixTTC.dispatchEvent(new Event('input', { bubbles: true }));
+                    elemPrixTTC.dispatchEvent(new Event('change', { bubbles: true }));
+                    button.removeEventListener('click', clique);
+                    button.remove();
+                }
+                container.appendChild(button);
+            }
+            else if (select.value != "1") {
+                const button = document.createElement("span");
+                button.innerText = "Swap taxe taux-zero";
+                button.classList.add("btn", "btn-primary");
+                button.style.marginLeft = "20px";
+                button.style.marginTop = "29px";
+                button.style.height = "fit-content";
+
+                button.addEventListener('click', clique);
+                function clique() {
+                    const prixTTC_temp = parseFloat(elemPrixTTC.value);
+                    // Change la valeur (ex. : "1" pour "taux-zero")
+                    select.value = "1";
+                    // Déclenche l'événement 'change' pour que Select2 se mette à jour
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+
+                    elemPrixTTC.value = prixTTC_temp;
                     elemPrixTTC.dispatchEvent(new Event('input', { bubbles: true }));
                     elemPrixTTC.dispatchEvent(new Event('change', { bubbles: true }));
                     button.removeEventListener('click', clique);
@@ -1308,13 +1316,9 @@ function productActions() {
             const downloadBtn = document.createElement('button');
             downloadBtn.type = "button";
             downloadBtn.textContent = "Télécharger toutes les images";
-            downloadBtn.style.padding = "10px";
             downloadBtn.style.marginTop = "10px";
-            downloadBtn.style.backgroundColor = "#007bff";
-            downloadBtn.style.color = "#fff";
-            downloadBtn.style.border = "none";
-            downloadBtn.style.borderRadius = "5px";
-            downloadBtn.style.cursor = "pointer";
+            downloadBtn.style.padding = "10px";
+            downloadBtn.classList.add("btn", "btn-outline-primary");
 
             document.querySelector('#product_description_images').parentElement.appendChild(downloadBtn);
 
@@ -1335,7 +1339,11 @@ function productActions() {
 
             // 3️⃣ Clique sur le bouton
             downloadBtn.addEventListener('click', () => {
-                const jsonUrl = "https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/22079/images-for-shop/1?_token=xr0Gt-lTDWUrHDGPLf9DqjFSz7bcDJ51cNaUV6RNV_o";
+                const url = new URL(window.location.href);
+                const pathnameParts = url.pathname.split("/");
+                const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
+                const token = url.searchParams.get("_token");
+                const jsonUrl = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/images-for-shop/1?_token=${token}`;
 
                 fetch(jsonUrl)
                     .then(resp => resp.json())
@@ -1346,6 +1354,7 @@ function productActions() {
                             const filename = `image_${item.image_id}.jpg`;
                             downloadImage(imageUrl, filename);
                         });
+                        displayNotif(`✅ ${data.length} images téléchargées`, 8000);
                     })
                     .catch(err => console.error("Erreur récupération JSON :", err));
             });
