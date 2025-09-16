@@ -941,14 +941,29 @@ function productActions() {
                         // console.log('➡️ Les images : ', previews);
 
                         let isInternalClick = false;
-                        previews.forEach(prev => {
+                        let lastClicked = null;
+                        previews.forEach((prev, idx) => {
                             // console.log("🔄 Image détectée : ", prev);
                             prev.addEventListener('click', (e) => {
                                 if (isInternalClick) return; // ⛔ ignore si clic programmatique
 
                                 const isCtrlPressed = e.ctrlKey || e.metaKey;
-                                console.log('CTRL :', isCtrlPressed);
-                                if (!isCtrlPressed) {
+                                const isShiftPressed = e.shiftKey;
+                                console.log('CTRL :', isCtrlPressed, ' | SHIFT :', isShiftPressed);
+                                if (isShiftPressed && lastClicked !== null) {
+                                    // ✅ Sélection plage entre lastClicked et idx
+                                    const start = Math.min(lastClicked, idx);
+                                    const end = Math.max(lastClicked, idx);
+
+                                    isInternalClick = true;
+                                    for (let i = start; i <= end; i++) {
+                                        const checkbox = previews[i].querySelector('input[type="checkbox"]');
+                                        if (checkbox && !checkbox.checked) {
+                                            previews[i].click(); // déclenche le même comportement de clic
+                                        }
+                                    }
+                                    isInternalClick = false;
+                                } else if (!isCtrlPressed) {
                                     isInternalClick = true; // ✅ bloquer récursion
                                     previews.forEach(prev2 => {
                                         if (prev !== prev2 && prev2.querySelector('input[type="checkbox"]').checked) {
@@ -957,6 +972,8 @@ function productActions() {
                                     });
                                     isInternalClick = false; // ✅ on réactive après
                                 }
+
+                                lastClicked = idx; // 📝 On mémorise le dernier index cliqué
                             });
                         });
                     }, 100); // ⏳ petit délai pour laisser les mutations s'accumuler
