@@ -1698,22 +1698,60 @@ function productActions() {
 
                     // const coloneGauche = document.getElementById('store_list');
                     // if (coloneGauche) {
-                    //     coloneGauche.style.display = "none";
+                    //     coloneGauche.style.display = "none"; // masque la colonne de gauche (liste des magasins) qui ne sert à rien
                     // }
 
                     document.querySelectorAll('.sbs_table_box').forEach((el) => {
                         el.classList.add('active');
                         // el.style.paddingBottom = "40px";
-                        el.style.marginBottom = "40px";
+                        el.style.marginBottom = "10px";
                         // el.style.borderBottom = "solid black 2px";
                         el.style.border = "solid black 1px";
-                        el.style.padding = "20px";
+                        el.style.padding = "5px 20px 10px 20px";
                         el.style.backgroundColor = "#ffc99413";
                         el.style.borderRadius = "10px";
                     });
 
                     document.querySelectorAll('.shortcuts .affect_quantities').forEach((el) => {
                         el.classList.add('disabled'); // désactive les boutons car ne fonctionne pas quand les 3 stocks sont affichés
+                    });
+
+                    document.querySelectorAll(".sbs_table_box h2").forEach(h2 => {
+                        if (h2.textContent.toLowerCase().includes("stocks de")) {
+                            h2.style.cssText = "display: inline-block !important;";
+                            const nextDiv = h2.nextElementSibling;
+                            if (nextDiv && nextDiv.classList.contains("shortcuts")) {
+                                nextDiv.style.cssText = "display: inline-block !important; float: right;";
+                            }
+                        }
+                        if (h2.textContent.toLowerCase().includes("alert")) {
+                            if (h2.querySelector(".chevron-toggle")) return; // Vérifie si le chevron n’existe pas déjà
+
+                            h2.style.cssText = "padding-top:0 !important; font-size:16px !important;";
+                            // Créer le chevron
+                            const chevron = document.createElement("span");
+                            chevron.textContent = " ▶"; // ▶ = fermé par défaut
+                            chevron.className = "chevron-toggle";
+                            chevron.style.cursor = "pointer";
+                            chevron.style.userSelect = "none";
+                            h2.appendChild(chevron);
+
+                            // Trouver la div suivante
+                            const nextDiv = h2.nextElementSibling;
+                            if (nextDiv && nextDiv.classList.contains("row")) {
+                                // Par défaut cachée
+                                nextDiv.style.display = "none";
+
+                                // Gestion du clic
+                                chevron.addEventListener("click", () => {
+                                    observer.disconnect(); // TEMPORAIREMENT suspendre l’observation
+                                    const isHidden = nextDiv.style.display === "none";
+                                    nextDiv.style.display = isHidden ? "flex" : "none"; // flex pour garder layout bootstrap
+                                    chevron.textContent = isHidden ? " ▼" : " ▶";
+                                    observer.observe(zone, { childList: true, subtree: true }); // réactives l’observer
+                                });
+                            }
+                        }
                     });
 
                     observer.observe(zone, { childList: true, subtree: true }); // réactives l’observer
