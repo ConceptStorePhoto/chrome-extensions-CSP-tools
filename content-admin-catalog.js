@@ -634,6 +634,19 @@ function productActions() {
                     ]
                 },
                 {
+                    type: "Drone",
+                    specs: [
+                        { spec: "Détails Capteur", value: "" },
+                        { spec: "Millions pixels", value: "" },
+                        { spec: "Temps de vol max.", value: "" },
+                        { spec: "Vidéo", value: "" },
+                        { spec: "Stockage", value: "", placeholder: "type de carte mémoire" },
+                        { spec: "Stockage interne", value: "", placeholder: "Si mémoire interne / en Go" },
+                        { spec: "Dimensions (LxHxP)", value: "" },
+                        { spec: "Poids", value: "" },
+                    ]
+                },
+                {
                     type: "Carte mémoire",
                     specs: [
                         { spec: "Type de carte", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
