@@ -97,6 +97,23 @@ chrome.storage.local.get("token_admin", (data) => {
                 buttonEdit.innerText = "🖊️ Modifier produit";
                 buttonEdit.style.color = '#FFF';
                 bandeau.appendChild(buttonEdit);
+
+                const buttonToggle = document.createElement("a");
+                buttonToggle.innerText = "🔄️ Activer/Désactiver produit"
+                buttonToggle.type = "button";
+                buttonToggle.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    toggleProductStatus(productId, token)
+                        .then(data => {
+                            alert(`Statut du produit mis à jour : ${data.status ? "Désactivé" : "Activé"}\n\n La page va se recharger.`);
+                            location.reload();
+                        })
+                        .catch(error => {
+                            alert(`Erreur lors de la mise à jour du statut : ${error.message}`);
+                        });
+                });
+                buttonToggle.style.color = '#FFF';
+                bandeau.appendChild(buttonToggle);
             }
         }
 
@@ -179,4 +196,28 @@ function insertBtnStyle() {
         }
     `;
     document.head.appendChild(style);
+}
+
+async function toggleProductStatus(idProduit, token) {
+    const url = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${idProduit}/toggle-status-for-shop/1?_token=${token}`;
+    try {
+        const response = await fetch(url, {
+            method: "POST", // en général un toggle utilise POST
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("✅ Succès :", data);
+        return data;
+    } catch (error) {
+        console.error("❌ Erreur lors du toggle :", error);
+        throw error;
+    }
 }
