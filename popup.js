@@ -22,10 +22,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("✅ Concept Store Photo detected", hostname);
                 document.getElementById("toolsCSP").classList.remove('hide');
                 document.getElementById("refreshContainer").classList.remove('hide');
-                // if (url.pathname.includes('catalog'))
-                //     document.querySelectorAll('.admin-catalog').forEach((elem) => {
+                // //// Cache toutes les sections au départ
+                // document.querySelectorAll('#toolsCSP .conteneur:not([data-type="global"])').forEach((elem) => {
+                //     elem.classList.add('hide');
+                // });
+                // //// Affiche les sections en fonction du type de page
+                // if (url.pathname.includes('catalog') && url.pathname.split("/")[url.pathname.split("/").length - 1] == "")
+                //     document.querySelectorAll('[data-type="admin-catalog"]').forEach((elem) => {
+                //         elem.classList.remove('hide');
+                //     });
+
+                // else if (url.pathname.includes('catalog') && url.pathname.split("/")[url.pathname.split("/").length - 1] == "edit")
+                //     document.querySelectorAll('[data-type="admin-catalog-product"]').forEach((elem) => {
                 //         elem.classList.remove('hide');
                 //     })
+
+                // else if (url.search.includes('AdminDmuBackToNew'))
+                //     document.querySelector('[data-type="admin-catalog-dmuNew"]').classList.remove('hide');
+
+                // else if (url.pathname.includes('orders'))
+                //     document.querySelectorAll('[data-type^="admin-orders"]').forEach((elem) => {
+                //         elem.classList.remove('hide');
+                //     });
+
+                // else
+                //     document.querySelectorAll('#toolsCSP .conteneur').forEach((elem) => {
+                //         elem.classList.remove('hide');
+                //     });
+
             } else if (hostname.includes("leboncoin.fr")) {
                 console.log("✅ LeBonCoin detected", hostname);
                 document.getElementById("LBCtools").classList.remove('hide');

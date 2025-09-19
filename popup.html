@@ -20,7 +20,7 @@
       <p style="margin-top: 0;">Ajoute des outils au site <b>CSP</b> sur <b>PrestaShop</b></p>
 
       <div class="optionContainer">
-        <div class="conteneur admin-catalog">
+        <div class="conteneur" data-type="admin-catalog">
           <h3>Admin : Catalogue produit</h3>
 
           <div class="divSliderButton">
@@ -133,8 +133,8 @@
 
         </div>
 
-        <div class="conteneur admin-catalog">
-          <h3>Admin : Catalogue : Fiche produit</h3>
+        <div class="conteneur" data-type="admin-catalog-product">
+          <h3>Admin : Fiche produit</h3>
 
           <div class="divSliderButton">
             <label class="switchButton">
@@ -210,7 +210,7 @@
 
         </div>
 
-        <div class="conteneur admin-catalog">
+        <div class="conteneur" data-type="admin-catalog-product">
           <h3>Admin : Fiche produit : Onglet Description</h3>
 
           <div class="divSliderButton" title="Change la logique de sélection par défaut">
@@ -247,7 +247,7 @@
 
         </div>
 
-        <div class="conteneur admin-catalog">
+        <div class="conteneur" data-type="admin-catalog-product">
           <h3>Admin : Fiche produit : Onglet Détail</h3>
 
           <div class="divSliderButton">
@@ -284,7 +284,7 @@
 
         </div>
 
-        <div class="conteneur admin-catalog">
+        <div class="conteneur" data-type="admin-catalog-product">
           <h3><span class="filAriane">Admin : Fiche produit :</span> Prix Spécifique</h3>
 
           <div class="divSliderButton">
@@ -329,7 +329,7 @@
 
         </div>
 
-        <div class="conteneur admin-catalog">
+        <div class="conteneur" data-type="admin-catalog-product">
           <h3>Admin : Fiche produit : Onglet CSP_tools</h3>
           <span>ℹ️ L'onglet aparait si au moins une fonctionalité est activée</span>
 
@@ -343,7 +343,28 @@
 
         </div>
 
-        <div class="conteneur admin-orders">
+        <div class="conteneur" data-type="admin-catalog-dmuNew">
+          <h3>Admin : Catalogue : Gestion nouveaux produits</h3>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_newProduct_shiftClick">
+              <span class="slider round"></span>
+            </label>
+            <span>Sélection SHIFT Click</span>
+          </div>
+
+          <div class="divSliderButton">
+            <label class="switchButton">
+              <input type="checkbox" class="toggle-button" id="toggle_catalog_newProduct_invertBlock">
+              <span class="slider round"></span>
+            </label>
+            <span>Afficher "Action multiple" avant liste</span>
+          </div>
+
+        </div>
+
+        <div class="conteneur" data-type="admin-orders">
           <h3>Admin : Liste des Commandes</h3>
 
           <div class="divSliderButton">
@@ -372,7 +393,7 @@
 
         </div>
 
-        <div class="conteneur admin-orders">
+        <div class="conteneur" data-type="admin-orders">
           <h3>Admin : Détails d'une Commande</h3>
 
           <div class="divSliderButton">
@@ -401,7 +422,7 @@
 
         </div>
 
-        <div class="conteneur admin-orders">
+        <div class="conteneur" data-type="admin-orders">
           <h3>Admin : Commandes : Panier</h3>
 
           <div class="divSliderButton">
@@ -414,28 +435,7 @@
 
         </div>
 
-        <div class="conteneur">
-          <h3>Admin : Catalogue : Gestion nouveaux produits</h3>
-
-          <div class="divSliderButton">
-            <label class="switchButton">
-              <input type="checkbox" class="toggle-button" id="toggle_catalog_newProduct_shiftClick">
-              <span class="slider round"></span>
-            </label>
-            <span>Sélection SHIFT Click</span>
-          </div>
-
-          <div class="divSliderButton">
-            <label class="switchButton">
-              <input type="checkbox" class="toggle-button" id="toggle_catalog_newProduct_invertBlock">
-              <span class="slider round"></span>
-            </label>
-            <span>Afficher "Action multiple" avant liste</span>
-          </div>
-
-        </div>
-
-        <div class="conteneur">
+        <div class="conteneur" data-type="client">
           <h3>Client : Fiche produit</h3>
 
           <div class="divSliderButton">
@@ -448,7 +448,7 @@
 
         </div>
 
-        <div class="conteneur">
+        <div class="conteneur" data-type="client">
           <h3>Client : Global</h3>
 
           <div class="divSliderButton">
@@ -480,7 +480,7 @@
 
         </div>
 
-        <div class="conteneur">
+        <div class="conteneur" data-type="global">
           <h3 title="Ajoute des options au clique droit - groupé dans un dossier si plusieurs sélectionés">Menu Contextuel</h3>
 
           <div class="divSliderButton">
