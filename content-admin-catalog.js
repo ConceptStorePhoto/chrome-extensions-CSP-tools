@@ -1394,6 +1394,85 @@ function productActions() {
 
     });
 
+    //// Partie Ajout ONGLET CSP_tools dans la fiche produit
+    chrome.storage.sync.get(["toggle_product_ongletCSPtools_dmuNew"], (data) => {
+        if (data.toggle_product_ongletCSPtools_dmuNew) {
+
+            // Ajout d'un Onglet CSP_tools dans la nav-tabs
+            const navTabs = document.querySelector('#form-nav');
+            const cspTab = document.createElement('li');
+            cspTab.className = 'nav-item';
+            cspTab.id = 'product_CSP-tab-nav';
+            cspTab.innerHTML = `<a href="#product_CSP-tab" role="tab" data-toggle="tab" class="nav-link" aria-selected="false">CSP_tools</a>`;
+            navTabs.appendChild(cspTab);
+            const tabContent = document.querySelector('#product-tabs-content');
+            const cspContent = document.createElement('div');
+            cspContent.setAttribute('role', 'tabpanel');
+            cspContent.className = 'form-contenttab tab-pane container-fluid';
+            cspContent.id = 'product_CSP-tab';
+            tabContent.appendChild(cspContent);
+            // Au chargement, vérifier le hash de l'URL pour activer l'onglet si besoin
+            const hash = window.location.hash;
+            console.log("🔗 Hash détecté :", hash);
+            if (hash === "#tab-product_CSP-tab") {
+                cspTab.querySelector('a').click(); // Simule un clic pour activer l'onglet
+            }
+
+
+            const urlPage = new URL(window.location.href);
+            const pathnameParts = urlPage.pathname.split("/");
+            const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
+
+            const urlElemMenuDMUnew = new URL(document.querySelector('li#subtab-AdminDmuBackToNew a')?.href);
+            const tokenDmu = urlElemMenuDMUnew.searchParams.get("token");
+            console.log("✅ Token DMUnew extrait :", tokenDmu);
+
+            cspContent.innerHTML = `
+                <div id="CSP_tools-new-product">
+                    <h3>Gestion des nouveaux produits</h3>
+                    <div style="display: inline-block; gap: 10px; width: 100%; max-width: 400px;">
+                        <td class="column-action1">																																							
+                            <button id="btn-set-new" class="button btn btn-default btn-block" type="button">
+                                <i class="icon-asterisk"></i> Définir comme "Nouveauté"
+                            </button>
+                        </td>
+
+                        <td class="column-action2">
+                            <button id="btn-set-old" class="button btn btn-default btn-block" type="button">
+                                <i class="icon-ban"></i> Définir comme "Ancien produit"
+                            </button>
+                        </td>
+                    </div>
+                </div>
+            `;
+
+            // --- Fonctions de requête ---
+            function sendRequest(action) {
+                const url = `index.php?controller=admindmubacktonew&${action}&id_product=${productId}&token=${tokenDmu}`;
+
+                fetch(url, { method: "POST" })
+                    .then(res => res.text())
+                    .then(data => {
+                        // console.log("✅ Réponse serveur:", data);
+                        displayNotif(`✅ Requête "${action}" envoyée ! (à vérifier)`, 4000);
+                    })
+                    .catch(err => {
+                        console.error("❌ Erreur requête:", err);
+                        displayNotif("❌ Erreur lors de la requête", 4000);
+                    });
+            }
+
+            // --- Écouteurs ---
+            document.querySelector("#btn-set-new").addEventListener("click", () => {
+                sendRequest("setNew");
+            });
+
+            document.querySelector("#btn-set-old").addEventListener("click", () => {
+                sendRequest("setOld");
+            });
+        }
+    });
+
     ///// Partie POPUP "Prix spécifiques" (promos)
     chrome.storage.sync.get(["toggle_product_remise_calcul", "toggle_product_heureFin", "toggle_product_heureDebut", "toggle_product_datePromoHistorique"], (data) => {
         if (!data.toggle_product_remise_calcul && !data.toggle_product_heureFin && !data.toggle_product_heureDebut && !data.toggle_product_datePromoHistorique) return;
