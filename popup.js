@@ -45,6 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 //         elem.classList.remove('hide');
                 //     });
 
+                // else if (!url.pathname.includes('logcncin'))
+                //     document.querySelectorAll('[data-type="client"]').forEach((elem) => {
+                //         elem.classList.remove('hide');
+                //     });
+
                 // else
                 //     document.querySelectorAll('#toolsCSP .conteneur').forEach((elem) => {
                 //         elem.classList.remove('hide');
