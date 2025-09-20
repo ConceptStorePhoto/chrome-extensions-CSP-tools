@@ -165,29 +165,25 @@ function catalogActions() {
 
             if (data.toggle_catalog_display_promotions) {
                 // Parcours du tableau et injection des promos
-                async function injectPromosInTable() {
-                    const rows = document.querySelectorAll(".column-id_product");
+                const rows = document.querySelectorAll(".column-id_product");
+                for (const el of rows) {
+                    const productId = el.innerText.trim(); // l’ID est directement dans la cellule
+                    if (!productId) continue;
 
-                    for (const el of rows) {
-                        const productId = el.innerText.trim(); // l’ID est directement dans la cellule
-                        if (!productId) continue;
-
-                        const promos = await fetchSpecificPrices(productId);
-                        const activePromos = promos.filter(isSpecificPricesActive);
-
+                    fetchSpecificPrices(productId, (liste) => {
+                        const activePromos = liste.filter(isSpecificPricesActive);
                         if (activePromos.length > 0) {
                             activePromos.forEach(promo => {
                                 const span = document.createElement("span");
                                 span.style.cssText = "display:block; white-space: normal !important; color:red; font-weight:bold;";
                                 span.innerText = promo.impact;
+                                if (promo.price && promo.price != "--")
+                                    span.innerText = span.innerText + `\nPrix Spé : ${promo.price}`;
                                 el.parentElement.querySelector('.column-price_tax_included').appendChild(span);
                             });
                         }
-                    }
+                    });
                 }
-
-                // 👉 À appeler quand le tableau est chargé
-                injectPromosInTable();
             }
 
             if (data.toggle_catalog_warning_HT_TTC) {
@@ -1576,6 +1572,7 @@ function productActions() {
         function ajouterChampPrixApresRemise(doc, prixBaseTTC) {
             const remise = doc.querySelector('#specific_price_impact_reduction_value');
             const divPrix = doc.querySelector('#specific_price_impact_reduction');
+            const remiseType = doc.querySelector('#specific_price_impact_reduction_type');
             if (!remise || !divPrix) return console.log('❌ div remise introuvable dans iframe');
 
             console.log("🎯 div remise trouvée : ajout de l'input");
@@ -1602,8 +1599,13 @@ function productActions() {
                 const found = getDeclinaisonSelectionnee(doc, combinations);
                 if (found) prixDeReference = found.calcul_prix_ttc_final;
 
-                if (!isNaN(prixApresRemise)) {
+                if (!isNaN(prixApresRemise) && remiseType.value === 'amount') {
                     remise.value = (prixDeReference - prixApresRemise).toFixed(2);
+                }
+                else if (!isNaN(prixApresRemise) && remiseType.value === 'percentage') {
+                    // displayNotif("⚠️ Le calcul en % n'est pas encore géré");
+                    const pourcentage = ((prixDeReference - prixApresRemise) / prixDeReference) * 100;
+                    remise.value = pourcentage.toFixed(2);
                 }
                 if (doc.querySelector('#specific_price_impact_disabling_switch_reduction_1')?.checked === false) {
                     console.log("➡️ Toggle remise détecté comme désactivé");
@@ -1621,14 +1623,28 @@ function productActions() {
             if (remise.value && parseFloat(remise.value) != 0) updatePrixApresRemise();
 
             function updatePrixApresRemise() {
-                const valeurRemise = parseFloat(remise.value);
-                let prixDeReference = prixBaseTTC;
-                const found = getDeclinaisonSelectionnee(doc, combinations);
-                if (found) prixDeReference = found.calcul_prix_ttc_final;
-                if (!isNaN(valeurRemise)) {
-                    inputPrixApresRemise.value = (prixDeReference - valeurRemise).toFixed(2);
-                } else {
-                    inputPrixApresRemise.value = '';
+                if (remiseType.value === 'amount') {
+                    const valeurRemise = parseFloat(remise.value);
+                    let prixDeReference = prixBaseTTC;
+                    const found = getDeclinaisonSelectionnee(doc, combinations);
+                    if (found) prixDeReference = found.calcul_prix_ttc_final;
+                    if (!isNaN(valeurRemise)) {
+                        inputPrixApresRemise.value = (prixDeReference - valeurRemise).toFixed(2);
+                    } else {
+                        inputPrixApresRemise.value = '';
+                    }
+                } else if (remiseType.value === 'percentage') {
+                    // displayNotif("⚠️ Le calcul en % n'est pas encore géré");
+                    const valeurRemise = parseFloat(remise.value);
+                    let prixDeReference = prixBaseTTC;
+                    const found = getDeclinaisonSelectionnee(doc, combinations);
+                    if (found) prixDeReference = found.calcul_prix_ttc_final;
+                    if (!isNaN(valeurRemise)) {
+                        const montantRemise = (valeurRemise / 100) * prixDeReference;
+                        inputPrixApresRemise.value = (prixDeReference - montantRemise).toFixed(2);
+                    } else {
+                        inputPrixApresRemise.value = '';
+                    }
                 }
             }
             divPrix.appendChild(divPrixApresRemise);
@@ -1913,44 +1929,40 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
         });
 }
 
-async function fetchSpecificPrices(productId) {
-    try {
-        // Récupérer le token depuis l'URL courante
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('_token');
-        if (!token) throw new Error("Token introuvable dans l'URL");
+function fetchSpecificPrices(productId, callback) {
+    // Récupérer le token depuis l'URL courante
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('_token');
+    if (!token) throw new Error("Token introuvable dans l'URL");
 
-        // Construire l'URL de l'API
-        const url = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/specific-prices/list?limit=10&offset=0&_token=${token}`;
+    // Construire l'URL de l'API
+    const url = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/specific-prices/list?limit=10&offset=0&_token=${token}`;
 
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                "accept": "application/json",
-                "x-requested-with": "XMLHttpRequest"
-            },
-            credentials: "include" // garde la session admin
+    fetch(url, {
+        method: "GET",
+        headers: {
+            "accept": "application/json",
+            "x-requested-with": "XMLHttpRequest"
+        },
+        credentials: "include" // garde la session admin
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(`🎯 Promotions récupérées (ID: ${productId}) :`, data.specificPrices);
+            const list = (data && Array.isArray(data.specificPrices)) ? data.specificPrices : [];
+            if (typeof callback === "function") callback(list);
+        })
+        .catch(err => {
+            console.error(`❌ Erreur récupération promotions (ID: ${productId}) :`, err);
+            displayNotif("❌ Erreur lors du chargement des promotions. Changer de page et revenir pour réessayer.");
+            if (typeof callback === "function") callback([]);
         });
-
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log(`🎯 Promotions récupérées (ID: ${productId}) :`, data.specificPrices);
-        return data.specificPrices;
-
-    } catch (err) {
-        console.error(`❌ Erreur récupération promotions (ID: ${productId}) :`, err);
-        displayNotif("❌ Erreur lors du chargement des promotions. Changer de page et revenir pour réessayer.");
-        return [];
-    }
 }
 function isSpecificPricesActive(promo) {
     const now = new Date();
 
-    const from = promo.period.from === "Toujours" ? null : new Date(promo.period.from);
-    const to = promo.period.to === "Toujours" ? null : new Date(promo.period.to);
+    const from = (promo.period && promo.period.from && promo.period.from !== "Toujours") ? new Date(promo.period.from) : null;
+    const to = (promo.period && promo.period.to && promo.period.to !== "Toujours") ? new Date(promo.period.to) : null;
 
     if (from && now < from) return false;
     if (to && now > to) return false;
