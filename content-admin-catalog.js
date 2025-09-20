@@ -32,6 +32,7 @@ function catalogActions() {
             "toggle_catalog_copy_aicm_buttons",
             "toggle_catalog_no_aicm_warning",
             "toggle_catalog_display_combinations",
+            "toggle_catalog_display_promotions",
             "toggle_catalog_warning_HT_TTC",
             "toggle_catalog_copy_name_buttons",
             "toggle_catalog_preview_buttons",
@@ -160,6 +161,33 @@ function catalogActions() {
                     }
                 });
 
+            }
+
+            if (data.toggle_catalog_display_promotions) {
+                // Parcours du tableau et injection des promos
+                async function injectPromosInTable() {
+                    const rows = document.querySelectorAll(".column-id_product");
+
+                    for (const el of rows) {
+                        const productId = el.innerText.trim(); // l’ID est directement dans la cellule
+                        if (!productId) continue;
+
+                        const promos = await fetchSpecificPrices(productId);
+                        const activePromos = promos.filter(isSpecificPricesActive);
+
+                        if (activePromos.length > 0) {
+                            activePromos.forEach(promo => {
+                                const span = document.createElement("span");
+                                span.style.cssText = "display:block; white-space: normal !important; color:red; font-weight:bold;";
+                                span.innerText = promo.impact;
+                                el.parentElement.querySelector('.column-price_tax_included').appendChild(span);
+                            });
+                        }
+                    }
+                }
+
+                // 👉 À appeler quand le tableau est chargé
+                injectPromosInTable();
             }
 
             if (data.toggle_catalog_warning_HT_TTC) {
@@ -1875,7 +1903,7 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
                 };
             });
 
-            console.log("📦 Déclinaisons récupérées via API :", liste);
+            console.log(`📦 Déclinaisons récupérées (${productId}) :`, liste);
             if (typeof callback === "function") callback(liste);
         })
         .catch(err => {
@@ -1883,6 +1911,50 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
             displayNotif("❌ Erreur lors du chargement des déclinaisons. Changer de page et revenir pour réessayer.");
             if (typeof callback === "function") callback([]);
         });
+}
+
+async function fetchSpecificPrices(productId) {
+    try {
+        // Récupérer le token depuis l'URL courante
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('_token');
+        if (!token) throw new Error("Token introuvable dans l'URL");
+
+        // Construire l'URL de l'API
+        const url = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/specific-prices/list?limit=10&offset=0&_token=${token}`;
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "accept": "application/json",
+                "x-requested-with": "XMLHttpRequest"
+            },
+            credentials: "include" // garde la session admin
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(`🎯 Promotions récupérées (ID: ${productId}) :`, data.specificPrices);
+        return data.specificPrices;
+
+    } catch (err) {
+        console.error(`❌ Erreur récupération promotions (ID: ${productId}) :`, err);
+        displayNotif("❌ Erreur lors du chargement des promotions. Changer de page et revenir pour réessayer.");
+        return [];
+    }
+}
+function isSpecificPricesActive(promo) {
+    const now = new Date();
+
+    const from = promo.period.from === "Toujours" ? null : new Date(promo.period.from);
+    const to = promo.period.to === "Toujours" ? null : new Date(promo.period.to);
+
+    if (from && now < from) return false;
+    if (to && now > to) return false;
+    return true;
 }
 
 function displayNotif(message, duree) {
