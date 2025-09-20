@@ -18,6 +18,7 @@ Extension Chrome qui permet de corriger certains problèmes d'interface sur le s
 - **Colissimo** : 
     - **Collecte** : Ajout d'une confirmation avant l'annulation de la collecte 
 
+Voir le Wiki pour plus de détails : [Wiki CSP tools](https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/wiki)
 
 ## Installation
 
@@ -36,6 +37,7 @@ Extension Chrome qui permet de corriger certains problèmes d'interface sur le s
 
 ## Mise à jour
 Pour mettre à jour l'extension, il suffit de télécharger à nouveau le fichier ZIP et de remplacer les fichiers précédemment installés par les nouveaux fichiers.
+Puis redémarrer Google Chrome ou actualiser l'extention dans [chrome://extensions/](chrome://extensions/).
 
 
 <br>
