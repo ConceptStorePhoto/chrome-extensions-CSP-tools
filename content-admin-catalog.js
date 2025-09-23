@@ -170,26 +170,41 @@ function catalogActions() {
             }
 
             if (data.toggle_catalog_display_promotions) {
-                // Parcours du tableau et injection des promos
-                const rows = document.querySelectorAll(".column-id_product");
-                for (const el of rows) {
-                    const productId = el.innerText.trim(); // l’ID est directement dans la cellule
-                    if (!productId) continue;
+                console.log("🔄 Ajout des promos dans le tableau du catalogue");
+                // Parcours du tableau et injection des promos, par paquets de 5
+                async function injectPromosInTable(batchSize = 5) {
+                    const rows = Array.from(document.querySelectorAll(".column-id_product"));
 
-                    fetchSpecificPrices(productId, (liste) => {
-                        const activePromos = liste.filter(isSpecificPricesActive);
-                        if (activePromos.length > 0) {
-                            activePromos.forEach(promo => {
-                                const span = document.createElement("span");
-                                span.style.cssText = "display:block; white-space: normal !important; color:red; font-weight:bold;";
-                                span.innerText = promo.impact;
-                                if (promo.price && promo.price != "--")
-                                    span.innerText = span.innerText + `\nPrix Spé : ${promo.price}`;
-                                el.parentElement.querySelector('.column-price_tax_included').appendChild(span);
+                    for (let i = 0; i < rows.length; i += batchSize) {
+                        const batch = rows.slice(i, i + batchSize);
+
+                        // Lance les fetch en parallèle pour le paquet
+                        const promises = batch.map(el => {
+                            const productId = el.innerText.trim();
+                            if (!productId) return Promise.resolve();
+
+                            return new Promise(resolve => {
+                                fetchSpecificPrices(productId, (liste) => {
+                                    const activePromos = liste.filter(isSpecificPricesActive);
+                                    if (activePromos.length > 0) {
+                                        activePromos.forEach(promo => {
+                                            const span = document.createElement("span");
+                                            span.style.cssText = "display:block; white-space: normal !important; color:red; font-weight:bold;";
+                                            span.innerText = promo.impact;
+                                            if (promo.price && promo.price != "--")
+                                                span.innerText = span.innerText + `\nPrix Spé : ${promo.price}`;
+                                            el.parentElement.querySelector('.column-price_tax_included').appendChild(span);
+                                        });
+                                    }
+                                    resolve();
+                                });
                             });
-                        }
-                    });
+                        });
+                        // Attendre que tout le paquet soit fini avant de passer au suivant
+                        await Promise.all(promises);
+                    }
                 }
+                injectPromosInTable();
             }
 
             if (data.toggle_catalog_warning_HT_TTC) {
@@ -1893,6 +1908,12 @@ function productActions() {
 
 ////////////////////////// FONCTIONS UTILITAIRES //////////////////////////
 
+// 👉 Un seul AbortController partagé pour toutes les requêtes
+const fetchController = new AbortController();
+window.addEventListener("beforeunload", () => {
+    fetchController.abort(); // annule toutes les requêtes en cours
+});
+
 function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
     if (!productId || !token) {
         console.warn(`[${new Date().toLocaleString()}] ❌ Impossible de détecter l'ID produit ou le token.`);
@@ -1902,7 +1923,7 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
     const shopId = 1;
     const apiUrl = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${productId}/combinations?shopId=${shopId}&product_combinations_${productId}[offset]=0&product_combinations_${productId}[limit]=100&_token=${token}`;
 
-    fetch(apiUrl, { credentials: "same-origin" })
+    fetch(apiUrl, { credentials: "same-origin", signal: fetchController.signal })
         .then(response => response.json())
         .then(data => {
             if (!data.combinations || !Array.isArray(data.combinations)) {
@@ -1928,6 +1949,10 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
             if (typeof callback === "function") callback(liste);
         })
         .catch(err => {
+            if (err.name === "AbortError") {
+                console.log(`⏹️ (getCombinations) Fetch annulé (ID: ${productId}) à cause du changement de page`);
+                return; // on ignore proprement
+            }
             console.error(`[${new Date().toLocaleString()}] ❌ Erreur lors du chargement des déclinaisons :`, err);
             displayNotif("❌ Erreur lors du chargement des déclinaisons. Changer de page et revenir pour réessayer.");
             if (typeof callback === "function") callback([]);
@@ -1951,7 +1976,8 @@ function fetchSpecificPrices(productId, callback) {
             "accept": "application/json",
             "x-requested-with": "XMLHttpRequest"
         },
-        credentials: "include" // garde la session admin
+        credentials: "include", // garde la session admin
+        signal: fetchController.signal // 👉 lié au contrôleur
     })
         .then(response => response.json())
         .then(data => {
@@ -1960,6 +1986,10 @@ function fetchSpecificPrices(productId, callback) {
             if (typeof callback === "function") callback(list);
         })
         .catch(err => {
+            if (err.name === "AbortError") {
+                console.log(`⏹️ (fetchSpecificPrices) Fetch annulé (ID: ${productId}) à cause du changement de page`);
+                return; // on ignore proprement
+            }
             console.error(`❌ Erreur récupération promotions (ID: ${productId}) :`, err);
             displayNotif("❌ Erreur lors du chargement des promotions. Changer de page et revenir pour réessayer.");
             if (typeof callback === "function") callback([]);
