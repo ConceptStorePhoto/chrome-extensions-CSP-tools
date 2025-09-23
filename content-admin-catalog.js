@@ -1488,13 +1488,13 @@ function productActions() {
                     <div style="display: inline-block; gap: 10px; width: 100%; max-width: 400px;">
                         <td class="column-action1">																																							
                             <button id="btn-set-new" class="button btn btn-default btn-block" type="button">
-                                <i class="icon-asterisk"></i> Définir comme "Nouveauté"
+                                <i class="material-icons">new_label</i> Définir comme "Nouveauté"
                             </button>
                         </td>
 
                         <td class="column-action2">
                             <button id="btn-set-old" class="button btn btn-default btn-block" type="button">
-                                <i class="icon-ban"></i> Définir comme "Ancien produit"
+                                <i class="material-icons">label_off</i> Définir comme "Ancien produit"
                             </button>
                         </td>
                     </div>
