@@ -1429,7 +1429,7 @@ function productActions() {
                 const url = new URL(window.location.href);
                 const pathnameParts = url.pathname.split("/");
                 const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
-                const jsonUrl = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/images-for-shop/1?_token=${tokenCatalog}`;
+                const jsonUrl = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${productId}/images-for-shop/1?_token=${tokenCatalog}`;
 
                 fetch(jsonUrl)
                     .then(resp => resp.json())
@@ -1484,7 +1484,7 @@ function productActions() {
 
             cspContent.innerHTML = `
                 <div id="CSP_tools-new-product">
-                    <h3>Gestion des nouveaux produits</h3>
+                    <h3>Gestion des nouveaux produits <a target="_blank" href="${location.origin}/logcncin/index.php?controller=AdminDmuBackToNew&token=${tokenDmu}"><i class="material-icons">open_in_new</i></a></h3>
                     <div style="display: inline-block; gap: 10px; width: 100%; max-width: 400px;">
                         <td class="column-action1">																																							
                             <button id="btn-set-new" class="button btn btn-default btn-block" type="button">
@@ -1979,7 +1979,7 @@ function fetchSpecificPrices(productId, callback) {
     if (!tokenCatalog) throw new Error("TokenCatalog introuvable dans l'URL du menu");
 
     // Construire l'URL de l'API
-    const url = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/specific-prices/list?limit=10&offset=0&_token=${tokenCatalog}`;
+    const url = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${productId}/specific-prices/list?limit=10&offset=0&_token=${tokenCatalog}`;
 
     fetch(url, {
         method: "GET",
