@@ -14,15 +14,6 @@ else if (window.location.pathname.split("/")[window.location.pathname.split("/")
     productActions();
 }
 
-// récupération du token dans l'url du site si page admin
-// let token = "";
-// if (window.location.search.includes('token=')) {
-//     token = window.location.search.split('=')[window.location.search.split('=').length - 1]; // récupère le dernier paramètre de l'URL
-//     console.log("✅ Token récupéré depuis l'URL :", token);
-//     chrome.storage.local.set({ token_admin: token }); // stock la valeur actuelle
-//     // localStorage.setItem("CSP_token_admin", token); // stock la valeur actuelle
-// }
-
 //// Récupère le token dans le menu (plus fiable que l'URL)
 const urlElemMenuCatalog = new URL(document.querySelector('li#subtab-AdminProducts a')?.href);
 const tokenCatalog = urlElemMenuCatalog.search.split('=')[urlElemMenuCatalog.search.split('=').length - 1];
@@ -180,8 +171,8 @@ function catalogActions() {
                     }
 
                     // ✅ quand tout est terminé
-                    console.log("✅ Injection des déclinaisons terminée");
-                    displayNotif("✅ Injection des déclinaisons terminée");
+                    console.log("✅ Affichage des déclinaisons terminée");
+                    displayNotif("✅ Affichage des déclinaisons terminée");
                 }
 
                 injectCombinations();
@@ -221,8 +212,8 @@ function catalogActions() {
                         // Attendre que tout le paquet soit fini avant de passer au suivant
                         await Promise.all(promises);
                     }
-                    console.log("✅ Injection des promos terminée");
-                    displayNotif("✅ Injection des promos terminée");
+                    console.log("✅ Affichage des promos terminée");
+                    displayNotif("✅ Affichage des promos terminée");
                 }
                 injectPromosInTable();
             }
