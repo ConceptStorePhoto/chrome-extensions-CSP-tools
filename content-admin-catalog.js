@@ -110,63 +110,81 @@ function catalogActions() {
             }
 
             if (data.toggle_catalog_display_combinations) {
-                const elements = document.querySelectorAll(".column-reference");
-                elements.forEach((el) => {
-                    // Vérifie que l'élément n'a pas de texte ou est vide
-                    if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM") || el.innerText.includes("Déclinaisons ?")) {
-                        getCombinations(el.previousElementSibling.previousElementSibling.previousElementSibling.innerText, tokenCatalog, "", "", (liste) => {
-                            const refsConcatenees = liste.map(c => c.ref).filter(ref => ref).join(" ");
-                            // console.log("💡Référence concaténée :", refsConcatenees);
-                            if (refsConcatenees) {
-                                el.style.maxWidth = "200px";
-                                el.querySelector("a").innerText = `${liste.length} Déclinaisons :\n`;
-                                const elem = document.createElement('span');
-                                elem.style.cssText = 'white-space: normal !important;';
-                                elem.innerText = refsConcatenees;
-                                el.appendChild(elem);
-                            } else if (liste.length != 0)
-                                el.querySelector("a").innerText = `${liste.length} Déclinaisons :\nAucun code AICM`;
+                console.log("🔄 Injection des déclinaisons");
 
-                            if (liste.length != 0) {
-                                const link = el.querySelector("a");
-                                const [baseUrl] = link.href.split("#"); // récupère tout avant le #
-                                link.href = `${baseUrl}#tab-product_combinations-tab`;
-                            }
+                async function injectCombinations(batchSize = 5) {
+                    const elements = Array.from(document.querySelectorAll(".column-reference"));
 
-                            // if (refsConcatenees) {
-                            //     el.style.maxWidth = "200px";
-                            //     if (el.innerText.includes("Aucun code AICM") || el.innerText.includes("Déclinaisons ?"))
-                            //         el.querySelector("a").innerText = "";
-                            //     const lienDeclinaisons = document.createElement('a');
-                            //     lienDeclinaisons.href = `${el.querySelector("a").href.split("#")}#tab-product_combinations-tab`;
-                            //     lienDeclinaisons.innerText = `${!el.innerText ? '' : '\n'}${liste.length} Déclinaisons :\n`;
-                            //     lienDeclinaisons.style.color = "#c90000";
-                            //     el.appendChild(lienDeclinaisons);
-                            //     const elem = document.createElement('span');
-                            //     elem.style.cssText = 'white-space: normal !important;';
-                            //     elem.innerText = refsConcatenees;
-                            //     el.appendChild(elem);
-                            // } else if (liste.length != 0) {
-                            //     el.querySelector("a").innerText = `${liste.length} Déclinaisons :\nAucun code AICM`;
-                            //     el.querySelector("a").setAttribute("style", "color: #c90000 !important");
-                            // }
+                    // Séparer en 2 groupes : prioritaires et reste
+                    const prioritaires = elements.filter(el =>
+                        !el.innerText ||
+                        el.innerText.trim() === "" ||
+                        el.innerText.includes("Aucun code AICM") ||
+                        el.innerText.includes("Déclinaisons ?")
+                    );
+                    const autres = elements.filter(el => !prioritaires.includes(el));
 
-                            const prixListe = liste.map(c => parseFloat(c.calcul_prix_ttc_final)).filter(p => !isNaN(p));
-                            if (prixListe.length > 0) {
-                                const min = Math.min(...prixListe);
-                                const max = Math.max(...prixListe);
+                    // Fonction utilitaire qui traite un paquet d’éléments
+                    async function processBatch(batch) {
+                        const promises = batch.map(el => {
+                            const productId = el.previousElementSibling.previousElementSibling.previousElementSibling.innerText.trim();
+                            if (!productId) return Promise.resolve();
 
-                                const intervalPrix = document.createElement('div');
-                                intervalPrix.style.cssText = 'white-space: nowrap !important;';
-                                intervalPrix.innerText = (min === max)
-                                    ? `${min.toFixed(2)}€`
-                                    : `${min.toFixed(2)}€ - ${max.toFixed(2)}€`;
-                                el.nextElementSibling.nextElementSibling.nextElementSibling.appendChild(intervalPrix);
-                            }
+                            return new Promise(resolve => {
+                                getCombinations(productId, tokenCatalog, "", "", (liste) => {
+                                    const refsConcatenees = liste.map(c => c.ref).filter(ref => ref).join(" ");
+                                    if (refsConcatenees) {
+                                        el.style.maxWidth = "200px";
+                                        el.querySelector("a").innerText = `${liste.length} Déclinaisons :\n`;
+                                        const elem = document.createElement('span');
+                                        elem.style.cssText = 'white-space: normal !important;';
+                                        elem.innerText = refsConcatenees;
+                                        el.appendChild(elem);
+                                    } else if (liste.length != 0) {
+                                        el.querySelector("a").innerText = `${liste.length} Déclinaisons :\nAucun code AICM`;
+                                    }
+
+                                    if (liste.length != 0) {
+                                        const link = el.querySelector("a");
+                                        const [baseUrl] = link.href.split("#");
+                                        link.href = `${baseUrl}#tab-product_combinations-tab`;
+                                    }
+
+                                    const prixListe = liste.map(c => parseFloat(c.calcul_prix_ttc_final)).filter(p => !isNaN(p));
+                                    if (prixListe.length > 0) {
+                                        const min = Math.min(...prixListe);
+                                        const max = Math.max(...prixListe);
+
+                                        const intervalPrix = document.createElement('div');
+                                        intervalPrix.style.cssText = 'white-space: nowrap !important;';
+                                        intervalPrix.innerText = (min === max)
+                                            ? `${min.toFixed(2)}€`
+                                            : `${min.toFixed(2)}€ - ${max.toFixed(2)}€`;
+                                        el.nextElementSibling.nextElementSibling.nextElementSibling.appendChild(intervalPrix);
+                                    }
+                                    resolve();
+                                });
+                            });
                         });
+                        await Promise.all(promises);
                     }
-                });
 
+                    // 1️⃣ traiter les prioritaires directement (par batch de 5 aussi pour éviter surcharge)
+                    for (let i = 0; i < prioritaires.length; i += batchSize) {
+                        await processBatch(prioritaires.slice(i, i + batchSize));
+                    }
+
+                    // 2️⃣ ensuite traiter les autres
+                    for (let i = 0; i < autres.length; i += batchSize) {
+                        await processBatch(autres.slice(i, i + batchSize));
+                    }
+
+                    // ✅ quand tout est terminé
+                    console.log("✅ Injection des déclinaisons terminée");
+                    displayNotif("✅ Injection des déclinaisons terminée");
+                }
+
+                injectCombinations();
             }
 
             if (data.toggle_catalog_display_promotions) {
@@ -203,6 +221,8 @@ function catalogActions() {
                         // Attendre que tout le paquet soit fini avant de passer au suivant
                         await Promise.all(promises);
                     }
+                    console.log("✅ Injection des promos terminée");
+                    displayNotif("✅ Injection des promos terminée");
                 }
                 injectPromosInTable();
             }
