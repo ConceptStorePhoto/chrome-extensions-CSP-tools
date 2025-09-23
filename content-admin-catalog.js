@@ -15,13 +15,19 @@ else if (window.location.pathname.split("/")[window.location.pathname.split("/")
 }
 
 // récupération du token dans l'url du site si page admin
-let token = "";
-if (window.location.search.includes('token=')) {
-    token = window.location.search.split('=')[window.location.search.split('=').length - 1]; // récupère le dernier paramètre de l'URL
-    console.log("✅ Token récupéré depuis l'URL :", token);
-    chrome.storage.local.set({ token_admin: token }); // stock la valeur actuelle
-    // localStorage.setItem("CSP_token_admin", token); // stock la valeur actuelle
-}
+// let token = "";
+// if (window.location.search.includes('token=')) {
+//     token = window.location.search.split('=')[window.location.search.split('=').length - 1]; // récupère le dernier paramètre de l'URL
+//     console.log("✅ Token récupéré depuis l'URL :", token);
+//     chrome.storage.local.set({ token_admin: token }); // stock la valeur actuelle
+//     // localStorage.setItem("CSP_token_admin", token); // stock la valeur actuelle
+// }
+
+//// Récupère le token dans le menu (plus fiable que l'URL)
+const urlElemMenuCatalog = new URL(document.querySelector('li#subtab-AdminProducts a')?.href);
+const tokenCatalog = urlElemMenuCatalog.search.split('=')[urlElemMenuCatalog.search.split('=').length - 1];
+chrome.storage.local.set({ token_admin: tokenCatalog }); // stock la valeur actuelle
+console.log("✅ Token Catalog extrait du menu :", tokenCatalog);
 
 /////// FONCTIONS ///////
 
@@ -108,7 +114,7 @@ function catalogActions() {
                 elements.forEach((el) => {
                     // Vérifie que l'élément n'a pas de texte ou est vide
                     if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM") || el.innerText.includes("Déclinaisons ?")) {
-                        getCombinations(el.previousElementSibling.previousElementSibling.previousElementSibling.innerText, token, "", "", (liste) => {
+                        getCombinations(el.previousElementSibling.previousElementSibling.previousElementSibling.innerText, tokenCatalog, "", "", (liste) => {
                             const refsConcatenees = liste.map(c => c.ref).filter(ref => ref).join(" ");
                             // console.log("💡Référence concaténée :", refsConcatenees);
                             if (refsConcatenees) {
@@ -1397,8 +1403,7 @@ function productActions() {
                 const url = new URL(window.location.href);
                 const pathnameParts = url.pathname.split("/");
                 const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
-                const token = url.searchParams.get("_token");
-                const jsonUrl = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/images-for-shop/1?_token=${token}`;
+                const jsonUrl = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/images-for-shop/1?_token=${tokenCatalog}`;
 
                 fetch(jsonUrl)
                     .then(resp => resp.json())
@@ -1521,9 +1526,9 @@ function productActions() {
             const url = new URL(window.location.href);
             const pathnameParts = url.pathname.split("/");
             const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
-            const token = url.searchParams.get("_token");
+            // const token = url.searchParams.get("_token");
             // console.log("🔄 DEMANDE de Chargement des déclinaisons depuis l'API ", productId);
-            getCombinations(productId, token, prixBaseTTC, prixBaseHT, (liste) => {
+            getCombinations(productId, tokenCatalog, prixBaseTTC, prixBaseHT, (liste) => {
                 combinations = liste;
             });
         }
@@ -1931,12 +1936,14 @@ function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
 
 function fetchSpecificPrices(productId, callback) {
     // Récupérer le token depuis l'URL courante
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('_token');
-    if (!token) throw new Error("Token introuvable dans l'URL");
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const token = urlParams.get('_token');
+    // if (!token) throw new Error("Token introuvable dans l'URL");
+
+    if (!tokenCatalog) throw new Error("TokenCatalog introuvable dans l'URL du menu");
 
     // Construire l'URL de l'API
-    const url = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/specific-prices/list?limit=10&offset=0&_token=${token}`;
+    const url = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${productId}/specific-prices/list?limit=10&offset=0&_token=${tokenCatalog}`;
 
     fetch(url, {
         method: "GET",
