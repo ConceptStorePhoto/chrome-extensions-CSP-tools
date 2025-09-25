@@ -29,6 +29,8 @@ function catalogActions() {
             "toggle_catalog_copy_aicm_buttons",
             "toggle_catalog_no_aicm_warning",
             "toggle_catalog_display_combinations",
+            "select_catalog_display_combinations",
+            "select_catalog_display_combinations_default",
             "toggle_catalog_display_promotions",
             "toggle_catalog_warning_HT_TTC",
             "toggle_catalog_copy_name_buttons",
@@ -102,6 +104,7 @@ function catalogActions() {
 
             if (data.toggle_catalog_display_combinations) {
                 console.log("🔄 Injection des déclinaisons");
+                const displayMode = data.select_catalog_display_combinations || data.select_catalog_display_combinations_default;
 
                 async function injectCombinations(batchSize = 5) {
                     const elements = Array.from(document.querySelectorAll(".column-reference"));
@@ -123,36 +126,48 @@ function catalogActions() {
 
                             return new Promise(resolve => {
                                 getCombinations(productId, tokenCatalog, "", "", (liste) => {
-                                    const refsConcatenees = liste.map(c => c.ref).filter(ref => ref).join(" ");
-                                    if (refsConcatenees) {
-                                        el.style.maxWidth = "200px";
-                                        el.querySelector("a").innerText = `${liste.length} Déclinaisons :\n`;
-                                        const elem = document.createElement('span');
-                                        elem.style.cssText = 'white-space: normal !important;';
-                                        elem.innerText = refsConcatenees;
-                                        el.appendChild(elem);
-                                    } else if (liste.length != 0) {
-                                        el.querySelector("a").innerText = `${liste.length} Déclinaisons :\nAucun code AICM`;
+                                    el.style.maxWidth = "200px";
+                                    if (displayMode === "resume") {
+                                        const refsConcatenees = liste.map(c => c.ref).filter(ref => ref).join(" ");
+                                        if (refsConcatenees) {
+                                            el.querySelector("a").innerText = `${liste.length} Déclinaisons :\n`;
+                                            const elem = document.createElement('span');
+                                            elem.style.cssText = 'white-space: normal !important;';
+                                            elem.innerText = refsConcatenees;
+                                            el.appendChild(elem);
+                                        } else if (liste.length != 0) {
+                                            el.querySelector("a").innerText = `${liste.length} Déclinaisons :\nAucun code AICM`;
+                                        }
+
+                                        if (liste.length != 0) {
+                                            const link = el.querySelector("a");
+                                            const [baseUrl] = link.href.split("#");
+                                            link.href = `${baseUrl}#tab-product_combinations-tab`;
+                                        }
+
+                                        const prixListe = liste.map(c => parseFloat(c.calcul_prix_ttc_final)).filter(p => !isNaN(p));
+                                        if (prixListe.length > 0) {
+                                            const min = Math.min(...prixListe);
+                                            const max = Math.max(...prixListe);
+
+                                            const intervalPrix = document.createElement('div');
+                                            intervalPrix.style.cssText = 'white-space: nowrap !important;';
+                                            intervalPrix.innerText = (min === max)
+                                                ? `${min.toFixed(2)}€`
+                                                : `${min.toFixed(2)}€ - ${max.toFixed(2)}€`;
+                                            el.nextElementSibling.nextElementSibling.nextElementSibling.appendChild(intervalPrix);
+                                        }
+
+                                        const stock = liste.map(c => c.quantity).filter(quantity => quantity).join(" + ");
+                                        if (stock) {
+                                            const stockElem = document.createElement('div');
+                                            stockElem.innerText = `Qté : ${stock}`;
+                                            el.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.appendChild(stockElem);
+                                        }
+                                    } else if (displayMode === "detail") {
+                                        // A FAIRE
                                     }
 
-                                    if (liste.length != 0) {
-                                        const link = el.querySelector("a");
-                                        const [baseUrl] = link.href.split("#");
-                                        link.href = `${baseUrl}#tab-product_combinations-tab`;
-                                    }
-
-                                    const prixListe = liste.map(c => parseFloat(c.calcul_prix_ttc_final)).filter(p => !isNaN(p));
-                                    if (prixListe.length > 0) {
-                                        const min = Math.min(...prixListe);
-                                        const max = Math.max(...prixListe);
-
-                                        const intervalPrix = document.createElement('div');
-                                        intervalPrix.style.cssText = 'white-space: nowrap !important;';
-                                        intervalPrix.innerText = (min === max)
-                                            ? `${min.toFixed(2)}€`
-                                            : `${min.toFixed(2)}€ - ${max.toFixed(2)}€`;
-                                        el.nextElementSibling.nextElementSibling.nextElementSibling.appendChild(intervalPrix);
-                                    }
                                     resolve();
                                 });
                             });

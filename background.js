@@ -69,6 +69,7 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_catalog_shift_selection: true,
         catalog_color_remplacement_default: '#0052a3',
         catalog_color_highlight_default: '#fff7c6',
+        select_catalog_display_combinations_default: "resume",
         toggle_product_subtitle_display: true,
         toggle_product_preview_buttons: true,
         toggle_product_focus_auto: true,
