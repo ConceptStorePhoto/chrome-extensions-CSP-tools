@@ -1,7 +1,7 @@
 {
   "name": "CSP tools",
   "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto PrestaShop 8.2.0 - DEV par QuentinPerou",
-  "version": "1.33.4",
+  "version": "1.33.5",
   "manifest_version": 3,
   "homepage_url": "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools",
   "options_page": "options.html",
