@@ -1465,9 +1465,9 @@ function productActions() {
     });
 
     //// Partie Ajout ONGLET CSP_tools dans la fiche produit
-    chrome.storage.sync.get(["toggle_product_ongletCSPtools_dmuNew"], (data) => {
-        if (data.toggle_product_ongletCSPtools_dmuNew) {
-
+    chrome.storage.sync.get(["toggle_product_ongletCSPtools_dmuNew", "toggle_fnac_auto_remplissage"], (data) => {
+        const cspContent = document.createElement('div');
+        if (data.toggle_product_ongletCSPtools_dmuNew || data.toggle_fnac_auto_remplissage) {
             // Ajout d'un Onglet CSP_tools dans la nav-tabs
             const navTabs = document.querySelector('#form-nav');
             const cspTab = document.createElement('li');
@@ -1476,7 +1476,6 @@ function productActions() {
             cspTab.innerHTML = `<a href="#product_CSP-tab" role="tab" data-toggle="tab" class="nav-link" aria-selected="false">CSP_tools</a>`;
             navTabs.appendChild(cspTab);
             const tabContent = document.querySelector('#product-tabs-content');
-            const cspContent = document.createElement('div');
             cspContent.setAttribute('role', 'tabpanel');
             cspContent.className = 'form-contenttab tab-pane container-fluid';
             cspContent.id = 'product_CSP-tab';
@@ -1487,8 +1486,9 @@ function productActions() {
             if (hash === "#tab-product_CSP-tab") {
                 cspTab.querySelector('a').click(); // Simule un clic pour activer l'onglet
             }
+        }
 
-
+        if (data.toggle_product_ongletCSPtools_dmuNew) {
             const urlPage = new URL(window.location.href);
             const pathnameParts = urlPage.pathname.split("/");
             const productId = pathnameParts.includes("products-v2") ? pathnameParts[pathnameParts.indexOf("products-v2") + 1] : null;
@@ -1497,22 +1497,23 @@ function productActions() {
             const tokenDmu = urlElemMenuDMUnew.searchParams.get("token");
             console.log("✅ Token DMUnew extrait :", tokenDmu);
 
-            cspContent.innerHTML = `
-                <div id="CSP_tools-new-product">
-                    <h3>Gestion des nouveaux produits <a target="_blank" href="${location.origin}/logcncin/index.php?controller=AdminDmuBackToNew&token=${tokenDmu}"><i class="material-icons">open_in_new</i></a></h3>
-                    <div style="display: inline-block; gap: 10px; width: 100%; max-width: 400px;">
-                        <td class="column-action1">																																							
-                            <button id="btn-set-new" class="button btn btn-default btn-block" type="button">
-                                <i class="material-icons">new_label</i> Définir comme "Nouveauté"
-                            </button>
-                        </td>
+            const divNewProduct = document.createElement("div");
+            divNewProduct.id = "CSP_tools-new-product";
+            cspContent.appendChild(divNewProduct);
+            divNewProduct.innerHTML = `
+                <h3>Gestion des nouveaux produits <a target="_blank" href="${location.origin}/logcncin/index.php?controller=AdminDmuBackToNew&token=${tokenDmu}"><i class="material-icons">open_in_new</i></a></h3>
+                <div style="display: inline-block; gap: 10px; width: 100%; max-width: 400px;">
+                    <td class="column-action1">																																							
+                        <button id="btn-set-new" class="button btn btn-default btn-block" type="button">
+                            <i class="material-icons">new_label</i> Définir comme "Nouveauté"
+                        </button>
+                    </td>
 
-                        <td class="column-action2">
-                            <button id="btn-set-old" class="button btn btn-default btn-block" type="button">
-                                <i class="material-icons">label_off</i> Définir comme "Ancien produit"
-                            </button>
-                        </td>
-                    </div>
+                    <td class="column-action2">
+                        <button id="btn-set-old" class="button btn btn-default btn-block" type="button">
+                            <i class="material-icons">label_off</i> Définir comme "Ancien produit"
+                        </button>
+                    </td>
                 </div>
             `;
 
@@ -1539,6 +1540,76 @@ function productActions() {
 
             document.querySelector("#btn-set-old").addEventListener("click", () => {
                 sendRequest("setOld");
+            });
+        }
+
+        if (data.toggle_fnac_auto_remplissage) {
+            console.log("🚀 Script Fnac auto-remplissage lancé");
+            const divFnac = document.createElement("div");
+            divFnac.id = "CSP_tools-fnac-auto-remplissage";
+            cspContent.appendChild(divFnac);
+            divFnac.innerHTML = `
+                <h3 style="margin-top:20px; margin-bottom:5px;">Ajout sur Fnac</h3>
+                <p><a target="_blank" href="https://mp.fnac.com/compte/vendeur/inventaire/ajouter-produit">Ouvrir la création de produit Fnac : https://mp.fnac.com/compte/vendeur/inventaire/ajouter-produit</a></p>
+                <div style="display: inline-block; gap: 10px; width: 100%; max-width: 400px;">
+                    <button id="btn-fnac-remplir-ean" class="button btn btn-default btn-block" type="button" disabled> Remplir Code EAN </button>
+                    <button id="btn-fnac-remplir-fiche" class="button btn btn-default btn-block" type="button" disabled> Remplir fiche produit </button>
+                </div>
+            `;
+            const btnEan = document.querySelector("#btn-fnac-remplir-ean");
+            const btnFiche = document.querySelector("#btn-fnac-remplir-fiche");
+
+            // écouter les messages qui arrivent
+            chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+                console.log("📩 Message reçu dans content-admin-catalog :", message);
+                if (message.action === "page_fnac_ean_ready") {
+                    if (btnEan) btnEan.disabled = !message.ready;
+                    // if (!message.ready) displayNotif("⚠️ Page Fnac EAN non prête – boutons désactivés");
+                    else displayNotif("✅ Page Fnac EAN prête – boutons activés");
+                }
+                else if (message.action === "page_fnac_fiche_ready") {
+                    if (btnFiche) btnFiche.disabled = !message.ready;
+                    // if (!message.ready) displayNotif("⚠️ Page Fnac FICHE non prête – boutons désactivés");
+                    else displayNotif("✅ Page Fnac FICHE prête – boutons activés");
+                }
+                else if (message.action === "fnac_fill_completed") {
+                    if (message.data.page === "ean") {
+                        displayNotif("✅ Code EAN rempli avec succès sur Fnac !");
+                    } else if (message.data.page === "fiche") {
+                        displayNotif("✅ Fiche produit remplie avec succès sur Fnac !");
+                    }
+                }
+            });
+
+            document.querySelector("#btn-fnac-remplir-ean").addEventListener("click", (event) => {
+                const ean = document.querySelector("#product_details_references_ean_13")?.value.trim() || null;
+                if (!ean) return displayNotif("⚠️ Pas de code EAN !");
+                if (ean) {
+                    console.log("➡️ Envoi du code EAN à la popup Fnac :", ean);
+                    chrome.runtime.sendMessage({
+                        type: "broadcast",
+                        action: "ean",
+                        data: { code: ean }
+                    });
+                }
+                // event.currentTarget.disabled = true; // éviter les envois multiples
+            });
+            document.querySelector("#btn-fnac-remplir-fiche").addEventListener("click", (event) => {
+                console.log("➡️ Envoi des infos FICHE à la popup Fnac (à compléter)");
+                chrome.runtime.sendMessage({
+                    type: "broadcast",
+                    action: "fiche",
+                    data: {
+                        etat: `4`,
+                        description: `Garantie de 6 mois - Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concept Store Photo de Nantes, Rennes et Vannes`,
+                        prix: parseFloat(document.querySelector("#product_pricing_retail_price_price_tax_included")?.value.trim()) || null,
+                        categorie: `104`,
+                        ref: document.querySelector("#product_details_references_reference")?.value.trim() || null,
+                        commentaire: `AICM: ${document.querySelector("#product_details_references_reference")?.value.trim()}`,
+                        delai: `2`,
+                    }
+                });
+                // event.currentTarget.disabled = true;
             });
         }
     });

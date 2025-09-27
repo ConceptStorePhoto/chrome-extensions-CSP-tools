@@ -199,12 +199,61 @@ function updateContextMenu() {
     });
 }
 
-// Réagir aux messages depuis la popup
-chrome.runtime.onMessage.addListener((msg) => {
+// écoute tous les messages
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    console.log("📩 Message reçu dans background :", msg);
+
+    // mise à jour menu contextuel
     if (msg.type === "updateContextMenu") {
         updateContextMenu();
     }
+
+    // gestion des broadcasts (Prestashop <-> Fnac)
+    if (msg.type === "broadcast") {
+        chrome.tabs.query({}, (tabs) => {
+            for (const tab of tabs) {
+                if (tab.id === sender.tab?.id || !tab.url) continue;
+
+                const isFromFnac = sender.tab?.url?.includes("fnac.com");
+                const isFromPresta = sender.tab?.url?.includes("conceptstorephoto");
+
+                if (isFromFnac && tab.url.includes("conceptstorephoto")) {
+                    chrome.tabs.sendMessage(tab.id, msg).catch(() => { });
+                }
+                if (isFromPresta && tab.url.includes("fnac.com")) {
+                    chrome.tabs.sendMessage(tab.id, msg).catch(() => { });
+                }
+            }
+        });
+    }
+
+    sendResponse({ status: "ok" }); // réponse obligatoire
 });
+
+chrome.webNavigation.onBeforeNavigate.addListener((details) => {
+    if (details.url.includes("fnac.com")) {
+        console.log("🌍 Fnac change de page → reset état");
+
+        chrome.tabs.query({}, (tabs) => {
+            for (const tab of tabs) {
+                const url = tab.url || "";
+                if (url.includes("conceptstorephoto.fr")) {
+                    chrome.tabs.sendMessage(tab.id, {
+                        type: "broadcast",
+                        action: "page_fnac_ean_ready",
+                        ready: false
+                    });
+                    chrome.tabs.sendMessage(tab.id, {
+                        type: "broadcast",
+                        action: "page_fnac_fiche_ready",
+                        ready: false
+                    });
+                }
+            }
+        });
+    }
+});
+
 
 // Action quand l’utilisateur clique sur l’entrée du menu
 chrome.contextMenus.onClicked.addListener((info, tab) => {
