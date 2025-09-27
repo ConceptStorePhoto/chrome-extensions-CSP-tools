@@ -214,6 +214,7 @@ function catalogActions() {
                                         activePromos.forEach(promo => {
                                             const span = document.createElement("span");
                                             span.style.cssText = "display:block; white-space: normal !important; color:red; font-weight:bold;";
+                                            span.title = `Promo active du ${promo.period.from} au ${promo.period.to} \nDéclinaison: ${promo.combination}\nImpact: ${promo.impact}${promo.price && promo.price != "--" ? `\nPrix Spé : ${promo.price}` : ""}`;
                                             span.innerText = promo.impact;
                                             if (promo.price && promo.price != "--")
                                                 span.innerText = span.innerText + `\nPrix Spé : ${promo.price}`;
