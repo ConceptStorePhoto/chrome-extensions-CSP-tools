@@ -213,9 +213,21 @@ function catalogActions() {
                                     if (activePromos.length > 0) {
                                         activePromos.forEach(promo => {
                                             const span = document.createElement("span");
-                                            span.style.cssText = "display:block; white-space: normal !important; color:red; font-weight:bold;";
+                                            span.style.cssText = "display:block; white-space: normal !important; color:#e70000; font-weight:bold;";
                                             span.title = `Promo active du ${promo.period.from} au ${promo.period.to} \nDéclinaison: ${promo.combination}\nImpact: ${promo.impact}${promo.price && promo.price != "--" ? `\nPrix Spé : ${promo.price}` : ""}`;
                                             span.innerText = promo.impact;
+                                            if (promo.price && promo.price != "--")
+                                                span.innerText = span.innerText + `\nPrix Spé : ${promo.price}`;
+                                            el.parentElement.querySelector('.column-price_tax_included').appendChild(span);
+                                        });
+                                    }
+                                    const comingPromos = liste.filter(isSpecificPricesComming);
+                                    if (comingPromos.length > 0) {
+                                        comingPromos.forEach(promo => {
+                                            const span = document.createElement("span");
+                                            span.style.cssText = "display:block; white-space: normal !important; color:green; font-weight:bold;";
+                                            span.title = `Promo à venir du ${promo.period.from} au ${promo.period.to} \nDéclinaison: ${promo.combination}\nImpact: ${promo.impact}${promo.price && promo.price != "--" ? `\nPrix Spé : ${promo.price}` : ""}`;
+                                            span.innerText = `À venir: ${promo.impact}`;
                                             if (promo.price && promo.price != "--")
                                                 span.innerText = span.innerText + `\nPrix Spé : ${promo.price}`;
                                             el.parentElement.querySelector('.column-price_tax_included').appendChild(span);
@@ -2102,6 +2114,12 @@ function isSpecificPricesActive(promo) {
     if (from && now < from) return false;
     if (to && now > to) return false;
     return true;
+}
+function isSpecificPricesComming(promo) {
+    const now = new Date();
+    const from = (promo.period && promo.period.from && promo.period.from !== "Toujours") ? new Date(promo.period.from) : null;
+    if (from && now < from) return true;
+    return false;
 }
 
 function displayNotif(message, duree) {
