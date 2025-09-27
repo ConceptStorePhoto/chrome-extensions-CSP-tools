@@ -63,6 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("✅ Colissimo detected", hostname);
                 document.getElementById("COLISSIMOtools").classList.remove('hide');
                 document.getElementById("refreshContainer").classList.remove('hide');
+            } else if (hostname.includes("fnac.com")) {
+                console.log("✅ Fnac detected", hostname);
+                document.getElementById("fnacTools").classList.remove('hide');
+                document.getElementById("refreshContainer").classList.remove('hide');
             } else {
                 console.log("ℹ️ Site non reconnu :", hostname);
                 document.getElementById("infoMessage").textContent = `Site non reconnu : ${hostname}`;
