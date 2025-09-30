@@ -78,6 +78,14 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
         }
 
     });
+
+    // coche automatiquement la case "Montrer au client" dans le champ message
+    const checkboxMessage = document.querySelector('#order_message_is_displayed_to_customer');
+    if (checkboxMessage) {
+        checkboxMessage.checked = true;
+        checkboxMessage.dispatchEvent(new Event('change'));
+    }
+
 }
 else if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "") {
     console.log("✅ Page Liste des commandes, ajout des actions...");
