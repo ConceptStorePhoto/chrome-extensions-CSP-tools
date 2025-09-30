@@ -86,6 +86,12 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
         checkboxMessage.dispatchEvent(new Event('change'));
     }
 
+    // modifie la hauteur du champ message
+    const textareaMessage = document.querySelector('#order_message_message');
+    if (textareaMessage) {
+        textareaMessage.style.height = "200px";
+    }
+
 }
 else if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "") {
     console.log("✅ Page Liste des commandes, ajout des actions...");
