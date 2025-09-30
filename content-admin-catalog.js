@@ -2336,7 +2336,7 @@ function createPresetSystem(config) {
                     isExpired = true;
                 }
             }
-            btn.className = "btn btn-sm " + (isExpired ? "btn-danger" : "btn-outline-primary");// Classe selon statut
+            btn.className = "btn btn-sm " + (isExpired ? "btn-outline-danger" : "btn-outline-primary");// Classe selon statut
 
             btn.addEventListener("click", () => applyPresetFn(item));
 
