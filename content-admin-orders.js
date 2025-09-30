@@ -92,7 +92,10 @@ else if (window.location.pathname.includes("orders") && window.location.pathname
             document.querySelectorAll('.column-tracking_number').forEach((el) => {
                 el.style.minWidth = "120px";
                 const trackingNumber = el.innerText.trim();
-                el.innerHTML = `<a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${trackingNumber}" target="_blank" title="Ouvrir le Suivi sur le site de La Poste">${trackingNumber}</a>`;
+                if (trackingNumber.length == 13) // Colissimo
+                    el.innerHTML = `<a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${trackingNumber}" target="_blank" title="Ouvrir le Suivi de La Poste">${trackingNumber}</a>`;
+                else if (trackingNumber.length == 18) // UPS
+                    el.innerHTML = `<a href="https://www.ups.com/track?InquiryNumber1=${trackingNumber}&loc=fr_FR&TypeOfInquiryNumber=T&requester=ST/trackdetails" target="_blank" title="Ouvrir le Suivi UPS">${trackingNumber}</a>`;
             });
         }
         if (data.toggle_orders_retraitMagasin) {
