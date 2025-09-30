@@ -27,59 +27,6 @@ const divContainer = document.createElement('div');
 divContainer.setAttribute('style', 'display: flex;flex-direction: column;position: fixed;top: 50%;right: 5px;z-index: 99999;gap:5px;transform: translateY(-50%);');
 document.body.appendChild(divContainer);
 
-/////////// FONCTIONS TEXTE & CLAVIER ///////////
-
-function simulateTyping(selector, text) {
-    const input = selector;
-    if (!input) return;
-
-    input.focus();
-
-    for (const char of text) {
-        const event = new KeyboardEvent("keydown", {
-            key: char,
-            code: char,
-            charCode: char.charCodeAt(0),
-            keyCode: char.charCodeAt(0),
-            which: char.charCodeAt(0),
-            bubbles: true,
-            cancelable: true
-        });
-        input.dispatchEvent(event);
-        input.value += char;
-
-        const inputEvent = new Event("input", {
-            bubbles: true,
-            cancelable: true,
-        });
-        input.dispatchEvent(inputEvent);
-    }
-}
-
-function simulateKeyPress(selector, key) {
-    const event = new KeyboardEvent("keydown", {
-        key: key,           // ex: "ArrowDown"
-        code: key,          // ex: "ArrowDown"
-        keyCode: keyMap[key], // pour compatibilité avec certains sites
-        which: keyMap[key],
-        bubbles: true,
-        cancelable: true
-    });
-
-    if (!selector)
-        document.dispatchEvent(event);
-    else
-        selector.dispatchEvent(event);
-}
-// mappage des touches vers leurs keyCodes
-const keyMap = {
-    ArrowDown: 40,
-    ArrowUp: 38,
-    ArrowLeft: 37,
-    ArrowRight: 39,
-    Enter: 13,
-    Tab: 9
-};
 
 /////////// DETECTION CHANGEMENT URL ///////////
 
@@ -137,6 +84,9 @@ function verificationUrlPage(url) {
     else if (url.includes('/compte/pro/mon-activite')) {
         console.log("➡️ page Mon Activité")
         actionPageActivite();
+    } else if (url.includes('/annonce/') && (url.includes('/prolonger') || url.includes('/editer'))) {
+        console.log("➡️ page Prolonger l'annonce")
+        presetAdresse();
     }
     else {
         console.log("➡️ Pas d'action ici = CLEAN")
@@ -237,8 +187,6 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
                             simulateKeyPress(champProduit, "Enter");
                         }
                     }
-
-
                 }
 
                 const testCategorie = [
@@ -279,9 +227,7 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
                 // console.log("➡️ Test catégorie : ", trouverCategorie(data.lbc_copy_data.name));
 
             });
-
         });
-
     });
 
     chrome.storage.sync.get("toggle_lbc_livraison", (data) => {
@@ -317,12 +263,14 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
                     button.click(); // Simule un clic pour décocher
                 }
             });
-
         });
-
     });
 
+    presetAdresse();
 
+}
+
+function presetAdresse() {
     chrome.storage.sync.get("toggle_lbc_adress", (data) => {
         if (!data.toggle_lbc_adress) return; // Ne rien faire si désactivé
 
@@ -358,7 +306,6 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
             });
             divContainer.appendChild(btn);
         });
-
     });
 }
 
@@ -423,41 +370,56 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// function trouverCategorie(nomProduit) {
-//     const testProduit = [
-//         {
-//             regex: "EXTENDER|TELECONVERTER|BAGUE|FLASH|FTZ|PROFOTO|GRIP",
-//             categorie: "Accessoires"
-//         },
-//         {
-//             regex: "XF \\d{1,}|EF \\d{1,}|RF \\d{1,}|AF \\d{1,}|FE \\d{1,}|Z \\d{1,}|SL \\d{1,}|\\d+-\\d+|\\d+ [F]?\\d+(\\.\\d+)?|SUMMILUX|SUMMICRON",
-//             categorie: "Objectifs"
-//         },
-//         {
-//             regex: "FUJIFILM X-|FUJI X-|NIKON D\\d{1,}",
-//             categorie: "Appareil photos"
-//         }
-//     ];
-//     for (const test of testProduit) {
-//         const regex = new RegExp(test.regex, "i"); // "i" pour ignorer la casse
-//         if (regex.test(nomProduit)) {
-//             return test.categorie;
-//         }
-//     }
-//     return "Catégorie inconnue";
-// }
+/////////// FONCTIONS TEXTE & CLAVIER ///////////
 
+function simulateTyping(selector, text) {
+    const input = selector;
+    if (!input) return;
 
-// function trouverMarque(nomProduit) {
-//   const debut = nomProduit.slice(0, 15).toUpperCase();
+    input.focus();
 
-//   for (const test of testMarques) {
-//     const regex = new RegExp(test.regex, "i");
-//     if (regex.test(debut)) {
-//       return test.marque;
-//     }
-//   }
+    for (const char of text) {
+        const event = new KeyboardEvent("keydown", {
+            key: char,
+            code: char,
+            charCode: char.charCodeAt(0),
+            keyCode: char.charCodeAt(0),
+            which: char.charCodeAt(0),
+            bubbles: true,
+            cancelable: true
+        });
+        input.dispatchEvent(event);
+        input.value += char;
 
-//   return "Marque inconnue";
-// }
+        const inputEvent = new Event("input", {
+            bubbles: true,
+            cancelable: true,
+        });
+        input.dispatchEvent(inputEvent);
+    }
+}
 
+function simulateKeyPress(selector, key) {
+    const event = new KeyboardEvent("keydown", {
+        key: key,           // ex: "ArrowDown"
+        code: key,          // ex: "ArrowDown"
+        keyCode: keyMap[key], // pour compatibilité avec certains sites
+        which: keyMap[key],
+        bubbles: true,
+        cancelable: true
+    });
+
+    if (!selector)
+        document.dispatchEvent(event);
+    else
+        selector.dispatchEvent(event);
+}
+// mappage des touches vers leurs keyCodes
+const keyMap = {
+    ArrowDown: 40,
+    ArrowUp: 38,
+    ArrowLeft: 37,
+    ArrowRight: 39,
+    Enter: 13,
+    Tab: 9
+};
