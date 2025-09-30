@@ -213,7 +213,7 @@ function catalogActions() {
                                     if (activePromos.length > 0) {
                                         activePromos.forEach(promo => {
                                             const span = document.createElement("span");
-                                            span.style.cssText = "display:block; white-space: normal !important; color:#e70000; font-weight:bold;";
+                                            span.style.cssText = "display:block; white-space: nowrap; color:#e70000; font-weight:bold;";
                                             span.title = `Promo active du ${promo.period?.from} au ${promo.period?.to} \nDéclinaison: ${promo.combination}\nImpact: ${promo.impact}${promo.price && promo.price != "--" ? `\nPrix Spé : ${promo.price}` : ""}`;
                                             span.innerText = promo.impact;
                                             if (promo.price && promo.price != "--")
@@ -225,7 +225,7 @@ function catalogActions() {
                                     if (comingPromos.length > 0) {
                                         comingPromos.forEach(promo => {
                                             const span = document.createElement("span");
-                                            span.style.cssText = "display:block; white-space: normal !important; color:green; font-weight:bold;";
+                                            span.style.cssText = "display:block; white-space: nowrap; color:green; font-weight:bold;";
                                             span.title = `Promo à venir du ${promo.period?.from} au ${promo.period?.to} \nDéclinaison: ${promo.combination}\nImpact: ${promo.impact}${promo.price && promo.price != "--" ? `\nPrix Spé : ${promo.price}` : ""}`;
                                             span.innerText = `À venir: ${promo.impact}`;
                                             if (promo.price && promo.price != "--")
