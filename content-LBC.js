@@ -235,6 +235,22 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
 
         console.log("🔄 Ajout du bouton désélection livraison");
 
+        const boutonPoid = document.createElement('span');
+        boutonPoid.className = "btn-swap";
+        boutonPoid.innerText = "Poid 500g-1kg";
+        boutonPoid.style.backgroundColor = ' #ad5820';
+        divContainer.appendChild(boutonPoid);
+        boutonPoid.addEventListener('click', () => {
+            const inputPoid = document.querySelector('div[data-rhf-name="estimated_parcel_weight"] input');
+            inputPoid.value = "";
+            (async () => {
+                simulateTyping(inputPoid, "De 500 g à 1 kg");
+                simulateKeyPress(inputPoid, "ArrowDown");
+                await sleep(10);
+                simulateKeyPress(inputPoid, "Enter");
+            })();
+        });
+
         const bouton = document.createElement('span');
         bouton.className = "btn-swap";
         bouton.innerText = "Pas de livraison";
