@@ -53,6 +53,12 @@ function catalogActions() {
                 filtreCategorie.style.maxHeight = "70vh"; // Limite la hauteur du menu déroulant des catégories
                 filtreCategorie.style.width = "400px";
                 filtreCategorie.style.overflowY = "auto";
+
+                //déplie le 1er niveau de catégories
+                const premiersNiveaux = filtreCategorie.querySelector('#category_filter > ul > li.category-node.more > div');
+                console.log("Dépliage du 1er niveau de catégories", premiersNiveaux);
+                if (premiersNiveaux)
+                    premiersNiveaux.click();
             }
 
             if (data.toggle_catalog_copy_aicm_buttons) {
