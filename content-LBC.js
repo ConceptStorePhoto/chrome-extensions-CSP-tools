@@ -237,7 +237,7 @@ Retrouvez toutes nos offres sur notre site internet et dans nos boutiques Concep
 
         const boutonPoid = document.createElement('span');
         boutonPoid.className = "btn-swap";
-        boutonPoid.innerText = "Poid 500g-1kg";
+        boutonPoid.innerText = "Poids 500g-1kg";
         boutonPoid.style.backgroundColor = ' #ad5820';
         divContainer.appendChild(boutonPoid);
         boutonPoid.addEventListener('click', () => {
@@ -293,9 +293,9 @@ function presetAdresse() {
         console.log("🔄 Ajout boutons Adresse");
 
         const adress = [
-            { name: "Nantes", adress: "2 Place de la Petite Hollande, 44000 Nantes", tel: "0240696136" },
+            { name: "Vannes", adress: "3 place Lucien Laroche, 56000 Vannes", tel: "0297543881" },
             { name: "Rennes", adress: "4 rue du pré botté, 35000 Rennes", tel: "0299792340" },
-            { name: "Vannes", adress: "3 place Lucien Laroche, 56000 Vannes", tel: "0297543881" }
+            { name: "Nantes", adress: "2 Place de la Petite Hollande, 44000 Nantes", tel: "0240696136" },
         ];
 
         adress.forEach((entry) => {
