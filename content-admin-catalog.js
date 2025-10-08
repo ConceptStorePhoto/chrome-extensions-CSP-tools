@@ -1489,6 +1489,7 @@ function productActions() {
         if (data.toggle_product_ongletCSPtools_dmuNew || data.toggle_fnac_auto_remplissage) {
             // Ajout d'un Onglet CSP_tools dans la nav-tabs
             const navTabs = document.querySelector('#form-nav');
+            navTabs.style.width = 'auto';
             const cspTab = document.createElement('li');
             cspTab.className = 'nav-item';
             cspTab.id = 'product_CSP-tab-nav';
@@ -1570,6 +1571,7 @@ function productActions() {
             divFnac.innerHTML = `
                 <h3 style="margin-top:20px; margin-bottom:5px;">Ajout sur Fnac</h3>
                 <p><a target="_blank" href="https://mp.fnac.com/compte/vendeur/inventaire/ajouter-produit">Ouvrir la création de produit Fnac : https://mp.fnac.com/compte/vendeur/inventaire/ajouter-produit</a></p>
+                <p><a target="_blank" href="https://vendeur.fnac.com/compte/vendeur/inventaire/ajouter-produit">Ouvrir la création de produit Fnac : https://vendeur.fnac.com/compte/vendeur/inventaire/ajouter-produit</a></p>
                 <div style="display: inline-block; gap: 10px; width: 100%; max-width: 400px;">
                     <button id="btn-fnac-remplir-ean" class="button btn btn-default btn-block" type="button" disabled> Remplir Code EAN </button>
                     <button id="btn-fnac-remplir-fiche" class="button btn btn-default btn-block" type="button" disabled> Remplir fiche produit </button>
@@ -1974,6 +1976,8 @@ function productActions() {
 
                     document.querySelectorAll('.shortcuts .affect_quantities').forEach((el) => {
                         el.classList.add('disabled'); // désactive les boutons car ne fonctionne pas quand les 3 stocks sont affichés
+                        const table = el.parentElement.querySelector('table.sbs_table_quantities');
+                        
                     });
 
                     document.querySelectorAll(".sbs_table_box h2").forEach(h2 => {

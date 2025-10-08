@@ -19,7 +19,7 @@ document.querySelectorAll('.column-link_rewrite').forEach(cell => {
     bouton.style.padding = "4px 8px";
     bouton.onclick = (event) => {
         event.preventDefault();
-        // event.stopPropagation(); // évite les comportements attachés ailleurs
+        event.stopPropagation(); // évite les comportements attachés ailleurs
         navigator.clipboard.writeText(lienPage).then(() => {
             bouton.innerText = "✅";
             setTimeout(() => (bouton.innerText = "📋"), 1500);
