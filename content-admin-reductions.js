@@ -1,37 +1,6 @@
 console.log("✅ Script injecté !  content-admin-reductions.js");
 
 
-
-//// Lance l'injection DE TOUT par lot de 10 
-// injectSubtitles(10);
-
-
-// const select = document.querySelector('#product_rule_select_1_1_1');
-// if (!select) console.warn("❌ Select introuvable.");
-// const options = select.querySelectorAll('option');
-// console.log(options);
-// options.forEach(opt => {
-//     opt.addEventListener('click', () => {
-//         const productId = opt.value.trim();
-//         console.log('Recherche sous-titre pour ID:', productId);
-//         if (!productId || isNaN(productId)) return;
-//         getSubtitle(productId, subtitle => {
-//             console.log(`[${productId}] → ${subtitle}`);
-//             if (subtitle && subtitle !== "false") {
-//                 const span = document.createElement("span");
-//                 span.innerText = ` – ${subtitle}`;
-//                 span.style.fontStyle = "italic";
-//                 span.style.color = "#666";
-//                 // const current = opt.textContent.trim();
-//                 // opt.innerHTML = `${current}`;
-//                 opt.appendChild(span);
-//             }
-//         });
-//     });
-// });
-
-
-
 const select = document.querySelector('#product_rule_select_1_1_1');
 if (!select) {
     console.warn("❌ Select introuvable (#product_rule_select_1_1_1) introuvable.");
@@ -58,11 +27,11 @@ if (!select) {
                 if (o.dataset.subtitleLoaded === "1") return;
 
                 getSubtitle(id, subtitle => {
+                    console.log(`[${productId}] → ${subtitle}`);
                     if (!subtitle || subtitle === "false") {
                         o.dataset.subtitleLoaded = "1"; // on marque quand même pour éviter recharges inutiles
                         return;
                     }
-                    console.log(`[${productId}] → ${subtitle}`);
 
                     // ajoute le sous-titre visuellement
                     const span = document.createElement("span");
@@ -81,13 +50,12 @@ if (!select) {
 }
 
 
-
-
 // Contrôleur d'annulation des fetch en cours lors du changement de page
 const fetchController = new AbortController();
 window.addEventListener("beforeunload", () => {
     fetchController.abort(); // annule toutes les requêtes en cours
 });
+
 
 function getSubtitle(productId, callback) {
     if (!productId) {
@@ -112,59 +80,15 @@ function getSubtitle(productId, callback) {
     })
         .then(r => r.text())
         .then(txt => callback(txt.trim() || null))
+        // .then(txt => {
+        //     const clean = txt.trim().replace(/^"(.*)"$/, '$1') || null;
+        //     callback(clean);
+        // })
         .catch(err => {
             if (err.name !== "AbortError")
                 console.error(`[${new Date().toLocaleString()}] ❌ Erreur pour ${productId} :`, err);
             callback(null);
         });
-}
-
-function getAllProductIds() {
-    const select = document.querySelector('#product_rule_select_1_1_1');
-    if (!select) {
-        console.warn("❌ Impossible de trouver le select #product_rule_select_1_1_1");
-        return [];
-    }
-
-    return Array.from(select.querySelectorAll('option'))
-        .map(opt => opt.value.trim())
-        .filter(v => v && !isNaN(v));
-}
-
-async function injectSubtitles(batchSize = 10) {
-    displayNotif("⏳ Injection des sous-titres en cours... (ça va être très long...)", 10000);
-    const select = document.querySelector('#product_rule_select_1_1_1');
-    if (!select) return console.warn("❌ Select introuvable.");
-
-    const options = Array.from(select.querySelectorAll('option'));
-    const ids = options.map(o => o.value.trim()).filter(v => v && !isNaN(v));
-
-    for (let i = 0; i < ids.length; i += batchSize) {
-        const batch = ids.slice(i, i + batchSize);
-
-        await Promise.all(batch.map(id => new Promise(resolve => {
-            getSubtitle(id, subtitle => {
-                console.log(`[${id}] → ${subtitle}`);
-                const option = options.find(o => o.value === id);
-                if (option && subtitle && subtitle !== "false") {
-                    // on insère le span <i>
-                    const span = document.createElement("span");
-                    span.innerText = ` – ${subtitle}`;
-                    span.style.fontStyle = "italic";
-                    span.style.color = "#666";
-
-                    // on remplace le contenu visuel
-                    const current = option.textContent.trim();
-                    option.innerHTML = `${current}`;
-                    option.appendChild(span);
-                }
-                resolve();
-            });
-        })));
-    }
-
-    console.log("✅ Sous-titres injectés dans toutes les options.");
-    if (typeof displayNotif === "function") displayNotif("✅ Sous-titres injectés !");
 }
 
 
