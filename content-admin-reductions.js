@@ -18,6 +18,7 @@ if (!select) {
             const nearbyOptions = options.slice(start, end);
 
             console.log(`🔍 Chargement des sous-titres de ${start} à ${end - 1}`);
+            displayNotif(`🔍 Chargement des sous-titres de ${start} à ${end - 1}`);
 
             nearbyOptions.forEach(o => {
                 const id = o.value.trim();
@@ -45,6 +46,7 @@ if (!select) {
                     o.dataset.subtitleText = subtitle;
                 });
             });
+            displayNotif(`✅ Chargement des sous-titres de ${start} à ${end - 1} terminé !`);
         });
     });
 }
