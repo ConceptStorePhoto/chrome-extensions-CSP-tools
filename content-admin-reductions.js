@@ -1,12 +1,15 @@
 console.log("✅ Script injecté !  content-admin-reductions.js");
 
 
+const select2 = document.querySelector('#product_rule_select_1_1_2');
 const select = document.querySelector('#product_rule_select_1_1_1');
-if (!select) {
-    console.warn("❌ Select introuvable (#product_rule_select_1_1_1) introuvable.");
-} else {
-    const options = Array.from(select.querySelectorAll('option'));
 
+attachSubtitleLoader(select);
+attachSubtitleLoader(select2);
+
+function attachSubtitleLoader(select) {
+    if (!select) return console.warn(`[${new Date().toLocaleString()}] ❌ Select introuvable introuvable.`, select);
+    const options = Array.from(select.querySelectorAll('option'));
     options.forEach((opt, index) => {
         opt.addEventListener('click', () => {
             const productId = opt.value.trim();
@@ -81,7 +84,7 @@ function getSubtitle(productId, callback) {
         signal: fetchController?.signal
     })
         .then(r => r.text())
-        .then(txt => callback(txt.trim() || null))
+        .then(txt => callback(decodeUnicode(txt.trim()) || null))
         // .then(txt => {
         //     const clean = txt.trim().replace(/^"(.*)"$/, '$1') || null;
         //     callback(clean);
@@ -91,6 +94,14 @@ function getSubtitle(productId, callback) {
                 console.error(`[${new Date().toLocaleString()}] ❌ Erreur pour ${productId} :`, err);
             callback(null);
         });
+}
+
+function decodeUnicode(str) {
+    try {
+        return JSON.parse('"' + str.replace(/"/g, '\\"') + '"');
+    } catch {
+        return str;
+    }
 }
 
 
