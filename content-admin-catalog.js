@@ -492,6 +492,7 @@ function productActions() {
         "toggle_product_smart_category",
         "toggle_product_specificPrices_color",
         "toggle_product_insertSeoTitleButton",
+        "toggle_product_insertUrlButton",
         "toggle_product_cleanEditorNote",
         "toggle_product_EncartOffrePageProduit_preset",
         "toggle_product_download_all_images",
@@ -1298,6 +1299,59 @@ function productActions() {
                 insertSeoTitle();
                 displayNotif("✅ SEO Title généré automatiquement (car vide)");
             }
+        }
+
+        if (data.toggle_product_insertUrlButton) {
+            console.log("🔄️ Ajout du bouton URL Custom");
+            const inputUrl = document.getElementById('product_seo_link_rewrite_1');
+
+            // Création du bouton
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.id = "CSP_tools-generate-url-btn";
+            btn.className = "btn btn-outline-secondary mt-1";
+            btn.innerHTML = "Générer l'url : <i>[brand]-[name]-[subtitle]</i>";
+            document.getElementById('product_seo_link_rewrite')?.parentElement.appendChild(btn);
+            btn.addEventListener("click", insertUrl);
+
+            function insertUrl() {
+                let name = document.querySelector("#product_header_name_1")?.value.trim() || "";
+                const subtitle = document.querySelector("#product_description_subtitle")?.value.trim() || "";
+
+                // Marque (span Select2 en priorité, sinon <select>)
+                const brandSpan = document.querySelector("#select2-product_description_manufacturer-container");
+                const brandSelect = document.querySelector("#product_description_manufacturer option:checked");
+                let brand = brandSpan?.textContent.trim() || brandSelect?.textContent.trim() || "";
+                if (brand === "Aucune marque") brand = "";
+
+                // Si la marque est déjà incluse dans le nom, la supprimer du début
+                if (brand && name) {
+                    const words = name.split(" ");
+                    const firstWord = (words[0] || "").toLowerCase();
+                    if (brand.toLowerCase() === firstWord || brand.toLowerCase().slice(0, 4) === firstWord.slice(0, 4)) {
+                        words.shift();
+                        name = words.join(" ").trim();
+                    }
+                }
+
+                const urlRaw = `${brand} ${name} ${subtitle}`.trim();
+
+                // --- Normalisation de l'URL ---
+                const urlGenerated = urlRaw
+                    .normalize("NFD")                      // décompose les accents
+                    .replace(/[\u0300-\u036f]/g, "")       // supprime les diacritiques
+                    .toLowerCase()                         // met tout en minuscule
+                    .replace(/[^a-z0-9]+/g, "-")           // remplace tout caractère non autorisé par "-"
+                    .replace(/^-+|-+$/g, "")               // supprime les tirets au début et à la fin
+                    .replace(/--+/g, "-");                 // évite les tirets doubles
+
+                if (inputUrl) {
+                    inputUrl.value = urlGenerated;
+                    inputUrl.dispatchEvent(new Event("input", { bubbles: true }));
+                    inputUrl.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+            }
+
         }
 
         if (data.toggle_product_cleanEditorNote) {
