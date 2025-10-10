@@ -367,4 +367,19 @@ chrome.commands.onCommand.addListener((command) => {
             }
         });
     }
+    else if (command === "ToggleEditBtn") {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs[0]?.id) {
+                chrome.scripting.executeScript({
+                    target: { tabId: tabs[0].id },
+                    func: () => {
+                        // Fonction à éxécuter
+                        document.querySelectorAll('.CSP_tools-custom-btn').forEach((elem) => {
+                            elem.classList.toggle('hide-btn');
+                        });
+                    }
+                });
+            }
+        });
+    }
 });

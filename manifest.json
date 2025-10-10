@@ -1,7 +1,7 @@
 {
   "name": "CSP tools",
   "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto PrestaShop 8.2.0 - DEV par QuentinPerou",
-  "version": "1.36.2",
+  "version": "1.36.3",
   "manifest_version": 3,
   "homepage_url": "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools",
   "options_page": "options.html",
@@ -143,6 +143,13 @@
         "mac": "Alt+Shift+D"
       },
       "description": "PrestaShop : Ouverir preview depuis modif produit"
+    },
+    "ToggleEditBtn": {
+      "suggested_key": {
+        "default": "Alt+Shift+A",
+        "mac": "Alt+Shift+A"
+      },
+      "description": "PrestaShop : Afficher/Masquer les boutons d'édition produit de  l'extenssion"
     }
   },
   "permissions": [

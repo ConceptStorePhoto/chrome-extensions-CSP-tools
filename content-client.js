@@ -194,6 +194,7 @@ function insertBtnStyle() {
         .CSP_tools-custom-btn:hover{
             color: #000;
         }
+        .hide-btn { display: none !important; }
     `;
     document.head.appendChild(style);
 }
