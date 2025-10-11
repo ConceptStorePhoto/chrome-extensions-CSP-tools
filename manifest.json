@@ -1,7 +1,7 @@
 {
   "name": "CSP tools",
   "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto PrestaShop 8.2.0 - DEV par QuentinPerou",
-  "version": "1.37.0",
+  "version": "1.37.2",
   "manifest_version": 3,
   "homepage_url": "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools",
   "options_page": "options.html",
@@ -76,6 +76,8 @@
         "https://www.conceptstorephoto.fr/logcncin/index.php?controller=AdminSpecificPriceRule*"
       ],
       "js": [
+        "functions/function-displayNotif.js",
+        "functions/function-getSubtitle.js",
         "content-admin-reductions.js"
       ]
     },
