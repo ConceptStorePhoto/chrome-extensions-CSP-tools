@@ -85,6 +85,17 @@
     },
     {
       "matches": [
+        "https://concept-store-photo.dmu.sarl/logcncin/index.php?controller=AdminCEEditor*",
+        "https://www.conceptstorephoto.fr/logcncin/index.php?controller=AdminCEEditor*"
+      ],
+      "js": [
+        "functions/function-displayNotif.js",
+        "functions/function-getSubtitle.js",
+        "content-admin-creativeElements.js"
+      ]
+    },
+    {
+      "matches": [
         "https://concept-store-photo.dmu.sarl/*",
         "https://www.conceptstorephoto.fr/*"
       ],
