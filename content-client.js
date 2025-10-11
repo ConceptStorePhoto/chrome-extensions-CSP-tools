@@ -148,8 +148,7 @@ function addAdminLinkButtonMiniature() {
 function createAdminButton(productId, style, container) {
     if (!productId) return;
 
-    const domain = window.location.hostname;
-    const adminLink = `https://${domain}/logcncin/index.php/sell/catalog/products-v2/${productId}/edit?_token=${token}`;
+    const adminLink = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${productId}/edit?_token=${token}`;
     const button = document.createElement("a");
     button.href = adminLink;
     button.className = "CSP_tools-custom-btn";
@@ -200,7 +199,7 @@ function insertBtnStyle() {
 }
 
 async function toggleProductStatus(idProduit, token) {
-    const url = `https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/${idProduit}/toggle-status-for-shop/1?_token=${token}`;
+    const url = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${idProduit}/toggle-status-for-shop/1?_token=${token}`;
     try {
         const response = await fetch(url, {
             method: "POST", // en général un toggle utilise POST
