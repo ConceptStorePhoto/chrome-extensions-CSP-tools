@@ -1,5 +1,11 @@
 console.log("✅ Script injecté !  functions/function-getSubtitle.js");
 
+// Contrôleur d'annulation des fetch en cours lors du changement de page
+const getSubtitleFetchController = new AbortController();
+window.addEventListener("beforeunload", () => {
+    getSubtitleFetchController.abort(); // annule toutes les requêtes en cours
+});
+
 function getSubtitle(productId, callback) {
     if (!productId) {
         console.warn(`[${new Date().toLocaleString()}] ❌ Pas d'ID produit.`);
@@ -19,7 +25,7 @@ function getSubtitle(productId, callback) {
         },
         body,
         credentials: "include",
-        signal: fetchController?.signal
+        signal: getSubtitleFetchController?.signal
     })
         .then(r => r.text())
         .then(txt => callback(decodeUnicode(txt.trim()) || null))

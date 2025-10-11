@@ -53,11 +53,5 @@ function attachSubtitleLoader(select) {
     });
 }
 
-
-// Contrôleur d'annulation des fetch en cours lors du changement de page
-const fetchController = new AbortController();
-window.addEventListener("beforeunload", () => {
-    fetchController.abort(); // annule toutes les requêtes en cours
-});
-
-// LES FONCTIONS SONT INJECTÉ VIA D'AUTRE SCRIPT : functions/function-getSubtitle.js
+// LES FONCTIONS SONT INJECTÉ VIA D'AUTRE SCRIPT : 
+// --> functions/function-getSubtitle.js
