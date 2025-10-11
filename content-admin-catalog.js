@@ -2028,10 +2028,40 @@ function productActions() {
                         el.style.borderRadius = "10px";
                     });
 
-                    document.querySelectorAll('.shortcuts .affect_quantities').forEach((el) => {
-                        el.classList.add('disabled'); // désactive les boutons car ne fonctionne pas quand les 3 stocks sont affichés
-                        const table = el.parentElement.querySelector('table.sbs_table_quantities');
-                        
+                    document.querySelectorAll('.affect_quantities').forEach(originalBtn => {
+                        // Remplacer le bouton natif (avec events natifs) par un nouveau custom
+                        const newBtn = originalBtn.cloneNode(true);
+                        originalBtn.insertAdjacentElement('afterend', newBtn);
+                        originalBtn.remove();
+
+                        newBtn.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            event.stopPropagation();
+
+                            // Trouver le bloc magasin correspondant et le tableau des quantités
+                            const magasinBox = this.closest('.sbs_table_box');
+                            if (!magasinBox) return;
+                            const table = magasinBox.querySelector('.sbs_table_quantities');
+                            if (!table) return;
+
+                            // Parcourir toutes les lignes produits
+                            table.querySelectorAll('tbody tr').forEach(row => {
+                                const inputAffect = row.querySelector('input[data-stock_to_affect]');
+                                const inputQty = row.querySelector('input.qty');
+
+                                if (inputAffect && inputQty) {
+                                    const valAffect = parseInt(inputAffect.value, 10) || 0;
+                                    const currentQty = parseInt(inputQty.value, 10) || 0;
+                                    const newQty = currentQty + valAffect;
+
+                                    inputQty.value = newQty;
+                                    inputQty.dispatchEvent(new Event('input', { bubbles: true }));
+                                    inputQty.dispatchEvent(new Event('change', { bubbles: true }));
+                                    inputQty.dispatchEvent(new Event('keyup', { bubbles: true }));
+                                }
+                            });
+                            console.log('✅ Quantités ajoutées pour ce magasin (clic natif bloqué)');
+                        });
                     });
 
                     document.querySelectorAll(".sbs_table_box h2").forEach(h2 => {
