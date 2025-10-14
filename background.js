@@ -88,6 +88,7 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_orders_carts_copyAicm: true,
         toggle_client_adminEdit_buttons: true,
         color_adminEditBtn_miniature_default: '#007bff',
+        color_adminEditBtn_miniature_price_default: '#b97900',
         select_client_adminEditBtn_miniature_default: "center",
         toggle_colissimo_confirm_annuler: true,
         toggle_contextMenu_copy_text: true,

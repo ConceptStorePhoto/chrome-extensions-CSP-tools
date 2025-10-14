@@ -2,6 +2,7 @@ console.log("✅ Script injecté !  content-client.js");
 
 let token = "";
 let color_adminEditBtn_miniature = "";
+let color_adminEditBtn_miniature_price = "";
 let select_client_adminEditBtn_miniature = "";
 
 chrome.storage.local.get("token_admin", (data) => {
@@ -19,10 +20,14 @@ chrome.storage.local.get("token_admin", (data) => {
         "color_adminEditBtn_miniature_default",
         "select_client_adminEditBtn_miniature",
         "select_client_adminEditBtn_miniature_default",
+        "toggle_adminEditBtn_miniature_price",
+        "color_adminEditBtn_miniature_price",
+        "color_adminEditBtn_miniature_price_default",
     ];
     chrome.storage.sync.get(keys, (data) => {
         color_adminEditBtn_miniature = data.color_adminEditBtn_miniature || data.color_adminEditBtn_miniature_default;
         select_client_adminEditBtn_miniature = data.select_client_adminEditBtn_miniature || data.select_client_adminEditBtn_miniature_default;
+        color_adminEditBtn_miniature_price = data.color_adminEditBtn_miniature_price || data.color_adminEditBtn_miniature_price_default;
 
         // Vérifie si on est sur une page PRODUIT côté client
         const match = window.location.pathname.match(/^\/(\d{2,5})-/);
@@ -32,8 +37,11 @@ chrome.storage.local.get("token_admin", (data) => {
                 addAdminLinkButtonProduct();
         }
         // else if (document.body.id == "search" || document.body.id == "category" || document.body.id == "index")
-        if (data.toggle_client_adminEditBtn_miniature) {
-            addAdminLinkButtonMiniature();
+        if (data.toggle_client_adminEditBtn_miniature || data.toggle_adminEditBtn_miniature_price) {
+            if (data.toggle_client_adminEditBtn_miniature)
+                addAdminLinkButtonMiniature();
+            if (data.toggle_adminEditBtn_miniature_price)
+                addPriceLinkButtonMiniature();
 
             const targetNode = document.querySelector("section#main");
             if (targetNode) {
@@ -42,7 +50,11 @@ chrome.storage.local.get("token_admin", (data) => {
                         mutation.addedNodes.forEach(node => {
                             if (node.nodeType === 1) {
                                 observer.disconnect();
-                                addAdminLinkButtonMiniature();
+                                if (data.toggle_client_adminEditBtn_miniature)
+                                    addAdminLinkButtonMiniature();
+                                if (data.toggle_adminEditBtn_miniature_price)
+                                    addPriceLinkButtonMiniature();
+
                                 setTimeout(() => {
                                     observer.observe(targetNode, { childList: true, subtree: true });
                                 }, 200);
@@ -131,7 +143,7 @@ function addAdminLinkButtonProduct() {
 }
 
 function addAdminLinkButtonMiniature() {
-    console.log("🔄 Ajout du bouton pour chaque produit");
+    console.log("🔄 Ajout du bouton d'édition pour chaque produit");
     const products = document.querySelectorAll("article.product-miniature");
     products.forEach((product) => {
         if (product.querySelector('.CSP_tools-custom-btn')) return;
@@ -142,6 +154,32 @@ function addAdminLinkButtonMiniature() {
         else
             createAdminButton(product.getAttribute("data-id-product"), { position: "absolute", top: "50%", right: "50%", transform: "translate(50%, -50%)", bgColor: color_adminEditBtn_miniature }, product.querySelector('.thumbnail'));
         console.log('color_adminEditBtn_miniature', color_adminEditBtn_miniature)
+    });
+}
+
+function addPriceLinkButtonMiniature() {
+    console.log("🔄 Ajout du bouton Modif Prix pour chaque produit");
+    const products = document.querySelectorAll("article.product-miniature");
+    products.forEach((product) => {
+        const adminLink = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${product.getAttribute("data-id-product")}/edit?_token=${token}#tab-product_pricing-tab`;
+        const button = document.createElement("a");
+        button.href = adminLink;
+        button.className = "CSP_tools-custom-btn";
+        button.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
+        button.innerText = "Modif Prix";
+        Object.assign(button.style, {
+            backgroundColor: color_adminEditBtn_miniature_price || "",
+            padding: "2px 15px",
+        });
+
+        // Ouvre dans un nouvel onglet si clic droit
+        button.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            window.open(adminLink, "_blank");
+        });
+
+        // inséré apres .product-price-and-shipping dans .product-description
+        product.querySelector('.product-description .product-price-and-shipping').insertAdjacentElement('afterend', button);
     });
 }
 
