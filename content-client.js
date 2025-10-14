@@ -161,13 +161,13 @@ function addPriceLinkButtonMiniature() {
     console.log("🔄 Ajout du bouton Modif Prix pour chaque produit");
     const products = document.querySelectorAll("article.product-miniature");
     products.forEach((product) => {
-        if (product.querySelector('.CSP_tools-custom-btn')) return;
+        if (product.querySelector('.CSP_tools-custom-btn-price')) return;
         if (!product.getAttribute("data-id-product")) return;
         // Crée le bouton
         const adminLink = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${product.getAttribute("data-id-product")}/edit?_token=${token}#tab-product_pricing-tab`;
         const button = document.createElement("a");
         button.href = adminLink;
-        button.className = "CSP_tools-custom-btn";
+        button.className = "CSP_tools-custom-btn CSP_tools-custom-btn-price";
         button.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
         button.innerText = "Modif Prix";
         Object.assign(button.style, {
