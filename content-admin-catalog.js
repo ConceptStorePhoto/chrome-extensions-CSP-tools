@@ -479,6 +479,7 @@ function catalogActions() {
 function productActions() {
     const keys = [
         "toggle_product_rename_tabs",
+        "toggle_product_fix_header",
         "toggle_product_subtitle_display",
         "toggle_product_preview_buttons",
         "toggle_product_ungroup_action",
@@ -505,6 +506,19 @@ function productActions() {
                 document.title = "Modifier  « " + productName + " " + productSubTitle + " » | " + document.title; // Change le titre de la page pour le catalogue
             else
                 document.title = "Modifier " + document.title; // Change le titre de la page pour le catalogue
+        }
+
+        if (data.toggle_product_fix_header) {
+            const pageForm = document.querySelector('form[name="product"]');
+            pageForm.style.paddingTop = "150px"; // Pour éviter que le contenu soit caché derrière l'en-tête fixe
+
+            const headerProduct = document.querySelector('form[name="product"] div.product-header-v2');
+            headerProduct.style.position = "fixed";
+            headerProduct.style.top = "40px";
+            headerProduct.style.zIndex = "10";
+            headerProduct.style.backgroundColor = "#fff";
+            headerProduct.style.marginRight = "20px";
+            headerProduct.style.width = "-webkit-fill-available";
         }
 
         if (data.toggle_product_subtitle_display) {
