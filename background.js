@@ -86,6 +86,7 @@ chrome.runtime.onInstalled.addListener(() => {
         toggle_orders_view_copyCommandeNumber: true,
         toggle_orders_view_copyAicm: true,
         toggle_orders_carts_copyAicm: true,
+        toggle_orders_confirmStatus: true,
         toggle_client_adminEdit_buttons: true,
         color_adminEditBtn_miniature_default: '#007bff',
         color_adminEditBtn_miniature_price_default: '#b97900',
