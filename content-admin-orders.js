@@ -122,6 +122,108 @@ else if (window.location.pathname.includes("orders") && window.location.pathname
             });
         }
     });
+
+
+    ///// Confirmation avant de changer le statut d'une commande /////
+    const confirmStatuses = [6, 7]; // Statuts à confirmer (Annulé, Remboursé)
+    const confirmMessage = "Attention ! Ce changement va rembourser automatiquement le client. Voulez-vous continuer ?";
+    (function injectPopup() {
+        if (document.getElementById('CSP_confirm_popup')) return;
+        console.log("🔄 Injection du popup de confirmation pour changement de statut");
+        const popupHTML = `
+            <div id="CSP_confirm_popup" class="csp-popup-overlay" style="display:none;">
+                <div class="csp-popup-content">
+                <p>${confirmMessage}</p>
+                <div class="csp-popup-buttons">
+                    <button id="CSP_confirm_yes" class="csp-btn-confirm">Confirmer</button>
+                    <button id="CSP_confirm_no" class="csp-btn-cancel">Annuler</button>
+                </div>
+                </div>
+            </div>
+            `;
+        const style = `
+            <style id="CSP_confirm_style">
+                .csp-popup-overlay {
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5);
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                z-index: 9999;
+                }
+                .csp-popup-content {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                max-width: 400px;
+                text-align: center;
+                font-family: Arial, sans-serif;
+                }
+                .csp-popup-buttons {
+                margin-top: 15px;
+                display: flex;
+                justify-content: space-around;
+                }
+                .csp-btn-confirm, .csp-btn-cancel {
+                padding: 8px 15px;
+                border: none;
+                cursor: pointer;
+                }
+                .csp-btn-confirm { background: #d9534f; color: white; }
+                .csp-btn-cancel { background: #6c757d; color: white; }
+            </style>
+            `;
+        document.body.insertAdjacentHTML('beforeend', popupHTML + style);
+    })();
+
+    (function handleDropdownConfirm() {
+        let pendingClick = null;
+        let confirmedClick = false; // <-- flag ajouté
+
+        document.querySelectorAll('.js-dropdown-item').forEach(item => {
+            item.addEventListener('click', function (e) {
+                const value = parseInt(this.getAttribute('data-value'), 10);
+
+                // Si c'est un clic confirmé, laisser passer
+                if (confirmedClick) {
+                    confirmedClick = false; // reset le flag
+                    return; // ne rien bloquer
+                }
+
+                if (confirmStatuses.includes(value)) {
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    e.preventDefault();
+                    console.log("⚠️ Changement de statut à confirmer :", value);
+                    pendingClick = this; // Sauvegarder le bouton cliqué
+
+                    // Afficher popup
+                    document.getElementById('CSP_confirm_popup').style.display = 'flex';
+                }
+            }, true);
+        });
+
+        // Bouton CONFIRMER
+        document.getElementById('CSP_confirm_yes').addEventListener('click', function () {
+            document.getElementById('CSP_confirm_popup').style.display = 'none';
+            if (pendingClick) {
+                confirmedClick = true; // <-- on marque que le prochain clic est confirmé
+                // Rejoue le clic
+                const evt = new MouseEvent('click', { bubbles: true, cancelable: true });
+                pendingClick.dispatchEvent(evt);
+                pendingClick = null;
+            }
+        });
+
+        // Bouton ANNULER
+        document.getElementById('CSP_confirm_no').addEventListener('click', function () {
+            document.getElementById('CSP_confirm_popup').style.display = 'none';
+            pendingClick = null;
+        });
+    })();
+
 }
 else if (window.location.pathname.includes("orders/carts/")) {
     console.log("✅ Page Panier (carts), ajout des actions...");
