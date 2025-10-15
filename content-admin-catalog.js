@@ -1643,10 +1643,12 @@ function productActions() {
                 <div style="display: inline-block; gap: 10px; width: 100%; max-width: 400px;">
                     <button id="btn-fnac-remplir-ean" class="button btn btn-default btn-block" type="button" disabled> Remplir Code EAN </button>
                     <button id="btn-fnac-remplir-fiche" class="button btn btn-default btn-block" type="button" disabled> Remplir fiche produit </button>
+                    <button id="btn-fnac-valider-fiche" class="button btn btn-default btn-block" type="button" disabled> Valider fiche produit </button>
                 </div>
             `;
             const btnEan = document.querySelector("#btn-fnac-remplir-ean");
             const btnFiche = document.querySelector("#btn-fnac-remplir-fiche");
+            const btnValidFiche = document.querySelector("#btn-fnac-valider-fiche");
 
             // écouter les messages qui arrivent
             chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -1655,6 +1657,7 @@ function productActions() {
                     if (btnEan) btnEan.disabled = !message.ready;
                     // if (!message.ready) displayNotif("⚠️ Page Fnac EAN non prête – boutons désactivés");
                     else displayNotif("✅ Page Fnac EAN prête – boutons activés");
+                    if (!message.ready) btnValidFiche.disabled = true; // désactiver le bouton de validation si pas prêt
                 }
                 else if (message.action === "page_fnac_fiche_ready") {
                     if (btnFiche) btnFiche.disabled = !message.ready;
@@ -1666,11 +1669,15 @@ function productActions() {
                         displayNotif("✅ Code EAN rempli avec succès sur Fnac !");
                     } else if (message.data.page === "fiche") {
                         displayNotif("✅ Fiche produit remplie avec succès sur Fnac !");
+                        btnValidFiche.disabled = false; // activer le bouton de validation
                     }
+                }
+                else if (message.action === "fnac_fiche_validee") {
+                    displayNotif("✅ Fiche produit validée avec succès sur Fnac !");
                 }
             });
 
-            document.querySelector("#btn-fnac-remplir-ean").addEventListener("click", (event) => {
+            btnEan.addEventListener("click", (event) => {
                 const ean = document.querySelector("#product_details_references_ean_13")?.value.trim() || null;
                 if (!ean) return displayNotif("⚠️ Pas de code EAN !");
                 if (ean) {
@@ -1683,7 +1690,7 @@ function productActions() {
                 }
                 // event.currentTarget.disabled = true; // éviter les envois multiples
             });
-            document.querySelector("#btn-fnac-remplir-fiche").addEventListener("click", (event) => {
+            btnFiche.addEventListener("click", (event) => {
                 console.log("➡️ Envoi des infos FICHE à la popup Fnac (à compléter)");
                 chrome.runtime.sendMessage({
                     type: "broadcast",
@@ -1699,6 +1706,14 @@ function productActions() {
                     }
                 });
                 // event.currentTarget.disabled = true;
+            });
+            btnValidFiche.addEventListener("click", (event) => {
+                console.log("➡️ Envoie la commande de validation fiche produit fnac");
+                chrome.runtime.sendMessage({
+                    type: "broadcast",
+                    action: "valider_fiche",
+                    data: {}
+                });
             });
         }
     });

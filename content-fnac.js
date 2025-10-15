@@ -76,6 +76,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             }
         });
     }
+    else if (message.action === "valider_fiche") {
+        console.log("✅ Commande Validation fiche !");
+        const buttonSubmit = document.querySelector('#shop_product_publish[type="submit"]'); // bouton pour soumettre le formulaire
+        if (buttonSubmit) buttonSubmit.click();
+        // chrome.runtime.sendMessage({
+        //     type: "broadcast",
+        //     action: "fnac_fiche_validee",
+        //     data: {
+        //         page: "fiche",
+        //         timestamp: Date.now()
+        //     }
+        // });
+    }
 });
 
 //////// Surveillance des changements de page ///////
