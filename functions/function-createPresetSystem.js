@@ -121,7 +121,7 @@ function createPresetSystem(config) {
         saveBtn.style.marginRight = "10px";
         saveBtn.addEventListener("click", () => {
             const values = {};
-            inputs.forEach(({ el, key }) => values[key] = el.value?.trim());
+            inputs.forEach(({ el, key }) => values[key] = el?.value?.trim());
             const autoName = values.text?.substring(0, 20) || null;
             saveHistory(values, autoName);
         });
