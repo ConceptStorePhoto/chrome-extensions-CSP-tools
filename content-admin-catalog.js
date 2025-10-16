@@ -1484,8 +1484,8 @@ function productActions() {
                 ],
                 targetElement: document.querySelector('h2[for="product_pricing_offer_amount"]'),
                 storageKey: "EncartOffrePageProduit_preset",
-                nbValeurMax: 6,
-                infoText: `Sauvegarde jusqu'à 6 valeurs • Clique droit pour renommer/supprimer`,
+                nbValeurMax: 8,
+                infoText: `Sauvegarde jusqu'à 8 valeurs • Clique droit pour renommer/supprimer`,
                 formatButtonText: item => item.name || "Preset sans nom",
                 applyPresetFn: (item) => {
                     ['amount', 'text', 'date'].forEach(k => {
