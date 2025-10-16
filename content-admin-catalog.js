@@ -700,12 +700,14 @@ function productActions() {
                         { spec: "Poids", value: "" },
                         { spec: "Accessoires fournis", value: "" },
                         { spec: "Autonomie", value: "" },
+                        { spec: "Monture d'objectif", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                     ]
                 },
                 {
                     type: "Objectif",
                     specs: [
                         { spec: "Compatibilité Objectif", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
+                        { spec: "Monture d'objectif", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Ouverture maximale f/", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Diamètre du filtre", value: "", placeholder: "NE RIEN ÉCRIRE ICI" },
                         { spec: "Distance minimale de mise au point", value: "" },
