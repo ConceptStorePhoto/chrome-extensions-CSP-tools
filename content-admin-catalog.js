@@ -1481,6 +1481,7 @@ function productActions() {
                     { el: document.querySelector('#product_pricing_offer_amount'), key: 'amount' },
                     { el: document.querySelector('#product_pricing_offer_text'), key: 'text' },
                     { el: document.querySelector('#product_pricing_offer_date'), key: 'date' },
+                    { el: document.querySelector('#product_pricing_offer_tag'), key: 'tag' },
                 ],
                 targetElement: document.querySelector('h2[for="product_pricing_offer_amount"]'),
                 storageKey: "EncartOffrePageProduit_preset",
@@ -1488,10 +1489,12 @@ function productActions() {
                 infoText: `Sauvegarde jusqu'à 8 valeurs • Clique droit pour renommer/supprimer`,
                 formatButtonText: item => item.name || "Preset sans nom",
                 applyPresetFn: (item) => {
-                    ['amount', 'text', 'date'].forEach(k => {
+                    ['amount', 'text', 'date', 'tag'].forEach(k => {
                         const el = document.querySelector(`#product_pricing_offer_${k}`);
                         if (el) {
                             el.value = item[k];
+                            if (item[k] == undefined)
+                                el.value = "";
                             el.dispatchEvent(new Event('change', { bubbles: true }));
                         }
                     });
