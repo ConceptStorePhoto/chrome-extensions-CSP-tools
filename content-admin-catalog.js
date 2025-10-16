@@ -1498,6 +1498,20 @@ function productActions() {
                     console.log("🎯 Application preset :", item.name);
                 }
             });
+
+            // insert un bouton pour effacer les champs après l'élément h2[for="product_pricing_offer_amount"]
+            const clearBtn = document.createElement('button');
+            clearBtn.type = "button";
+            clearBtn.textContent = "🗑️ Vider les champs Offre";
+            clearBtn.classList.add("btn","btn-sm", "btn-outline-secondary");
+            clearBtn.style.marginBottom = "10px";
+            clearBtn.addEventListener('click', () => {
+                ['amount', 'text', 'date', 'tag'].forEach(k => {
+                    const champ = document.querySelector(`#product_pricing_offer_${k}`)
+                    if (champ) { champ.value = ""; champ.dispatchEvent(new Event('change', { bubbles: true })); }
+                });
+            });
+            document.querySelector('h2[for="product_pricing_offer_amount"]').insertAdjacentElement('afterend', clearBtn);
         }
 
         if (data.toggle_product_download_all_images) {
