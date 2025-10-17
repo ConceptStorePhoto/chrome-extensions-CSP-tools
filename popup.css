@@ -162,6 +162,13 @@
      transition: 0.4s;
  }
 
+ input[data-groupe]+.slider::before {
+     background-color: #c9ecff;
+     /* content: '!'; */
+     /* text-align: center; */
+     /* font-size: 12px; */
+ }
+
  input:checked+.slider {
      background-color: var(--bleu);
  }
