@@ -480,6 +480,7 @@ function productActions() {
     const keys = [
         "toggle_product_rename_tabs",
         "toggle_product_fix_header",
+        "toggle_product_tabScroll",
         "toggle_product_subtitle_display",
         "toggle_product_preview_buttons",
         "toggle_product_ungroup_action",
@@ -519,6 +520,119 @@ function productActions() {
             headerProduct.style.backgroundColor = "#fff";
             headerProduct.style.marginRight = "20px";
             headerProduct.style.width = "-webkit-fill-available";
+        }
+        if (data.toggle_product_tabScroll) {
+            console.log("🟦 Tabpanel Scroll Enhancer – v2");
+
+            const FIXED_SELECTORS = [
+                '#header_infos',
+                '.product-header-v2',
+                '#product-tabs',
+                '.product-footer'
+            ];
+
+            // Timeout debounce util
+            function debounce(fn, wait = 100) {
+                let t;
+                return (...args) => {
+                    clearTimeout(t);
+                    t = setTimeout(() => fn(...args), wait);
+                };
+            }
+
+            // calcule la hauteur totale des éléments fixes (sans les marges externes)
+            function getFixedElementsTotalHeight() {
+                let total = 0;
+                FIXED_SELECTORS.forEach(sel => {
+                    const el = document.querySelector(sel);
+                    if (el) {
+                        const r = el.getBoundingClientRect();
+                        total += r.height;
+                    }
+                });
+                return total;
+            }
+
+            // calcule la marge bottom d'un élément (parseFloat)
+            function getMarginBottom(el) {
+                if (!el) return 0;
+                const s = window.getComputedStyle(el);
+                return parseFloat(s.marginBottom) || 0;
+            }
+
+            // applique la règle de scroll sur tous les tabpanels
+            function applyScrollToTabPanels() {
+                const footerHeight = (document.querySelector('.product-footer') || { getBoundingClientRect: () => ({ height: 0 }) }).getBoundingClientRect().height;
+                // On va aussi masquer le scroll global de la page pour forcer l'usage des scrollbars internes
+                try {
+                    document.documentElement.style.overflow = 'hidden';
+                    document.body.style.overflow = 'hidden';
+                } catch (e) {
+                    console.warn("Impossible de modifier overflow global :", e);
+                }
+
+                document.querySelectorAll('div[role="tabpanel"]').forEach(panel => {
+                    // top du panel par rapport à la fenêtre (pour tenir compte des éléments au-dessus)
+                    const panelRect = panel.getBoundingClientRect();
+                    const panelTop = Math.max(0, panelRect.top); // sécurité
+                    const panelMarginBottom = getMarginBottom(panel);
+
+                    // hauteur disponible = fenêtre - (distance panel -> top) - footerHeight - marge bottom du panel - petite garde (8px)
+                    const availableHeight = Math.max(80, Math.floor(window.innerHeight - panelTop - footerHeight - panelMarginBottom - 8));
+
+                    // Appliquer styles
+                    panel.style.boxSizing = 'border-box';
+                    panel.style.maxHeight = availableHeight + 'px';
+                    panel.style.height = availableHeight + 'px'; // garde pour compatibilité
+                    panel.style.overflowY = 'auto';
+                    panel.style.overflowX = 'hidden'; // évite le scroll horizontal
+                    panel.style.width = '100%'; // si tu veux, sinon 'auto'
+                    panel.style.maxWidth = '100%';
+
+                    // Ombre interne blanche haut + bas
+                    panel.style.boxShadow = 'inset 0 10px 10px -10px rgba(255,255,255,0.8), inset 0 -10px 10px -10px rgba(255,255,255,0.8)';
+                    panel.style.webkitBoxShadow = 'inset 0 10px 10px -10px rgba(255,255,255,0.8), inset 0 -10px 10px -10px rgba(255,255,255,0.8)';
+
+                    // Pour éviter que certains enfants provoquent un overflow horizontal
+                    panel.style.wordBreak = panel.style.wordBreak || 'break-word';
+
+                    // Si tu veux debug : décommenter
+                    // console.log('panel top', panelTop, 'available', availableHeight);
+                });
+            }
+
+            const debouncedApply = debounce(() => {
+                applyScrollToTabPanels();
+            }, 80);
+
+            function init() {
+                // Appliquer au chargement initial
+                applyScrollToTabPanels();
+
+                // Suppression de l'ombre sur le footer produit
+                const footer = document.querySelector('.product-footer');
+                if (footer) {
+                    footer.style.boxShadow = 'none';
+                    footer.style.webkitBoxShadow = 'none';
+                }
+
+                // Recalculer sur redimensionnement
+                window.addEventListener('resize', debouncedApply);
+
+                // MutationObserver pour changements dynamiques dans le DOM
+                const observer = new MutationObserver(debouncedApply);
+                observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+
+                // Nettoyage si nécessaire: si une future action veut restaurer le scroll global, il faudra rétablir document.documentElement.style.overflow=''
+                // On le laisse volontairement activé (c'est l'objectif: remplacer le scroll page par le scroll interne)
+                console.log("🟦 Tabpanel Scroll Enhancer – initialisé");
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
         }
 
         if (data.toggle_product_subtitle_display) {
@@ -1508,7 +1622,7 @@ function productActions() {
             const clearBtn = document.createElement('button');
             clearBtn.type = "button";
             clearBtn.textContent = "🗑️ Vider les champs Offre";
-            clearBtn.classList.add("btn","btn-sm", "btn-outline-secondary");
+            clearBtn.classList.add("btn", "btn-sm", "btn-outline-secondary");
             clearBtn.style.marginBottom = "10px";
             clearBtn.addEventListener('click', () => {
                 ['amount', 'text', 'date', 'tag'].forEach(k => {
