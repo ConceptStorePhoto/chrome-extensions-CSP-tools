@@ -1,7 +1,5 @@
 console.log("✅ Script injecté !  functions/common-functions-prestashop.js");
 
-////////// FICHIER TEST = PAS UTILISER !
-
 // Contrôleur d'annulation des fetch en cours lors du changement de page
 const commonFetchController = new AbortController();
 window.addEventListener("beforeunload", () => {
@@ -9,47 +7,61 @@ window.addEventListener("beforeunload", () => {
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-console.log("✅ common-functions-prestashop.js : getSubtitle + decodeUnicode");
+console.log("✅ common-functions-prestashop.js : getCombinations ");
 
-function getSubtitle(productId, callback) {
-    if (!productId) {
-        console.warn(`[${new Date().toLocaleString()}] ❌ Pas d'ID produit.`);
-        if (typeof callback === "function") callback(null);
+function getCombinations(productId, token, prixBaseTTC, prixBaseHT, callback) {
+    if (!productId || !token) {
+        console.warn(`[${new Date().toLocaleString()}] ❌ Impossible de détecter l'ID produit ou le token.`);
         return;
     }
 
-    const apiUrl = `${location.origin}/module/dmucustomproduct/customproduct`;
-    const body = `action=get_subtitle&id_product=${encodeURIComponent(productId)}`;
+    const shopId = 1;
+    const apiUrl = `${location.origin}/logcncin/index.php/sell/catalog/products-v2/${productId}/combinations?shopId=${shopId}&product_combinations_${productId}[offset]=0&product_combinations_${productId}[limit]=100&_token=${token}`;
 
-    fetch(apiUrl, {
-        method: "POST",
-        headers: {
-            "accept": "*/*",
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "x-requested-with": "XMLHttpRequest"
-        },
-        body,
-        credentials: "include",
-        signal: commonFetchController?.signal
-    })
-        .then(r => r.text())
-        .then(txt => callback(decodeUnicode(txt.trim()) || null))
-        // .then(txt => {
-        //     const clean = txt.trim().replace(/^"(.*)"$/, '$1') || null;
-        //     callback(clean);
-        // })
+    fetch(apiUrl, { credentials: "same-origin", signal: commonFetchController.signal })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.combinations || !Array.isArray(data.combinations)) {
+                console.warn(`[${new Date().toLocaleString()}] ❌ Format de données inattendu :`, data);
+                return;
+            }
+            // console.log("📦 DATA Déclinaisons récupérées via API :", data);
+
+            const liste = data.combinations.map(c => {
+                const impact = parseFloat(c.impact_on_price_te.replace(',', '.'));
+                return {
+                    id: c.combination_id,
+                    name: c.name,
+                    ref: c.reference,
+                    quantity: c.quantity,
+                    impact_price_ht: impact,
+                    calcul_prix_ttc_final: prixBaseTTC + (impact * 1.2),
+                    calcul_prix_ttc_TEST: (prixBaseHT + impact) * 1.2
+                };
+            });
+
+            console.log(`📦 Déclinaisons récupérées (${productId}) :`, liste);
+            if (typeof callback === "function") callback(liste);
+        })
         .catch(err => {
-            if (err.name !== "AbortError")
-                console.error(`[${new Date().toLocaleString()}] ❌ Erreur pour ${productId} :`, err);
-            callback(null);
+            if (err.name === "AbortError") {
+                console.log(`⏹️ (getCombinations) Fetch annulé (ID: ${productId}) à cause du changement de page`);
+                return; // on ignore proprement
+            }
+            console.error(`[${new Date().toLocaleString()}] ❌ Erreur lors du chargement des déclinaisons :`, err);
+            displayNotif("❌ Erreur lors du chargement des déclinaisons. Changer de page et revenir pour réessayer.");
+            if (typeof callback === "function") callback([]);
         });
 }
 
-function decodeUnicode(str) {
-    try {
-        return JSON.parse('"' + str.replace(/"/g, '\\"') + '"');
-    } catch {
-        return str;
-    }
-}
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+console.log("✅ common-functions-prestashop.js : normalize ");
+
+function normalize(str) {
+    return str
+        .toLowerCase()
+        .normalize("NFD")              // sépare les accents
+        .replace(/[\u0300-\u036f]/g, "") // supprime les accents
+        .trim();
+}
