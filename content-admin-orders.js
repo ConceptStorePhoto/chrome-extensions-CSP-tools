@@ -17,7 +17,13 @@ document.head.appendChild(style);
 if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "view" && !window.location.pathname.includes("carts")) {
     console.log("✅ Page Détail de commande, ajout des actions...");
 
-    chrome.storage.sync.get(["toggle_orders_view_copyAicm", "toggle_orders_view_copyCommandeNumber", "toggle_orders_view_openColissimoTracking"], (data) => {
+    const keys = [
+        "toggle_orders_view_copyAicm",
+        "toggle_orders_view_copyCommandeNumber",
+        "toggle_orders_view_openColissimoTracking",
+        "toggle_orders_view_acceptPaymentStatus"
+    ];
+    chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_orders_view_copyAicm) {
             console.log("🔄 Ajout des boutons de copie du code AICM");
             const elements = document.querySelectorAll(".productReference");
@@ -75,6 +81,30 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 boutonSuivi.href = `https://www.laposte.fr/outils/suivre-vos-envois?code=${item.innerText}`;
                 item.parentElement.prepend(boutonSuivi);
             });
+        }
+        if (data.toggle_orders_view_acceptPaymentStatus) {
+            const actionContainer = document.querySelector('#order-view-page .order-actions');
+            const paymentStatusSelect = document.querySelector('#update_order_status_action_input');
+            const updateStatusBtn = document.querySelector('#update_order_status_action_btn');
+            if (actionContainer && paymentStatusSelect && paymentStatusSelect?.value === "17") { // Check if status is "En attente de paiement PayPal"
+                const acceptButton = document.createElement('button');
+                acceptButton.type = "button";
+                acceptButton.className = "btn btn-success mr-2";
+                acceptButton.innerText = "Accepter le paiement";
+                acceptButton.title = "Accepter le paiement de cette commande et mettre à jour le statut\nIndispensable récupérer les fonds via PayPal.";
+                acceptButton.style.backgroundColor = "#28a745";
+                acceptButton.style.borderColor = "#28a745";
+                acceptButton.onclick = () => {
+                    const confirmAccept = confirm("Voulez-vous vraiment accepter le paiement de cette commande ?");
+                    if (!confirmAccept) return;
+                    if (paymentStatusSelect && updateStatusBtn) {
+                        paymentStatusSelect.value = "2"; // ID pour "Paiement accepté"
+                        paymentStatusSelect.dispatchEvent(new Event('change'));
+                        updateStatusBtn.click();
+                    }
+                }
+                actionContainer.insertBefore(acceptButton, actionContainer.querySelector('.order-navigation'));
+            }
         }
 
     });
