@@ -168,6 +168,9 @@
      /* text-align: center; */
      /* font-size: 12px; */
  }
+  input[data-groupe-synchro]+.slider::before {
+     background-color: #ffc9c9;
+ }
 
  input:checked+.slider {
      background-color: var(--bleu);

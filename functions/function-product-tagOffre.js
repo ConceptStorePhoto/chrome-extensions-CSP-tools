@@ -1,6 +1,13 @@
 console.log("✅ Script injecté !  functions/function-product-tagOffre.js");
 
-(function initCustomOfferTagFeature() {
+chrome.storage.sync.get("toggle_product_EncartOffre_TagOffre", (data) => {
+    if (data.toggle_product_EncartOffre_TagOffre) {
+        console.log("✅ toggle_product_EncartOffre_TagOffre activé");
+        initCustomOfferTagFeature();
+    }
+});
+
+function initCustomOfferTagFeature() {
     const PREFIXconsole = "tagOffre";
     const OFFER_LABEL = "Offre";
     const PRICE_FIELD_ID = "product_pricing_offer_tag";
@@ -58,7 +65,7 @@ console.log("✅ Script injecté !  functions/function-product-tagOffre.js");
         const wrapper = document.createElement('div');
         wrapper.className = 'form-group';
         wrapper.innerHTML = `
-            <h4 class="form-control-label">Texte Tag Custom</h4>
+            <h4 class="form-control-label">Texte Tag Offre Custom</h4>
             <p>Génère automatiquement la caractéristique dans l'onglet détails</p>
             <input type="text" id="${PRICE_FIELD_ID}" class="form-control" placeholder="${PLACEHOLDER}" />
         `;
@@ -228,4 +235,4 @@ console.log("✅ Script injecté !  functions/function-product-tagOffre.js");
     }
 
     init();
-})();
+}

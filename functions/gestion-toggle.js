@@ -21,6 +21,12 @@ export function gestionToggle() {
         const id = button.id;
         const groupe = button.dataset.groupe;
         const groupeSynchro = button.dataset.groupeSynchro;
+        
+        let titleParts = [];
+        if (groupe) titleParts.push(`Groupe exclusif:  ${groupe}`);
+        if (groupeSynchro) titleParts.push(`Groupe synchro:  ${groupeSynchro}`);
+        titleParts.push(`ID:  ${id}`);
+        button.nextElementSibling.title = titleParts.join('\n');
 
         // Charger l'état initial
         chrome.storage.sync.get(id, (data) => {

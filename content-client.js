@@ -129,8 +129,8 @@ chrome.storage.local.get("token_admin", (data) => {
             }
         }
 
+        insertBtnStyle();
     });
-    insertBtnStyle();
 });
 
 ///////////// FONCTIONS //////////////
@@ -170,10 +170,7 @@ function addPriceLinkButtonMiniature() {
         button.className = "CSP_tools-custom-btn CSP_tools-custom-btn-price";
         button.title = "Clique = Ouvrir || Clic droit = Ouvrir dans nouvel onglet";
         button.innerText = "Modif Prix";
-        Object.assign(button.style, {
-            backgroundColor: color_adminEditBtn_miniature_price || "",
-            padding: "2px 15px",
-        });
+        product.style.position = "relative";
 
         // Ouvre dans un nouvel onglet si clic droit
         button.addEventListener("contextmenu", (e) => {
@@ -235,6 +232,13 @@ function insertBtnStyle() {
             color: #000;
         }
         .hide-btn { display: none !important; }
+        .CSP_tools-custom-btn-price {
+            background-color: ${color_adminEditBtn_miniature_price || ""};
+            padding: 2px 15px;
+            /*position: absolute;*/
+            /*bottom: 26px;*/
+            /*z-index: 10;*/
+        }
     `;
     document.head.appendChild(style);
 }
