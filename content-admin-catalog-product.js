@@ -459,7 +459,7 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
                         { spec: "Poids", value: "" },
                     ]
                 },
-                 {
+                {
                     type: "Référence",
                     specs: [
                         { spec: "Référence", value: "" },
@@ -1450,6 +1450,19 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
                         iframeDoc.querySelector('#select2-specific_price_combination_id-container')?.style.setProperty('min-width', '450px', 'important');
                         document.querySelector('#modal-specific-price-form .modal-dialog')?.style.setProperty('max-width', '1030px');
 
+                        // valider si touche "Entrée" pressée dans le champ remise
+                        const remiseInput = iframeDoc.querySelector('#specific_price_impact_reduction_value');
+                        const submitBtn = document.querySelector('#modal-specific-price-form .modal-footer button.btn-confirm-submit');
+                        if (remiseInput && submitBtn) {
+                            remiseInput.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter') {
+                                    console.log("➡️ Touche Entrée pressée dans le champ remise : validation");
+                                    e.preventDefault();
+                                    submitBtn.click();
+                                }
+                            });
+                        }
+
                         if (data.toggle_product_remise_calcul) {
                             ajouterChampPrixApresRemise(iframeDoc, prixBaseTTC);
                             afficherPrixDeclinaison(iframeDoc, combinations);
@@ -1650,8 +1663,8 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
                 ],
                 targetElement: doc.querySelector('div.date-range')?.parentElement?.querySelector('h4'),
                 storageKey: "promo_dates_history",
-                nbValeurMax: 5,
-                infoText: `Sauvegarde jusqu'à 5 valeurs • Clique droit pour renommer/supprimer`,
+                nbValeurMax: 10, // Nombre de presets maximum (par défaut 5)
+                infoText: `Sauvegarde jusqu'à 10 valeurs • Clique droit pour renommer/supprimer`,
                 formatButtonText: item => item.name ? `${item.name}\n${item.debut.split(" ")[0]} → ${item.fin.split(" ")[0]}` : `${item.debut.split(" ")[0]} → ${item.fin.split(" ")[0]}`,
                 applyPresetFn: (item) => {
                     const debutEl = doc.querySelector('#specific_price_date_range_from');
