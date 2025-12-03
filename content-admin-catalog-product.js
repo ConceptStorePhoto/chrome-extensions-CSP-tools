@@ -17,6 +17,7 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
         "toggle_product_subtitle_display",
         "toggle_product_preview_buttons",
         "toggle_product_ungroup_action",
+        "toggle_product_related_products_preset",
         "toggle_product_focus_auto",
         "toggle_product_taxe_ttc",
         "toggle_product_auto_occasion",
@@ -253,6 +254,10 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
             });
         }
 
+        // if (data.toggle_product_related_products_preset) {
+        //     console.log("🔄 Ajout du preset Produits liés");
+        // }
+
         if (data.toggle_product_taxe_ttc) {
             console.log("🔄 Ajout le bouton de swap de taxe et prix ttc");
             const elemPrixHT = document.getElementById('product_pricing_retail_price_price_tax_excluded');
@@ -445,6 +450,19 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
                     name: "Capteur FF",
                     specs: [
                         { spec: "Format de Capteur", value: "", placeholder: "NE RIEN ÉCRIRE ICI", valuePreset: "Plein format" },
+                    ]
+                },
+                {
+                    type: "Poid, Dimenssions",
+                    specs: [
+                        { spec: "Dimensions (LxHxP)", value: "" },
+                        { spec: "Poids", value: "" },
+                    ]
+                },
+                 {
+                    type: "Référence",
+                    specs: [
+                        { spec: "Référence", value: "" },
                     ]
                 },
             ];

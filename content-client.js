@@ -139,7 +139,7 @@ function addAdminLinkButtonProduct() {
     console.log("🔄 Ajout du bouton d'édition admin");
     const productId = window.location.pathname.split("/")[1].split("-")[0];
     console.log("➡️ ID produit :", productId);
-    createAdminButton(productId, { position: "fixed", top: "129px", right: "20px", zIndex: "99" }, document.body);
+    createAdminButton(productId, { position: "fixed", top: "129px", right: "20px", zIndex: "999" }, document.body);
 }
 
 function addAdminLinkButtonMiniature() {
