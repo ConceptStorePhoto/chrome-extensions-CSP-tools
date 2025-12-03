@@ -21,7 +21,8 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
         "toggle_orders_view_copyAicm",
         "toggle_orders_view_copyCommandeNumber",
         "toggle_orders_view_openColissimoTracking",
-        "toggle_orders_view_acceptPaymentStatus"
+        "toggle_orders_view_acceptPaymentStatus",
+        "toggle_orders_view_messagePrefill",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_orders_view_copyAicm) {
@@ -107,6 +108,19 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
             }
         }
 
+        // modifie la hauteur du champ message
+        const textareaMessage = document.querySelector('#order_message_message');
+        if (textareaMessage) {
+            textareaMessage.style.height = "250px";
+
+            // message par défaut
+            if (data.toggle_orders_view_messagePrefill && textareaMessage.value.trim() === "") {
+                const defaultMessage = "Bonjour,\n\n\nCordialement";
+                textareaMessage.value = defaultMessage;
+                textareaMessage.dispatchEvent(new Event('input'));
+            }
+        }
+
     });
 
     // coche automatiquement la case "Montrer au client" dans le champ message
@@ -116,11 +130,14 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
         checkboxMessage.dispatchEvent(new Event('change'));
     }
 
-    // modifie la hauteur du champ message
-    const textareaMessage = document.querySelector('#order_message_message');
-    if (textareaMessage) {
-        textareaMessage.style.height = "200px";
-    }
+    // Ajustements CSS divers
+    document.querySelectorAll('.cellProductQuantity .badge ').forEach((el) => {
+        el.style.fontSize = "unset";
+        el.style.padding = "5px 15px";
+    });
+    document.querySelectorAll('.cellProductQuantity .form-control ').forEach((el) => {
+        el.style.fontSize = "unset";
+    });
 
 }
 else if (window.location.pathname.includes("orders") && window.location.pathname.split("/")[window.location.pathname.split("/").length - 1] == "") {

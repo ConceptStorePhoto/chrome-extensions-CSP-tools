@@ -22,11 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("✅ Concept Store Photo detected", hostname);
                 document.getElementById("toolsCSP").classList.remove('hide');
                 document.getElementById("refreshContainer").classList.remove('hide');
-                // //// Cache toutes les sections au départ
-                // document.querySelectorAll('#toolsCSP .conteneur:not([data-type="global"])').forEach((elem) => {
-                //     elem.classList.add('hide');
-                // });
-                // //// Affiche les sections en fonction du type de page
+                //// Cache toutes les sections au départ
+                document.querySelectorAll('#toolsCSP .conteneur:not([data-type="global"])').forEach((elem) => {
+                    elem.classList.add('hide');
+                });
+                //// Affiche les sections en fonction du type de page
                 // if (url.pathname.includes('catalog') && url.pathname.split("/")[url.pathname.split("/").length - 1] == "")
                 //     document.querySelectorAll('[data-type="admin-catalog"]').forEach((elem) => {
                 //         elem.classList.remove('hide');
@@ -45,10 +45,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 //         elem.classList.remove('hide');
                 //     });
 
-                // else if (!url.pathname.includes('logcncin'))
-                //     document.querySelectorAll('[data-type="client"]').forEach((elem) => {
-                //         elem.classList.remove('hide');
-                //     });
+                if (url.pathname.includes('logcncin'))
+                    document.querySelectorAll('#toolsCSP [data-type^="admin"]').forEach((elem) => {
+                        elem.classList.remove('hide');
+                    });
+
+                else if (!url.pathname.includes('logcncin'))
+                    document.querySelectorAll('#toolsCSP [data-type="client"]').forEach((elem) => {
+                        elem.classList.remove('hide');
+                    });
 
                 // else
                 //     document.querySelectorAll('#toolsCSP .conteneur').forEach((elem) => {

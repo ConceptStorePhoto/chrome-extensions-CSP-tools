@@ -6,6 +6,7 @@
      --text-color-1: #333;
      --background-color-1: #f4f4f4;
      --background-color-2: #fff;
+     --background-color-3: #d1d1d1;
  }
 
  /*************** Mise en forme barre de scroll ***************/
@@ -92,6 +93,23 @@
      background-color: var(--bleu-hover);
  }
 
+ #mainContainer{
+    padding-bottom: 20px;
+ }
+
+ /* #mainContainer>div {
+     background-color: var(--background-color-3);
+     padding: 20px;
+     border-radius: 16px;
+     flex-grow: 1;
+ } */
+
+ #Global {
+     background-color: var(--background-color-3);
+     padding: 20px;
+     border-radius: 16px;
+ }
+
  .conteneur {
      width: 100%;
      background-color: var(--background-color-2);
@@ -168,7 +186,8 @@
      /* text-align: center; */
      /* font-size: 12px; */
  }
-  input[data-groupe-synchro]+.slider::before {
+
+ input[data-groupe-synchro]+.slider::before {
      background-color: #ffc9c9;
  }
 

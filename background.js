@@ -140,7 +140,7 @@ function updateContextMenu() {
                 id: "recherche-missNumerique", // identifiant unique
                 title: "🔎 Rechercher sur Miss Numérique",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: whitelistContextMenu
+                // documentUrlPatterns: whitelistContextMenu
             });
         });
 
@@ -151,7 +151,7 @@ function updateContextMenu() {
                 id: "recherche-idealo", // identifiant unique
                 title: "🔎 Rechercher sur Idealo",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: whitelistContextMenu
+                // documentUrlPatterns: whitelistContextMenu
             });
         });
 
@@ -162,7 +162,7 @@ function updateContextMenu() {
                 id: "recherche-panajou", // identifiant unique
                 title: "🔎 Rechercher sur Panajou",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: whitelistContextMenu
+                // documentUrlPatterns: whitelistContextMenu
             });
         });
 
@@ -173,7 +173,7 @@ function updateContextMenu() {
                 id: "recherche-ipln", // identifiant unique
                 title: "🔎 Rechercher sur IPLN",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: whitelistContextMenu
+                // documentUrlPatterns: whitelistContextMenu
             });
         });
 
@@ -184,7 +184,7 @@ function updateContextMenu() {
                 id: "recherche-fnac", // identifiant unique
                 title: "🔎 Rechercher sur Fnac",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: whitelistContextMenu
+                // documentUrlPatterns: whitelistContextMenu
             });
         });
 
@@ -195,7 +195,7 @@ function updateContextMenu() {
                 id: "recherche-csp", // identifiant unique
                 title: "🔎 Rechercher sur Concept Store Photo",
                 contexts: ["selection", "link"],
-                documentUrlPatterns: whitelistContextMenu
+                // documentUrlPatterns: whitelistContextMenu
             });
         });
 
