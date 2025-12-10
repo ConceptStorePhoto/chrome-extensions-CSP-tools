@@ -24,6 +24,16 @@
   "content_scripts": [
     {
       "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "functions/function-displayNotif.js",
+        "content-script-GLOBAL.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
         "https://concept-store-photo.dmu.sarl/logcncin/index.php/sell/catalog/products-v2/?*",
         "https://www.conceptstorephoto.fr/logcncin/index.php/sell/catalog/products-v2/?*"
       ],
@@ -183,6 +193,13 @@
         "mac": "Alt+Shift+A"
       },
       "description": "PrestaShop : Afficher/Masquer les boutons d'édition produit de  l'extenssion"
+    },
+    "CopyHoveredLink": {
+      "suggested_key": {
+        "default": "Alt+C",
+        "mac": "Alt+C"
+      },
+      "description": "Copier l'URL du lien survolé"
     }
   },
   "permissions": [

@@ -385,4 +385,12 @@ chrome.commands.onCommand.addListener((command) => {
             }
         });
     }
+    else if (command === "CopyHoveredLink") {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const tabId = tabs[0]?.id;
+            if (!tabId) return;
+
+            chrome.tabs.sendMessage(tabId, "copy-hovered-link");
+        });
+    }
 });
