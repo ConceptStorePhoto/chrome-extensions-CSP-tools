@@ -23,6 +23,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
         "toggle_orders_view_openColissimoTracking",
         "toggle_orders_view_acceptPaymentStatus",
         "toggle_orders_view_messagePrefill",
+        "toggle_orders_view_serialNumberTools",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_orders_view_copyAicm) {
@@ -105,6 +106,60 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                     }
                 }
                 actionContainer.insertBefore(acceptButton, actionContainer.querySelector('.order-navigation'));
+            }
+        }
+        if (data.toggle_orders_view_serialNumberTools) {
+            // Pré-remplit le champ pour le numéro de série dans l'onglet Documents
+            const orderDocumentsSectionButton = document.querySelector('#orderDocumentsTabContent table .documents-table-column-actions button');
+            const orderDocumentsSectionInputTexte = document.querySelector('#orderDocumentsTabContent form input[type="text"]');
+            const orderDocumentsSectionSubmit = document.querySelector('#orderDocumentsTabContent form button[type="submit"]');
+            if (orderDocumentsSectionButton) {
+                orderDocumentsSectionButton.click();
+                // if (orderDocumentsSectionInputTexte && orderDocumentsSectionSubmit) {
+                //     orderDocumentsSectionInputTexte.value = "Numéro de série : ";
+                // }
+            }
+
+            // insert une div avant #order_hook_tabs
+            const orderHookTabs = document.querySelector('#order_hook_tabs');
+            if (orderHookTabs) {
+                const newDiv = document.createElement('div');
+                newDiv.id = "CSP_custom_div_before_order_hook_tabs";
+                newDiv.classList.add('tab-content');
+                newDiv.innerHTML = `<h3>Section CSPtools</h3>`;
+                newDiv.innerHTML += `
+                <label for="CSP_serial_number_input">Numéro de série :</label>
+                <div class="input-group" style="gap:1rem;">
+                    <input type="text" id="CSP_serial_number_input" name="CSP_serial_number_input" class="form-control" />
+                    <button id="CSP_save_serial_number_btn" class="btn btn-primary">Enregistrer</button>
+                </div>
+                <span>Le numéro de série sera ajouté sur la Facture dans la section Documents de la commande. (⚠️Rechargement)</span>
+                `;
+                if (orderDocumentsSectionInputTexte && orderDocumentsSectionInputTexte.value.trim() != "") {
+                    newDiv.querySelector('#CSP_serial_number_input').value = orderDocumentsSectionInputTexte.value.replace("Numéro de série : ", "").trim();
+                }
+                const saveButton = newDiv.querySelector('#CSP_save_serial_number_btn');
+                saveButton.onclick = () => {
+                    const serialNumber = newDiv.querySelector('#CSP_serial_number_input').value.trim();
+                    if (serialNumber === "") {
+                        alert("Veuillez entrer un numéro de série avant d'enregistrer.");
+                        return;
+                    }
+                    // alert(`Numéro de série "${serialNumber}" enregistré !`);
+                    if (orderDocumentsSectionInputTexte && orderDocumentsSectionInputTexte.value.trim() === "") {
+                        orderDocumentsSectionInputTexte.value = `Numéro de série : ${serialNumber}`;
+                        orderDocumentsSectionInputTexte.dispatchEvent(new Event('input'));
+                        orderDocumentsSectionSubmit.click();
+                    }
+                    // const internal_note_note = document.querySelector('#internal_note_note'); // champ note interne texarea
+                    // if (internal_note_note) {
+                    //     internal_note_note.value= `Numéro de série : ${serialNumber} \n` + internal_note_note.value;
+                    //     internal_note_note.dispatchEvent(new Event('input'));
+                    //     const addNoteButton = document.querySelector('form[name="internal_note"] button[type="submit"]');
+                    //     if (addNoteButton) addNoteButton.click();
+                    // }
+                };
+                orderHookTabs.parentNode.insertBefore(newDiv, orderHookTabs);
             }
         }
 
