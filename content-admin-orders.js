@@ -321,6 +321,13 @@ else if (window.location.pathname.includes("orders") && window.location.pathname
             })();
         }
     });
+
+    document.querySelectorAll('.column-payment').forEach((el) => {
+        if (el.innerText && el.innerText != "" && el.innerText == 'Fnac') {
+            el.style.backgroundColor = "yellow";
+        }
+    });
+
 }
 else if (window.location.pathname.includes("orders/carts/")) {
     console.log("✅ Page Panier (carts), ajout des actions...");
