@@ -1236,9 +1236,9 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
     });
 
     //// Partie Ajout ONGLET CSP_tools dans la fiche produit
-    chrome.storage.sync.get(["toggle_product_ongletCSPtools_dmuNew", "toggle_fnac_auto_remplissage"], (data) => {
+    chrome.storage.sync.get(["toggle_product_ongletCSPtools_dmuNew", "toggle_fnac_auto_remplissage", "toggle_product_ongletCSPtools_lbcCopy"], (data) => {
         const cspContent = document.createElement('div');
-        if (data.toggle_product_ongletCSPtools_dmuNew || data.toggle_fnac_auto_remplissage) {
+        if (data.toggle_product_ongletCSPtools_dmuNew || data.toggle_fnac_auto_remplissage || data.toggle_product_ongletCSPtools_lbcCopy) {
             // Ajout d'un Onglet CSP_tools dans la nav-tabs
             const navTabs = document.querySelector('#form-nav');
             navTabs.style.width = 'auto';
@@ -1398,6 +1398,34 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
                     action: "valider_fiche",
                     data: {}
                 });
+            });
+        }
+
+        if (data.toggle_product_ongletCSPtools_lbcCopy) {
+            console.log("🚀 Script LeBonCoin Copy lancé");
+            const divLBC = document.createElement("div");
+            divLBC.id = "CSP_tools-lbc-copy";
+            cspContent.appendChild(divLBC);
+            divLBC.innerHTML = `
+                <h3 style="margin-top:20px;">Copie des infos pour LeBonCoin</h3>
+                <div style="display: inline-block; gap: 10px; width: 100%; max-width: 400px;">
+                    <button id="btn-lbc-copy" class="button btn btn-default btn-block" type="button"> Copier les infos pour LeBonCoin</button>
+                </div>
+            `;
+            const btnLBC = document.querySelector("#btn-lbc-copy");
+
+            btnLBC.addEventListener('click', () => {
+                const name = document.querySelector('#product_header_name_1').value.trim();
+                const aicm = document.querySelector('#product_details_references_reference').value.trim();
+                const prix = document.querySelector('#product_pricing_retail_price_price_tax_included').value;
+                let dataCopy = { name: name, aicm: aicm, prix: prix };
+                chrome.storage.local.set({ "lbc_copy_data": dataCopy });
+                console.log("Donnée copiée : ", dataCopy);
+                navigator.clipboard.writeText(aicm);
+
+                let textbtn = btnLBC.innerText;
+                btnLBC.innerText = "✅ copie pour LBC effectuée !";
+                setTimeout(() => (btnLBC.innerText = textbtn), 1500);
             });
         }
     });
