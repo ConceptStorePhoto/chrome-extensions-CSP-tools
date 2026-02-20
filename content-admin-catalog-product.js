@@ -1417,7 +1417,7 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
             btnLBC.addEventListener('click', () => {
                 const name = document.querySelector('#product_header_name_1').value.trim();
                 const aicm = document.querySelector('#product_details_references_reference').value.trim();
-                const prix = document.querySelector('#product_pricing_retail_price_price_tax_included').value;
+                const prix = parseFloat(document.querySelector('#product_pricing_retail_price_price_tax_included').value.trim()).toFixed(2);
                 let dataCopy = { name: name, aicm: aicm, prix: prix };
                 chrome.storage.local.set({ "lbc_copy_data": dataCopy });
                 console.log("Donnée copiée : ", dataCopy);
