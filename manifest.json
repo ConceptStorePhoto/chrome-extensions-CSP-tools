@@ -194,6 +194,9 @@
         "mac": "Alt+Shift+A"
       },
       "description": "PrestaShop : Afficher/Masquer les boutons d'édition produit de  l'extenssion"
+    }, 
+    "PushClearOfferBtn": {
+      "description": "PrestaShop : CSP tools - Vider les champs Offre (prix, stock, etc.)"
     },
     "CopyHoveredLink": {
       "suggested_key": {

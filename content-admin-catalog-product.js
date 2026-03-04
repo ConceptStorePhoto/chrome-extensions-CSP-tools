@@ -1172,6 +1172,7 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
             // insert un bouton pour effacer les champs après l'élément h2[for="product_pricing_offer_amount"]
             const clearBtn = document.createElement('button');
             clearBtn.type = "button";
+            clearBtn.id = "CSP_tools-clear-offer-fields-btn";
             clearBtn.textContent = "🗑️ Vider les champs Offre";
             clearBtn.classList.add("btn", "btn-sm", "btn-outline-secondary");
             clearBtn.style.marginBottom = "10px";
