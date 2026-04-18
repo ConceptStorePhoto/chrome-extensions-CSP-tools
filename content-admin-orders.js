@@ -178,6 +178,25 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
 
     });
 
+    // copier le numéro de commande FNAC au clic sur la ligne correspondante
+    const fnacPanel = document.querySelector('#fnac-info-panel')
+    fnacPanel.style.cursor = "copy";
+    fnacPanel.title = "Cliquer pour copier le numéro de commande Fnac";
+    fnacPanel?.addEventListener('click', function () {
+        const fnacLabel = this.querySelector('.fnac-label')?.textContent.trim();
+        const fnacOrderNumber = this.querySelector('.fnac-data')?.textContent.trim();
+        if (fnacLabel && fnacOrderNumber) {
+            navigator.clipboard.writeText(`${fnacLabel} ${fnacOrderNumber}`).then(() => {
+                const originalBg = this.style.backgroundColor;
+                this.style.backgroundColor = "yellow";
+                setTimeout(() => {
+                    this.style.backgroundColor = originalBg;
+                }, 1500);
+            });
+        }
+    });
+
+
     // coche automatiquement la case "Montrer au client" dans le champ message
     const checkboxMessage = document.querySelector('#order_message_is_displayed_to_customer');
     if (checkboxMessage) {
