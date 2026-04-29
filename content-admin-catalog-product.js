@@ -423,6 +423,16 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
                         { spec: "Poids", value: "" },
                     ]
                 },
+                 {
+                    type: "Jumelles",
+                    specs: [
+                        { spec: "Dimensions (LxHxP)", value: "" },
+                        { spec: "Poids", value: "" },
+                        { spec: "Grossissement", value: "" },
+                        { spec: "Distance minimale de mise au point", value: "" },
+                        { spec: "Diamètre", value: "" },
+                    ]
+                },
                 {
                     type: "Occasion",
                     specs: [

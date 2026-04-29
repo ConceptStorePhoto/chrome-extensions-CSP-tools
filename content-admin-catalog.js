@@ -152,7 +152,7 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
                                             el.nextElementSibling.nextElementSibling.nextElementSibling.appendChild(intervalPrix);
                                         }
 
-                                        const stock = liste.map(c => c.quantity).filter(quantity => quantity).join(" + ");
+                                        const stock = liste.map(c => c.quantity).filter(quantity => quantity).join("+");
                                         if (stock) {
                                             const stockElem = document.createElement('div');
                                             stockElem.innerText = `Qté : ${stock}`;
