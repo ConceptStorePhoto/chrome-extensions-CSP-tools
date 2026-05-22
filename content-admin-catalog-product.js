@@ -1162,8 +1162,8 @@ if (window.location.pathname.split("/")[window.location.pathname.split("/").leng
                 ],
                 targetElement: document.querySelector('h2[for="product_pricing_offer_amount"]'),
                 storageKey: "EncartOffrePageProduit_preset",
-                nbValeurMax: 8,
-                infoText: `Sauvegarde jusqu'à 8 valeurs • Clique droit pour renommer/supprimer`,
+                nbValeurMax: 10,
+                infoText: `Sauvegarde jusqu'à 10 valeurs • Clique droit pour renommer/supprimer`,
                 formatButtonText: item => item.name || "Preset sans nom",
                 applyPresetFn: (item) => {
                     ['amount', 'text', 'date', 'tag'].forEach(k => {
