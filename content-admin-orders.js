@@ -24,6 +24,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
         "toggle_orders_view_acceptPaymentStatus",
         "toggle_orders_view_messagePrefill",
         "toggle_orders_view_serialNumberTools",
+        "toggle_orders_view_openEcomPrepNewCommande",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_orders_view_copyAicm) {
@@ -37,6 +38,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 if (!el.innerText || el.innerText.trim() === "" || el.innerText.includes("Aucun code AICM")) return;
 
                 const texte = el?.innerText.match(/(\d+)$/)?.[1];
+                el.dataset.aicm = texte; // stocke le code AICM dans un data attribute pour éviter de devoir le recalculer au clic
                 console.log('numéro produit :', texte);
                 const bouton = document.createElement("button");
                 bouton.innerText = "📋";
@@ -108,6 +110,56 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 actionContainer.insertBefore(acceptButton, actionContainer.querySelector('.order-navigation'));
             }
         }
+        // if (data.toggle_orders_view_openEcomPrepNewCommande) {
+        //     const actionContainer = document.querySelector('#order-view-page .order-actions');
+        //     if (actionContainer) {
+        //         const prepButton = document.createElement('a');
+        //         prepButton.className = "btn btn-info mr-2";
+        //         prepButton.innerText = "Prépa. EcomPrep";
+        //         prepButton.title = "Ouvrir la préparation de commande dans EcomPrep (si intégration configurée)";
+        //         prepButton.style.backgroundColor = "#17a2b8";
+        //         prepButton.style.borderColor = "#17a2b8";
+
+        //         const orderId = document.querySelector('h1.d-inline [data-role="order-id"]')?.textContent.trim();
+        //         const orderReference = document.querySelector('h1.d-inline [data-role="order-reference"]')?.textContent.trim();
+        //         const customerName = document.querySelector('#addressInvoice>p:nth-child(2)')?.textContent.trim();
+        //         const customerAddress = document.querySelector('#addressInvoice>p:nth-child(3)')?.textContent.trim();
+        //         const customerCity = document.querySelector('#addressInvoice>p:nth-child(4)')?.textContent.trim();
+        //         const lastChild = document.querySelector('#addressInvoice>p:last-child')?.textContent.trim();
+        //         const customerCountry = (lastChild && /\d/.test(lastChild)) 
+        //             ? document.querySelector('#addressInvoice>p:nth-last-child(2)')?.textContent.trim()
+        //             : lastChild;
+        //         const products = [];
+        //         document.querySelectorAll('.cellProduct').forEach((row, index) => {
+        //             const reference = row.querySelector('.productName')?.textContent.trim();
+        //             console.log('reference :', reference);
+        //             const sku = row.querySelector('.productReference')?.innerText.match(/(\d+)/)?.[1].trim();
+        //             console.log('sku :', sku);
+        //             const quantity = row.querySelector('.cellProductQuantity')?.textContent.trim().match(/^(\d+)/)[0] || row.querySelector('.cellProductQuantity .badge')?.textContent.trim() || "1";
+        //             console.log('quantity :', quantity);
+        //             if (reference && sku && quantity) {
+        //                 products.push({ reference, sku, quantity });
+        //             }
+        //         });
+        //         console.log({ orderId, orderReference, customerName, customerAddress, customerCity, customerCountry, products });
+        //         const url = new URL("https://192.168.40.163:3001/commandes/new");
+        //         url.searchParams.append("source", "SITE");
+        //         url.searchParams.append("idExterne", `${orderId} ${orderReference}`);
+        //         url.searchParams.append("clientNom", customerName?.split(' ')[1] || "");
+        //         url.searchParams.append("clientPrenom", customerName?.split(' ')[0] || "");
+        //         url.searchParams.append("clientAdresse", customerAddress) + ' ' + customerCity;
+        //         url.searchParams.append("clientPays", customerCountry);
+        //         products.forEach((prod, index) => {
+        //             url.searchParams.append(`produit_${index + 1}_reference`, prod.reference);
+        //             url.searchParams.append(`produit_${index + 1}_sku`, prod.sku);
+        //             url.searchParams.append(`produit_${index + 1}_quantite`, prod.quantity);
+        //         });
+        //         console.log("URL de pré-remplissage pour EcomPrep :", url.toString());
+        //         prepButton.href = url.toString();
+        //         prepButton.target = "_blank";
+        //         actionContainer.insertBefore(prepButton, actionContainer.querySelector('.order-navigation'));
+        //     }
+        // }
         if (data.toggle_orders_view_serialNumberTools) {
             // Pré-remplit le champ pour le numéro de série dans l'onglet Documents
             const orderDocumentsSectionButton = document.querySelector('#orderDocumentsTabContent table .documents-table-column-actions button');
