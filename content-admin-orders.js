@@ -83,14 +83,13 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 if (fnacLabel && fnacOrderNumber) {
                     fullTextFnac = `${fnacLabel} ${fnacOrderNumber}`;
                     const copyButton = document.createElement('button');
-                    const buttonText = fnacLogo.outerHTML + fnacOrderNumber
-                    copyButton.innerHTML = buttonText + "📋";
+                    copyButton.innerHTML = fnacLogo.outerHTML + fnacOrderNumber;
                     copyButton.title = "Copier le numéro de commande Fnac";
                     copyButton.className = "CSP_tools-copier-btn";
                     copyButton.onclick = () => {
                         navigator.clipboard.writeText(fullTextFnac).then(() => {
-                            copyButton.innerHTML = buttonText + "✅";
-                            setTimeout(() => (copyButton.innerHTML = buttonText + "📋"), 1500);
+                            copyButton.style.backgroundColor = "#38ff66";
+                            setTimeout(() => (copyButton.style.backgroundColor = ""), 1500);
                         });
                     };
                     document.querySelector('.title-row .title-content').appendChild(copyButton);
@@ -130,11 +129,11 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
             const actionContainer = document.querySelector('#order-view-page .order-actions');
             const paymentStatusSelect = document.querySelector('#update_order_status_action_input');
             const updateStatusBtn = document.querySelector('#update_order_status_action_btn');
-            if (actionContainer && paymentStatusSelect && paymentStatusSelect?.value === "17") { // Check if status is "En attente de paiement PayPal"
+            if (actionContainer && paymentStatusSelect && (paymentStatusSelect?.value === "17" || (paymentStatusSelect?.value === "20" && document.querySelector('#fnac-info-panel')))) { // Check if status is "En attente de paiement PayPal"
                 const acceptButton = document.createElement('button');
                 acceptButton.type = "button";
                 acceptButton.className = "btn btn-success mr-2";
-                acceptButton.innerText = "Accepter le paiement";
+                acceptButton.innerText = `Accepter le paiement ${document.querySelector('#fnac-info-panel') ? "Fnac" : "PayPal"}`;
                 acceptButton.title = "Accepter le paiement de cette commande et mettre à jour le statut\nIndispensable récupérer les fonds via PayPal.";
                 acceptButton.style.backgroundColor = "#28a745";
                 acceptButton.style.borderColor = "#28a745";
