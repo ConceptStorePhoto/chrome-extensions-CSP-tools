@@ -72,6 +72,46 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 });
             };
             document.querySelector('h1.d-inline').prepend(bouton);
+
+            // copier le numéro de commande FNAC avec un bouton dans la ligne titre de la commande
+            const fnacPanel = document.querySelector('#fnac-info-panel');
+            let fullTextFnac = "";
+            if (fnacPanel) {
+                const fnacLogo = fnacPanel.querySelector('img');
+                const fnacLabel = fnacPanel.querySelector('.fnac-label')?.textContent.trim();
+                const fnacOrderNumber = fnacPanel.querySelector('.fnac-data')?.textContent.trim();
+                if (fnacLabel && fnacOrderNumber) {
+                    fullTextFnac = `${fnacLabel} ${fnacOrderNumber}`;
+                    const copyButton = document.createElement('button');
+                    const buttonText = fnacLogo.outerHTML + fnacOrderNumber
+                    copyButton.innerHTML = buttonText + "📋";
+                    copyButton.title = "Copier le numéro de commande Fnac";
+                    copyButton.className = "CSP_tools-copier-btn";
+                    copyButton.onclick = () => {
+                        navigator.clipboard.writeText(fullTextFnac).then(() => {
+                            copyButton.innerHTML = buttonText + "✅";
+                            setTimeout(() => (copyButton.innerHTML = buttonText + "📋"), 1500);
+                        });
+                    };
+                    document.querySelector('.title-row .title-content').appendChild(copyButton);
+                }
+            }
+
+            // Ajout d'un bouton pour copier toutes les infos de la commande (ID, Référence, Fnac, Magasin)
+            const copyAllButton = document.createElement('button');
+            copyAllButton.innerText = "Copier infos";
+            copyAllButton.title = "Copier toutes les informations de la commande (ID, Référence, Fnac, Magasin)";
+            copyAllButton.className = "CSP_tools-copier-btn";
+            /* villeStockage = a extraire de la ligne du prepier produit commande */
+            const villeStockage = document.querySelector('.cellProduct .warehouse_order_detail select option:checked')?.innerText.trim().split('Concept Store Photo')[1]?.trim();
+            copyAllButton.onclick = () => {
+                const allInfo = `Commande ${commandeID} ${commandeREF} ${fullTextFnac ? `\n${fullTextFnac}` : ""} ${villeStockage ? `\n\nDépart de : ${villeStockage}` : ""}`;
+                navigator.clipboard.writeText(allInfo).then(() => {
+                    copyAllButton.style.backgroundColor = "#38ff66";
+                    setTimeout(() => (copyAllButton.style.backgroundColor = ""), 1500);
+                });
+            };
+            document.querySelector('.title-row .title-content').appendChild(copyAllButton);
         }
         if (data.toggle_orders_view_openColissimoTracking) {
             const listeColissimoNumber = document.querySelectorAll('.colissimo-shipment-number');
