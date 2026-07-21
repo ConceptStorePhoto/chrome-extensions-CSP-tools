@@ -25,6 +25,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
         "toggle_orders_view_messagePrefill",
         "toggle_orders_view_serialNumberTools",
         "toggle_orders_view_openEcomPrepNewCommande",
+        "toggle_orders_view_openIntranetNewDemandeSite",
     ];
     chrome.storage.sync.get(keys, (data) => {
         if (data.toggle_orders_view_copyAicm) {
@@ -199,6 +200,59 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
         //         actionContainer.insertBefore(prepButton, actionContainer.querySelector('.order-navigation'));
         //     }
         // }
+
+        if (data.toggle_orders_view_openIntranetNewDemandeSite) {
+            console.log("🔄 Ajout du bouton pour ouvrir Demande Site sur l'intranet");
+            const actionContainer = document.querySelector('#order-view-page .order-actions');
+            console.log('actionContainer :', actionContainer);
+            if (actionContainer) {
+                const demandeSiteBtn = document.createElement('a');
+                demandeSiteBtn.className = "btn btn-info mr-2";
+                demandeSiteBtn.innerText = "Demande Intranet";
+                demandeSiteBtn.title = "Ouvrir la demande de site sur l'intranet (pré-rempli avec les infos de la commande)";
+                demandeSiteBtn.style.backgroundColor = "#17a2b8";
+                demandeSiteBtn.style.borderColor = "#17a2b8";
+                const villeStockage = document.querySelector('.cellProduct .warehouse_order_detail select option:checked')?.innerText.trim().split('Concept Store Photo')[1]?.trim();
+                const orderId = document.querySelector('h1.d-inline [data-role="order-id"]')?.textContent.trim();
+                const orderReference = document.querySelector('h1.d-inline [data-role="order-reference"]')?.textContent.trim();
+                const customerName = document.querySelector('#addressInvoice>p:nth-child(2)')?.textContent.trim();
+                const customerAddress = document.querySelector('#addressInvoice>p:nth-child(3)')?.textContent.trim();
+                const customerCity = document.querySelector('#addressInvoice>p:nth-child(4)')?.textContent.trim();
+                const lastChild = document.querySelector('#addressInvoice>p:last-child')?.textContent.trim();
+                const customerCountry = (lastChild && /\d/.test(lastChild))
+                    ? document.querySelector('#addressInvoice>p:nth-last-child(2)')?.textContent.trim()
+                    : lastChild;
+                const products = [];
+                document.querySelectorAll('.cellProduct').forEach((row, index) => {
+                    const reference = row.querySelector('.productName')?.textContent.trim();
+                    console.log('reference :', reference);
+                    const sku = row.querySelector('.productReference')?.innerText.match(/(\d+)/)?.[1].trim();
+                    console.log('sku :', sku);
+                    const quantity = row.querySelector('.cellProductQuantity')?.textContent.trim().match(/^(\d+)/)[0] || row.querySelector('.cellProductQuantity .badge')?.textContent.trim() || "1";
+                    console.log('quantity :', quantity);
+                    if (reference && sku && quantity) {
+                        products.push({ reference, sku, quantity });
+                    }
+                });
+                console.log( "Donnée pour URL",{ orderId, orderReference, customerName, customerAddress, customerCity, customerCountry, products });
+                const url = new URL("https://intranet2.conceptstorephoto.fr/demande-site");
+                url.searchParams.append("new","");
+                url.searchParams.append("shopName", villeStockage || "");
+                // url.searchParams.append("idExterne", `${orderId} ${orderReference}`);
+                // url.searchParams.append("clientNom", customerName?.split(' ')[1] || "");
+                // url.searchParams.append("clientPrenom", customerName?.split(' ')[0] || "");
+                products.forEach((prod, index) => {
+                    url.searchParams.append(`product_${index + 1}`, prod.reference);
+                    url.searchParams.append(`SKU_${index + 1}`, prod.sku);
+                    url.searchParams.append(`quantity_${index + 1}`, prod.quantity);
+                });
+                console.log("URL de pré-remplissage pour DemandeSite Intranet :", url.toString());
+                demandeSiteBtn.href = url.toString();
+                demandeSiteBtn.target = "_blank";
+                actionContainer.insertBefore(demandeSiteBtn, actionContainer.querySelector('.order-navigation'));
+            }
+        }
+
         if (data.toggle_orders_view_serialNumberTools) {
             // Pré-remplit le champ pour le numéro de série dans l'onglet Documents
             const orderDocumentsSectionButton = document.querySelector('#orderDocumentsTabContent table .documents-table-column-actions button');
