@@ -238,13 +238,12 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 const url = new URL("https://intranet2.conceptstorephoto.fr/demande-site");
                 url.searchParams.append("new","");
                 url.searchParams.append("shopName", villeStockage || "");
-                // url.searchParams.append("idExterne", `${orderId} ${orderReference}`);
-                // url.searchParams.append("clientNom", customerName?.split(' ')[1] || "");
-                // url.searchParams.append("clientPrenom", customerName?.split(' ')[0] || "");
+                url.searchParams.append("notes", `REF commande ${orderId} ${orderReference}`);
+                url.searchParams.append("client", customerName);
                 products.forEach((prod, index) => {
                     url.searchParams.append(`product_${index + 1}`, prod.reference);
                     url.searchParams.append(`SKU_${index + 1}`, prod.sku);
-                    url.searchParams.append(`quantity_${index + 1}`, prod.quantity);
+                    url.searchParams.append(`qty_${index + 1}`, prod.quantity);
                 });
                 console.log("URL de pré-remplissage pour DemandeSite Intranet :", url.toString());
                 demandeSiteBtn.href = url.toString();
