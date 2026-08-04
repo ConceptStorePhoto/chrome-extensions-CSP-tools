@@ -60,6 +60,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
             const commandeID = document.querySelector('h1.d-inline [data-role="order-id"]')?.textContent.trim();
             const commandeREF = document.querySelector('h1.d-inline [data-role="order-reference"]')?.textContent.trim();
             const commandeNAME = `Commande ${commandeID} ${commandeREF}`;
+            const customerName = document.querySelector('#addressInvoice>p:nth-child(2)')?.textContent.trim();
             console.log(commandeNAME);
             const bouton = document.createElement("button");
             bouton.innerText = "📋";
@@ -105,7 +106,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
             /* villeStockage = a extraire de la ligne du prepier produit commande */
             const villeStockage = document.querySelector('.cellProduct .warehouse_order_detail select option:checked')?.innerText.trim().split('Concept Store Photo')[1]?.trim();
             copyAllButton.onclick = () => {
-                const allInfo = `Commande ${commandeID} ${commandeREF} ${fullTextFnac ? `\n${fullTextFnac}` : ""} ${villeStockage ? `\n\nDépart de : ${villeStockage}` : ""}`;
+                const allInfo = `Commande ${commandeID} ${commandeREF} ${fullTextFnac ? `\n${fullTextFnac}` : ""} \nClient : ${customerName} ${villeStockage ? `\n\nDépart de : ${villeStockage}` : ""}`;
                 navigator.clipboard.writeText(allInfo).then(() => {
                     copyAllButton.style.backgroundColor = "#38ff66";
                     setTimeout(() => (copyAllButton.style.backgroundColor = ""), 1500);
