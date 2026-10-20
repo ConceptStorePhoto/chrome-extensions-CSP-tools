@@ -1,32 +1,87 @@
-const GITHUB_MANIFEST_URL = "https://raw.githubusercontent.com/ConceptStorePhoto/chrome-extensions-CSP-tools/refs/heads/main/manifest.json";
-const GITHUB_REPO_URL = "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools";
+const GITHUB_REPO = "ConceptStorePhoto/chrome-extensions-CSP-tools";
 
-export async function checkForUpdate() {
+// Sans token : URLs publiques (dépôt public). Avec un fichier update-token.txt : API GitHub (dépôt privé).
+const PUBLIC_MANIFEST_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/refs/heads/main/manifest.json`;
+const PUBLIC_ZIP_URL = `https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip`;
+const API_MANIFEST_URL = `https://api.github.com/repos/${GITHUB_REPO}/contents/manifest.json?ref=main`;
+const API_ZIP_URL = `https://api.github.com/repos/${GITHUB_REPO}/zipball/main`;
+
+const CACHE_KEY = "update_check_cache";
+
+// Lit le token de mise à jour (update-token.txt à la racine de l'extension), null si absent
+async function getUpdateToken() {
     try {
-        console.log("🔎 Vérification de mise à jour en cours...");
-        const res = await fetch(GITHUB_MANIFEST_URL);
-        console.log("HTTP status fetch manifest:", res.status);
-        if (!res.ok) {
-            console.error(`❌ Erreur HTTP lors du fetch du manifest: ${res.status}`);
-            throw new Error(`Erreur HTTP ${res.status}`);
+        const res = await fetch(chrome.runtime.getURL("update-token.txt"));
+        if (!res.ok) return null;
+        return (await res.text()).trim() || null;
+    } catch {
+        return null;
+    }
+}
+
+async function fetchRemoteVersion() {
+    const token = await getUpdateToken();
+    const res = token
+        ? await fetch(API_MANIFEST_URL, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/vnd.github.raw+json"
+            },
+            cache: "no-store"
+        })
+        : await fetch(PUBLIC_MANIFEST_URL, { cache: "no-store" });
+    console.log(`HTTP status fetch manifest (${token ? "API + token" : "public"}):`, res.status);
+    if (!res.ok) {
+        console.error(`❌ Erreur HTTP lors du fetch du manifest: ${res.status}`);
+        throw new Error(`Erreur HTTP ${res.status}`);
+    }
+    const remoteManifest = await res.json();
+    return remoteManifest.version;
+}
+
+// maxAgeMinutes > 0 : réutilise la dernière version distante connue si elle a moins de maxAgeMinutes
+export async function checkForUpdate({ maxAgeMinutes = 0 } = {}) {
+    const localVersion = chrome.runtime.getManifest().version;
+    try {
+        let remoteVersion = null;
+        if (maxAgeMinutes > 0) {
+            const { [CACHE_KEY]: cache } = await chrome.storage.local.get(CACHE_KEY);
+            if (cache && Date.now() - cache.checkedAt < maxAgeMinutes * 60 * 1000) {
+                remoteVersion = cache.remoteVersion;
+                console.log("📦 Version distante lue depuis le cache :", remoteVersion);
+            }
         }
-        const remoteManifest = await res.json();
-        const remoteVersion = remoteManifest.version;
-        const localVersion = chrome.runtime.getManifest().version;
+        if (!remoteVersion) {
+            console.log("🔎 Vérification de mise à jour en cours...");
+            remoteVersion = await fetchRemoteVersion();
+            await chrome.storage.local.set({ [CACHE_KEY]: { remoteVersion, checkedAt: Date.now() } });
+        }
 
         console.log(`📦 Version locale: ${localVersion}, Version distante: ${remoteVersion}`);
 
         if (isNewerVersion(remoteVersion, localVersion)) {
             console.log("🚀 Mise à jour disponible !");
-            return { updateAvailable: true, remoteVersion, repoURL: GITHUB_REPO_URL, localVersion };
+            return { updateAvailable: true, remoteVersion, localVersion };
         } else {
             console.log("✅ Extension à jour.");
-            return { updateAvailable: false, localVersion };
+            return { updateAvailable: false, remoteVersion, localVersion };
         }
     } catch (err) {
         console.error("❌ Erreur lors de la vérification de mise à jour :", err);
-        return { updateAvailable: false };
+        return { updateAvailable: false, localVersion, error: true };
     }
+}
+
+// Télécharge le ZIP de la dernière version dans le dossier Téléchargements
+export async function downloadLatestZip(version) {
+    const token = await getUpdateToken();
+    const options = {
+        url: token ? API_ZIP_URL : PUBLIC_ZIP_URL,
+        filename: `CSP-tools-v${version || "derniere"}.zip`,
+        conflictAction: "uniquify"
+    };
+    if (token) options.headers = [{ name: "Authorization", value: `Bearer ${token}` }];
+    return chrome.downloads.download(options);
 }
 
 function isNewerVersion(remote, local) {

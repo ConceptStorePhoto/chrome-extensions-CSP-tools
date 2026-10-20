@@ -1,4 +1,6 @@
-import { checkForUpdate } from './functions/update-check.js';
+import { checkForUpdate, downloadLatestZip } from './functions/update-check.js';
+
+const UPDATE_NOTIFICATION_ID = "csp-tools-update";
 
 // --- Au démarrage de Chrome
 chrome.runtime.onStartup.addListener(() => {
@@ -28,8 +30,8 @@ function verifierMAJ() {
     checkForUpdate().then(result => {
         if (result.updateAvailable) {
             console.log("🔔 Mise à jour détectée :", result.remoteVersion);
-            showUpdateNotification(result.remoteVersion, result.repoURL);
-        } else {
+            showUpdateNotification(result.remoteVersion);
+        } else if (!result.error) {
             console.log("✅ Aucune mise à jour trouvée");
         }
     }).catch(err => {
@@ -37,22 +39,25 @@ function verifierMAJ() {
     });
 }
 
-// --- Affiche une notification Chrome
-function showUpdateNotification(version, url) {
-    chrome.notifications.create({
+// --- Affiche une notification Chrome (un identifiant fixe : une nouvelle notification remplace la précédente)
+function showUpdateNotification(version) {
+    chrome.notifications.create(UPDATE_NOTIFICATION_ID, {
         type: "basic",
         iconUrl: "logo.png",
         title: "CSP tools - Nouvelle version disponible",
-        message: `Version ${version} disponible. Cliquez pour voir.`,
+        message: `Version ${version} disponible. Cliquez pour télécharger le ZIP, ou lancez UPDATE.bat.`,
         priority: 2
-    }, (notificationId) => {
-        chrome.notifications.onClicked.addListener((notifId) => {
-            if (notifId === notificationId) {
-                chrome.tabs.create({ url });
-            }
-        });
     });
 }
+
+// --- Clic sur la notification : téléchargement du ZIP
+// Listener au niveau du module, pour qu'il reste actif après la mise en veille du service worker
+chrome.notifications.onClicked.addListener(async (notifId) => {
+    if (notifId !== UPDATE_NOTIFICATION_ID) return;
+    chrome.notifications.clear(notifId);
+    const { remoteVersion } = await checkForUpdate({ maxAgeMinutes: 240 });
+    downloadLatestZip(remoteVersion).catch(err => console.error("❌ Téléchargement de la mise à jour impossible :", err));
+});
 
 /////////////////////////////////////
 

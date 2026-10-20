@@ -114,18 +114,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Vérification des mises à jour
-import { checkForUpdate } from './functions/update-check.js';
+import { checkForUpdate, downloadLatestZip } from './functions/update-check.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const updateMsg = document.getElementById("update-message");
 
-    const updateInfo = await checkForUpdate();
+    const updateInfo = await checkForUpdate({ maxAgeMinutes: 30 });
 
     if (updateInfo.updateAvailable) {
-        updateMsg.innerHTML = `
-            🚀 <strong>Mise à jour disponible</strong> (v${updateInfo.localVersion} ➡️ v${updateInfo.remoteVersion})
-            <a href="${updateInfo.repoURL}" target="_blank" rel="noopener">Télécharger</a>
-        `;
+        const titre = document.createElement("strong");
+        titre.textContent = "Mise à jour disponible";
+
+        const lienTelecharger = document.createElement("a");
+        lienTelecharger.href = "#";
+        lienTelecharger.textContent = "Télécharger le ZIP";
+        lienTelecharger.addEventListener("click", (event) => {
+            event.preventDefault();
+            downloadLatestZip(updateInfo.remoteVersion)
+                .then(() => (lienTelecharger.textContent = "✅ Téléchargement lancé"))
+                .catch(err => {
+                    console.error("❌ Téléchargement de la mise à jour impossible :", err);
+                    lienTelecharger.textContent = "❌ Échec du téléchargement";
+                });
+        });
+
+        updateMsg.replaceChildren(
+            "🚀 ", titre, ` (v${updateInfo.localVersion} ➡️ v${updateInfo.remoteVersion}) `,
+            lienTelecharger, " ou lancer UPDATE.bat"
+        );
+        updateMsg.classList.remove('hide');
+    } else if (updateInfo.error) {
+        updateMsg.textContent = `⚠️ Vérification des mises à jour impossible - Version : ${updateInfo.localVersion}`;
         updateMsg.classList.remove('hide');
     } else {
         updateMsg.textContent = `✅ Extension à jour - Version : ${updateInfo.localVersion}`;

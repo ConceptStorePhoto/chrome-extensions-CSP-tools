@@ -1,0 +1,3 @@
+# UPDATE.bat est versionne octet pour octet (fins de ligne CRLF, aucune conversion) :
+# la transition depuis l'ancienne version depend de la position exacte de son contenu.
+UPDATE.bat -text
