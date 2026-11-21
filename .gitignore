@@ -3,3 +3,5 @@
 update-token.txt
 # Journal de la derniere mise a jour automatique (UPDATE.bat --auto), propre a chaque poste
 update.log
+# Copie de l'installeur avec le token integre, creee par installeur/creer-installeur.ps1
+installeur/a-envoyer/

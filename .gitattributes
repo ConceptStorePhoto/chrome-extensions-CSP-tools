@@ -1,3 +1,5 @@
 # UPDATE.bat est versionne octet pour octet (fins de ligne CRLF, aucune conversion) :
 # la transition depuis l'ancienne version depend de la position exacte de son contenu.
 UPDATE.bat -text
+# Modele de l'installeur : fins de ligne CRLF conservees, cmd gere mal les etiquettes en LF.
+installeur/INSTALLER.bat -text

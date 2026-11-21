@@ -22,6 +22,14 @@ Voir le Wiki pour plus de détails : [Wiki CSP tools](https://github.com/Concept
 
 ## Installation
 
+**Nouveau poste** : lancer l'installeur reçu, `INSTALLER-CSP-tools.bat`. Il installe l'extension dans `C:\CSP-tools`, active la mise à jour automatique, puis explique l'étape à faire dans Chrome : le chemin du dossier est déjà copié, il suffit de le coller.
+
+**Créer l'installeur à envoyer** (depuis le dossier du projet, avec `update-token.txt` présent) :
+`powershell -NoProfile -ExecutionPolicy Bypass -File installeur\creer-installeur.ps1`
+La copie est créée dans `installeur\a-envoyer\`. Elle contient le token : l'envoyer uniquement aux collaborateurs, jamais la publier.
+
+**Installation manuelle** :
+
 - Télécharger le github au format ZIP 
     - [Télécharger le ZIP](https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/archive/refs/heads/main.zip)
 - Décompresser le fichier ZIP dans un dossier définitif, par exemple `C:\CSP-tools` : pas dans Téléchargements, sur le Bureau ou dans un dossier synchronisé OneDrive
