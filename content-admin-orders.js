@@ -242,7 +242,7 @@ if (window.location.pathname.includes("orders") && window.location.pathname.spli
                 url.searchParams.append("notes", `REF commande ${orderId} ${orderReference}`);
                 url.searchParams.append("client", customerName);
                 products.forEach((prod, index) => {
-                    url.searchParams.append(`product_${index + 1}`, prod.reference);
+                    // url.searchParams.append(`product_${index + 1}`, prod.reference);
                     url.searchParams.append(`SKU_${index + 1}`, prod.sku);
                     url.searchParams.append(`qty_${index + 1}`, prod.quantity);
                 });
