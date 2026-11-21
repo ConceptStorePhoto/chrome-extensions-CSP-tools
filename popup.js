@@ -121,7 +121,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const updateInfo = await checkForUpdate({ maxAgeMinutes: 30 });
 
-    if (updateInfo.updateAvailable) {
+    if (updateInfo.localVersion !== chrome.runtime.getManifest().version) {
+        // Fichiers déjà mis à jour sur le disque (mise à jour automatique) : il reste à recharger l'extension
+        const lienActiver = document.createElement("a");
+        lienActiver.href = "#";
+        lienActiver.textContent = "Activer maintenant";
+        lienActiver.addEventListener("click", (event) => {
+            event.preventDefault();
+            chrome.runtime.reload();
+        });
+        updateMsg.replaceChildren(
+            `🔄 Version ${updateInfo.localVersion} installée : `, lienActiver,
+            " (puis rechargez les pages du back-office déjà ouvertes)"
+        );
+        updateMsg.classList.remove('hide');
+    } else if (updateInfo.updateAvailable) {
         const titre = document.createElement("strong");
         titre.textContent = "Mise à jour disponible";
 

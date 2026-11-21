@@ -24,20 +24,24 @@ Voir le Wiki pour plus de détails : [Wiki CSP tools](https://github.com/Concept
 
 - Télécharger le github au format ZIP 
     - [Télécharger le ZIP](https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools/archive/refs/heads/main.zip)
-- Décompresser le fichier ZIP (dans un dossier que vous ne risquez pas de supprimer ⚠️)
+- Décompresser le fichier ZIP dans un dossier définitif, par exemple `C:\CSP-tools` : pas dans Téléchargements, sur le Bureau ou dans un dossier synchronisé OneDrive
+    - ⚠️ Ne plus déplacer ce dossier ensuite : Chrome ne retrouverait plus l'extension, et la recharger depuis un autre dossier efface tous ses réglages
 - Ouvrir Google Chrome
 - Accéder à la page des extensions de Chrome : [chrome://extensions/](chrome://extensions/)
 - Activer le mode développeur en haut à droite
 - Cliquer sur "Charger l'extension non empaquetée"
 - Sélectionner le dossier décompressé précédemment
 - L'extension devrait apparaître dans la liste des extensions installées
+- Lancer une fois `UPDATE.bat` (dans le dossier de l'extension) : il active la mise à jour automatique
+    - Si le dépôt est privé, déposer d'abord dans le dossier le fichier `update-token.txt` fourni
 - Vous pouvez maintenant utiliser l'extension
 - Penser à l'épingler à la barre d'outils, pour un accès rapide  
 
 
 ## Mise à jour
-Pour mettre à jour l'extension, il suffit de télécharger à nouveau le fichier ZIP et de remplacer les fichiers précédemment installés par les nouveaux fichiers.
-Puis redémarrer Google Chrome ou actualiser l'extention dans [chrome://extensions/](chrome://extensions/).
+**Automatique** : après un premier lancement de `UPDATE.bat`, une tâche planifiée Windows (« CSP tools - Mise a jour ») met l'extension à jour chaque jour à 8 h, ou dès l'ouverture de session si le poste était éteint à cette heure. Une notification « Mise à jour installée » propose ensuite d'activer la nouvelle version. Le résultat de la dernière mise à jour automatique est écrit dans `update.log`, dans le dossier de l'extension.
+
+**Manuelle** : lancer `UPDATE.bat` dans le dossier de l'extension, puis cliquer sur « Recharger » dans [chrome://extensions/](chrome://extensions/) ou redémarrer Google Chrome.
 
 
 <br>

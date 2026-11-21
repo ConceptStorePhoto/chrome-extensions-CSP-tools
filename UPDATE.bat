@@ -41,13 +41,14 @@ exit /b
 :main
 :: Le script se relance depuis une copie dans %TEMP% : la copie des nouveaux fichiers
 :: peut ainsi remplacer UPDATE.bat sans perturber le script en cours d'execution.
+:: UPDATE.bat --auto : mode silencieux utilise par la tache planifiee, sans pause.
 if /i "%~1"=="--depuis-temp" goto :maj
 copy /y "%~f0" "%TEMP%\csp-tools-update.bat" >nul || (
     echo [ERREUR] Impossible de preparer la mise a jour dans le dossier temporaire.
-    pause
+    if /i not "%~1"=="--auto" pause
     exit /b 1
 )
-"%TEMP%\csp-tools-update.bat" --depuis-temp "%~dp0"
+"%TEMP%\csp-tools-update.bat" --depuis-temp "%~dp0" %1
 
 :maj
 setlocal
@@ -57,22 +58,36 @@ set "EXT_DIR=%~2"
 set "REPO=ConceptStorePhoto/chrome-extensions-CSP-tools"
 set "ZIP_FILE=%TEMP%\csp-tools-update.zip"
 set "WORK_DIR=%TEMP%\csp-tools-update"
+set "AUTO="
+if /i "%~3"=="--auto" set "AUTO=1"
+if defined AUTO echo [INFO] Mise a jour automatique du %date% a %time%
 
 if not exist "%EXT_DIR%manifest.json" (
     echo [ERREUR] Dossier de l'extension introuvable : %EXT_DIR%
-    pause
+    if not defined AUTO pause
     exit /b 1
 )
 
 :: Garde-fou : un dossier contenant .git est un depot de developpement, jamais un poste
 if exist "%EXT_DIR%.git" (
     echo [ATTENTION] Dossier de developpement detecte, presence de .git : mise a jour interdite.
-    pause
+    if not defined AUTO pause
     exit /b 1
 )
 
 cd /d "%EXT_DIR%"
 if exist "%EXT_DIR%tmp" rd /s /q "%EXT_DIR%tmp"
+
+:: Inscrit la tache planifiee qui relance ce script chaque jour en mode silencieux.
+:: Refait a chaque lancement manuel : la tache suit le dossier s'il a ete deplace.
+if not defined AUTO (
+    powershell -NoProfile -ExecutionPolicy Bypass -File "%EXT_DIR%maj-auto.ps1" -ExtDir "%EXT_DIR%." >nul 2>&1
+    if errorlevel 1 (
+        echo [ATTENTION] Mise a jour automatique non activee : il faudra lancer UPDATE.bat a la main.
+    ) else (
+        echo [OK] Mise a jour automatique activee : chaque jour a 8h, ou des l'ouverture de session si le poste etait eteint.
+    )
+)
 
 set "GH_TOKEN="
 if exist "%EXT_DIR%update-token.txt" set /p GH_TOKEN=<"%EXT_DIR%update-token.txt"
@@ -123,7 +138,7 @@ echo       - Redemarrez Chrome
 echo.
 echo En cas d'erreur, relancer le fichier UPDATE.bat
 echo.
-pause
+if not defined AUTO pause
 exit /b 0
 
 
@@ -149,5 +164,5 @@ goto :fin_erreur
 if exist "%WORK_DIR%" rd /s /q "%WORK_DIR%"
 if exist "%ZIP_FILE%" del "%ZIP_FILE%"
 echo.
-pause
+if not defined AUTO pause
 exit /b 1

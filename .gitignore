@@ -1,3 +1,5 @@
 # Token de mise a jour (lecture seule) : NE PAS versionner tant que le depot est public.
 # Phase 2, une fois le depot passe en prive : supprimer cette ligne puis committer le fichier.
 update-token.txt
+# Journal de la derniere mise a jour automatique (UPDATE.bat --auto), propre a chaque poste
+update.log

@@ -39,9 +39,21 @@ async function fetchRemoteVersion() {
     return remoteManifest.version;
 }
 
+// Version des fichiers présents sur le disque. Elle peut être plus récente que la version chargée
+// par Chrome (chrome.runtime.getManifest) après une mise à jour automatique, tant que l'extension
+// n'a pas été rechargée.
+export async function getInstalledVersion() {
+    try {
+        const res = await fetch(chrome.runtime.getURL("manifest.json"), { cache: "no-store" });
+        return (await res.json()).version;
+    } catch {
+        return chrome.runtime.getManifest().version;
+    }
+}
+
 // maxAgeMinutes > 0 : réutilise la dernière version distante connue si elle a moins de maxAgeMinutes
 export async function checkForUpdate({ maxAgeMinutes = 0 } = {}) {
-    const localVersion = chrome.runtime.getManifest().version;
+    const localVersion = await getInstalledVersion();
     try {
         let remoteVersion = null;
         if (maxAgeMinutes > 0) {

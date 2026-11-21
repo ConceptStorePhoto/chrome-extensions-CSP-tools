@@ -1,6 +1,7 @@
-import { checkForUpdate, downloadLatestZip } from './functions/update-check.js';
+import { checkForUpdate, downloadLatestZip, getInstalledVersion } from './functions/update-check.js';
 
 const UPDATE_NOTIFICATION_ID = "csp-tools-update";
+const INSTALLED_NOTIFICATION_ID = "csp-tools-installed";
 
 // --- Au démarrage de Chrome
 chrome.runtime.onStartup.addListener(() => {
@@ -15,6 +16,8 @@ chrome.runtime.onInstalled.addListener(() => {
 
     // On planifie une vérification toutes les 4 heures
     chrome.alarms.create("checkUpdates", { periodInMinutes: 240 });
+    // Et toutes les 15 minutes, la détection d'une version installée par la mise à jour automatique
+    chrome.alarms.create("checkInstalledVersion", { periodInMinutes: 15 });
 });
 
 // --- Quand l'alarme se déclenche
@@ -22,8 +25,25 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "checkUpdates") {
         console.log("⏰ Vérification programmée des mises à jour...");
         verifierMAJ();
+    } else if (alarm.name === "checkInstalledVersion") {
+        verifierVersionInstallee();
     }
 });
+
+// --- Fichiers mis à jour sur le disque (tâche planifiée UPDATE.bat --auto) mais pas encore chargés par Chrome
+async function verifierVersionInstallee() {
+    const versionInstallee = await getInstalledVersion();
+    const versionChargee = chrome.runtime.getManifest().version;
+    if (versionInstallee === versionChargee) return;
+    console.log(`🔔 Version ${versionInstallee} installée, version ${versionChargee} encore chargée`);
+    chrome.notifications.create(INSTALLED_NOTIFICATION_ID, {
+        type: "basic",
+        iconUrl: "logo.png",
+        title: "CSP tools - Mise à jour installée",
+        message: `Version ${versionInstallee} installée. Cliquez pour l'activer, puis rechargez les pages du back-office déjà ouvertes.`,
+        priority: 2
+    });
+}
 
 // --- Fonction centrale
 function verifierMAJ() {
@@ -50,9 +70,13 @@ function showUpdateNotification(version) {
     });
 }
 
-// --- Clic sur la notification : téléchargement du ZIP
+// --- Clic sur les notifications : activation de la version installée, ou téléchargement du ZIP
 // Listener au niveau du module, pour qu'il reste actif après la mise en veille du service worker
 chrome.notifications.onClicked.addListener(async (notifId) => {
+    if (notifId === INSTALLED_NOTIFICATION_ID) {
+        chrome.runtime.reload();
+        return;
+    }
     if (notifId !== UPDATE_NOTIFICATION_ID) return;
     chrome.notifications.clear(notifId);
     const { remoteVersion } = await checkForUpdate({ maxAgeMinutes: 240 });
