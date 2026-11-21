@@ -17,6 +17,6 @@ $copie = $modele.Replace($ligneVide, ('set "GH_TOKEN={0}"' -f $token))
 
 $sortie = Join-Path $PSScriptRoot 'a-envoyer'
 New-Item -ItemType Directory -Force -Path $sortie | Out-Null
-$fichier = Join-Path $sortie 'INSTALLER-CSP-tools.bat'
+$fichier = Join-Path $sortie 'Installateur-CSP-tools-Windows.bat'
 [System.IO.File]::WriteAllText($fichier, $copie, [System.Text.Encoding]::ASCII)
 Write-Host "Installeur pret a envoyer : $fichier"

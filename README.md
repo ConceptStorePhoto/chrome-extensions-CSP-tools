@@ -22,7 +22,7 @@ Voir le Wiki pour plus de détails : [Wiki CSP tools](https://github.com/Concept
 
 ## Installation
 
-**Nouveau poste** : lancer l'installeur reçu, `INSTALLER-CSP-tools.bat`. Il installe l'extension dans `C:\CSP-tools`, active la mise à jour automatique, puis explique l'étape à faire dans Chrome : le chemin du dossier est déjà copié, il suffit de le coller.
+**Nouveau poste Windows** : lancer l'installeur reçu, `Installateur-CSP-tools-Windows.bat`. Il installe l'extension dans `C:\CSP-tools`, active la mise à jour automatique, puis explique l'étape à faire dans Chrome : le chemin du dossier est déjà copié, il suffit de le coller.
 
 **Créer l'installeur à envoyer** (depuis le dossier du projet, avec `update-token.txt` présent) :
 `powershell -NoProfile -ExecutionPolicy Bypass -File installeur\creer-installeur.ps1`
