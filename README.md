@@ -57,4 +57,4 @@ For more details, visit the [official tutorial](https://developer.chrome.com/doc
 
 Dev par [QuentinPerou](https://github.com/quentinperou)  
 
-Merci à ChatGPT et GitHub Copilot pour l'aide à la création de l'extension ^^
+Réalisé avec l'assistance de ChatGPT, GitHub Copilot et Claude Code ^^
