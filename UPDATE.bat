@@ -101,6 +101,10 @@ echo [INFO] Mise a jour des fichiers...
 xcopy "%SRC_DIR%\*" "%EXT_DIR%." /E /H /C /I /Y
 if errorlevel 1 goto :erreur_copie
 
+:: xcopy ne supprime rien : retire les anciennes copies a la racine des fichiers
+:: deplaces dans content-script\, uniquement si la nouvelle copie existe.
+for %%F in ("%EXT_DIR%content-*.js") do if exist "%EXT_DIR%content-script\%%~nxF" del /q "%%~fF"
+
 set "NEW_VERSION="
 for /f "usebackq delims=" %%V in (`powershell -NoProfile -Command "(ConvertFrom-Json (Get-Content -Raw -Encoding UTF8 -LiteralPath '%EXT_DIR%manifest.json')).version"`) do set "NEW_VERSION=%%V"
 

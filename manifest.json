@@ -1,7 +1,7 @@
 {
   "name": "CSP tools",
   "description": "Ajoute des fonctionnalités au backend de la boutique ConceptStorePhoto PrestaShop 8.2.0 - DEV par QuentinPerou",
-  "version": "1.47.1",
+  "version": "1.47.2",
   "manifest_version": 3,
   "homepage_url": "https://github.com/ConceptStorePhoto/chrome-extensions-CSP-tools",
   "options_page": "options.html",
@@ -28,7 +28,7 @@
       ],
       "js": [
         "functions/function-displayNotif.js",
-        "content-script-GLOBAL.js"
+        "content-script/content-script-GLOBAL.js"
       ],
       "run_at": "document_idle"
     },
@@ -40,7 +40,7 @@
       "js": [
         "functions/common-functions-prestashop.js",
         "functions/function-displayNotif.js",
-        "content-admin-catalog.js"
+        "content-script/content-admin-catalog.js"
       ]
     },
     {
@@ -59,7 +59,7 @@
         "functions/function-displayNotif.js",
         "functions/function-product-tagOffre.js",
         "functions/function-createPresetSystem.js",
-        "content-admin-catalog-product.js"
+        "content-script/content-admin-catalog-product.js"
       ]
     },
     {
@@ -68,7 +68,7 @@
         "https://www.conceptstorephoto.fr/logcncin/index.php/sell/orders/*"
       ],
       "js": [
-        "content-admin-orders.js"
+        "content-script/content-admin-orders.js"
       ]
     },
     {
@@ -78,7 +78,7 @@
         "https://www.conceptstorephoto.fr/logcncin/index.php?controller=AdminDmuBackToNew&*"
       ],
       "js": [
-        "content-admin-newProduct.js"
+        "content-script/content-admin-newProduct.js"
       ]
     },
     {
@@ -87,7 +87,7 @@
         "https://www.conceptstorephoto.fr/logcncin/index.php/sell/stocks/*"
       ],
       "js": [
-        "content-admin-stocks.js"
+        "content-script/content-admin-stocks.js"
       ]
     },
     {
@@ -96,7 +96,7 @@
         "https://www.conceptstorephoto.fr/logcncin/index.php/improve/design/cms-pages/*"
       ],
       "js": [
-        "content-admin-cmsPages.js"
+        "content-script/content-admin-cmsPages.js"
       ]
     },
     {
@@ -109,7 +109,7 @@
       "js": [
         "functions/function-displayNotif.js",
         "functions/function-getSubtitle.js",
-        "content-admin-reductions.js"
+        "content-script/content-admin-reductions.js"
       ]
     },
     {
@@ -120,7 +120,7 @@
       "js": [
         "functions/function-displayNotif.js",
         "functions/function-getSubtitle.js",
-        "content-admin-creativeElements.js"
+        "content-script/content-admin-creativeElements.js"
       ]
     },
     {
@@ -134,7 +134,7 @@
         "https://www.conceptstorephoto.fr/wp-admin/*"
       ],
       "js": [
-        "content-client.js"
+        "content-script/content-client.js"
       ]
     },
     {
@@ -142,7 +142,7 @@
         "https://www.conceptstorephoto.fr/wp-admin/*"
       ],
       "js": [
-        "content-admin-WP.js"
+        "content-script/content-admin-WP.js"
       ]
     },
     {
@@ -150,7 +150,7 @@
         "https://www.leboncoin.fr/*"
       ],
       "js": [
-        "content-LBC.js"
+        "content-script/content-LBC.js"
       ]
     },
     {
@@ -161,7 +161,7 @@
         "https://vendeur.fnac.com/compte/vendeur/inventaire/ajouter-produit"
       ],
       "js": [
-        "content-fnac.js"
+        "content-script/content-fnac.js"
       ]
     },
     {
@@ -169,7 +169,7 @@
         "https://www.applications.colissimo.entreprise.laposte.fr/entreprise/collecte-ondemand/*"
       ],
       "js": [
-        "content-colissimo.js"
+        "content-script/content-colissimo.js"
       ]
     }
   ],
